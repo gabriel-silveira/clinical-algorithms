@@ -33,15 +33,13 @@ class Metadata {
 
   get pendency() {
     return {
-      has: () => this.data.pendency && this.data.pendency.length,
+      has: () => this.data.pendency !== null && this.data.pendency.length > 0,
       add: (blockIndex: number, propName: string) => {
         const pendency = `${blockIndex}-${propName}`;
 
         if (this.data.pendency === null) this.data.pendency = [];
 
         const pendencyExists = this.data.pendency.find((value) => value === pendency);
-
-        console.log('pendencyExists', pendencyExists);
 
         if (!pendencyExists) {
           this.data.pendency.push(pendency);
@@ -51,8 +49,7 @@ class Metadata {
         const pendency = `${blockIndex}-${propName}`;
 
         if (this.data.pendency) {
-          console.log('AQUI', pendency);
-          this.data.pendency = [...this.data.pendency.filter((value) => value === pendency)];
+          this.data.pendency = [...this.data.pendency.filter((value) => value !== pendency)];
         }
       },
       clear: () => {
@@ -454,6 +451,13 @@ class Metadata {
     } else {
       this.editor.graph.notSaved();
     }
+  }
+
+  public alertPendency() {
+    this.editor.quasar.notify({
+      type: 'negative',
+      message: 'Resuelva los problemas pendientes antes de guardar.',
+    });
   }
 }
 

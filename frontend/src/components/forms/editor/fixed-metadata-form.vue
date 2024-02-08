@@ -227,33 +227,42 @@ const isFormal = computed(() => data.recommendation_type === RECOMMENDATION_TYPE
 const validate = (propName: string) => {
   clearTimeout(validation[propName]);
 
-  if (propName === 'intervention' && data.intervention) {
-    if (!data.comparator) {
-      validation[propName] = setTimeout(() => {
-        redComparator.value?.validate();
-
-        editor.metadata.pendency.add(data.index, 'comparator');
-      }, 250);
-    } else {
-      editor.metadata.pendency.remove(data.index, 'comparator');
-    }
-  }/*  else {
-    editor.metadata.pendency.add(data.index, 'intervention');
-  } */
-
-  if (propName === 'comparator' && data.comparator) {
-    if (!data.intervention) {
-      validation[propName] = setTimeout(() => {
-        refIntervention.value?.validate();
-
-        editor.metadata.pendency.add(data.index, 'intervention');
-      }, 250);
-    } else {
+  if (propName === 'intervention') {
+    if (data.intervention) {
       editor.metadata.pendency.remove(data.index, 'intervention');
+
+      if (!data.comparator) {
+        validation[propName] = setTimeout(() => {
+          redComparator.value?.validate();
+
+          editor.metadata.pendency.add(data.index, 'comparator');
+        }, 250);
+      } else {
+        editor.metadata.pendency.remove(data.index, 'comparator');
+      }
+    } else {
+      editor.metadata.pendency.add(data.index, 'intervention');
     }
-  }/*  else {
-    editor.metadata.pendency.add(data.index, 'comparator');
-  } */
+  }
+
+  if (propName === 'comparator') {
+    if (data.comparator) {
+      console.log(data.comparator);
+      editor.metadata.pendency.remove(data.index, 'comparator');
+
+      if (!data.intervention) {
+        validation[propName] = setTimeout(() => {
+          refIntervention.value?.validate();
+
+          editor.metadata.pendency.add(data.index, 'intervention');
+        }, 250);
+      } else {
+        editor.metadata.pendency.remove(data.index, 'intervention');
+      }
+    } else {
+      editor.metadata.pendency.add(data.index, 'comparator');
+    }
+  }
 };
 
 const checkDirectionStrengthRelationship = (value: string) => {

@@ -100,9 +100,11 @@ import {
 } from 'src/router/routes/algorithms';
 
 import { formatDatetime } from 'src/services/date';
+import { useQuasar } from 'quasar';
 
 const route = useRoute();
 const router = useRouter();
+const $q = useQuasar();
 
 const editor = inject('editor') as Editor;
 
@@ -150,7 +152,11 @@ const goAlgorithmsPage = () => {
 };
 
 const saveGraph = () => {
-  editor.graph.save();
+  if (editor.metadata.pendency.has()) {
+    editor.metadata.alertPendency();
+  } else {
+    editor.graph.save();
+  }
 };
 
 const editGraph = async () => {
