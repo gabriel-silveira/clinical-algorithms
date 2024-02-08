@@ -229,38 +229,37 @@ const validate = (propName: string) => {
 
   if (propName === 'intervention') {
     if (data.intervention) {
-      editor.metadata.pendency.remove(data.index, 'intervention');
+      editor.metadata.pendency.remove(data, 'intervention');
 
       if (!data.comparator) {
         validation[propName] = setTimeout(() => {
           redComparator.value?.validate();
 
-          editor.metadata.pendency.add(data.index, 'comparator');
+          editor.metadata.pendency.add(data, 'comparator');
         }, 250);
       } else {
-        editor.metadata.pendency.remove(data.index, 'comparator');
+        editor.metadata.pendency.remove(data, 'comparator');
       }
     } else {
-      editor.metadata.pendency.add(data.index, 'intervention');
+      editor.metadata.pendency.add(data, 'intervention');
     }
   }
 
   if (propName === 'comparator') {
     if (data.comparator) {
-      console.log(data.comparator);
-      editor.metadata.pendency.remove(data.index, 'comparator');
+      editor.metadata.pendency.remove(data, 'comparator');
 
       if (!data.intervention) {
         validation[propName] = setTimeout(() => {
           refIntervention.value?.validate();
 
-          editor.metadata.pendency.add(data.index, 'intervention');
+          editor.metadata.pendency.add(data, 'intervention');
         }, 250);
       } else {
-        editor.metadata.pendency.remove(data.index, 'intervention');
+        editor.metadata.pendency.remove(data, 'intervention');
       }
     } else {
-      editor.metadata.pendency.add(data.index, 'comparator');
+      editor.metadata.pendency.add(data, 'comparator');
     }
   }
 };
@@ -335,6 +334,7 @@ const setInitialValues = () => {
 
 onBeforeMount(() => {
   editor.metadata.pendency.clear();
+  editor.metadata.pendency.clearRecommendationTypes();
 
   setInitialValues();
 });

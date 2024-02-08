@@ -17,6 +17,7 @@ class Metadata {
       data: IFixedMetadata,
     } | null,
     pendency: string[] | null,
+    pendencyRecommendationTypes: string[],
   } = reactive({
       mountingComponent: true,
       loadingBlocks: false,
@@ -25,6 +26,7 @@ class Metadata {
       showPanel: false,
       recommendationToShow: null,
       pendency: null,
+      pendencyRecommendationTypes: [],
     });
 
   constructor(editor: Editor) {
@@ -34,8 +36,8 @@ class Metadata {
   get pendency() {
     return {
       has: () => this.data.pendency !== null && this.data.pendency.length > 0,
-      add: (blockIndex: number, propName: string) => {
-        const pendency = `${blockIndex}-${propName}`;
+      add: (data: IFixedMetadata, propName: string) => {
+        const pendency = `${data.index}-${propName}`;
 
         if (this.data.pendency === null) this.data.pendency = [];
 
@@ -43,17 +45,43 @@ class Metadata {
 
         if (!pendencyExists) {
           this.data.pendency.push(pendency);
+
+          this.pendency.addRecommendationType(data.recommendation_type);
+
+          this.editor.element.updateRecommendationsTotals();
         }
       },
-      remove: (blockIndex: number, propName: string) => {
-        const pendency = `${blockIndex}-${propName}`;
+      remove: (data: IFixedMetadata, propName: string) => {
+        const pendency = `${data.index}-${propName}`;
 
-        if (this.data.pendency) {
+        if (
+          this.data.pendency
+          && this.data.pendency.find((value) => value === pendency)
+        ) {
           this.data.pendency = [...this.data.pendency.filter((value) => value !== pendency)];
+
+          this.pendency.removeRecommendationType(data.recommendation_type);
+
+          this.editor.element.updateRecommendationsTotals();
         }
       },
       clear: () => {
         this.data.pendency = null;
+      },
+      clearRecommendationTypes: () => {
+        this.data.pendencyRecommendationTypes = [];
+      },
+      addRecommendationType: (type: string) => {
+        // if (!this.data.pendencyRecommendationTypes.find((value) => value === type)) {
+        //   this.data.pendencyRecommendationTypes.push(type);
+        // }
+        this.data.pendencyRecommendationTypes.push(type);
+      },
+      removeRecommendationType: (type: string) => {
+        this.data.pendencyRecommendationTypes.splice(
+          this.data.pendencyRecommendationTypes.indexOf(type),
+          1,
+        );
       },
     };
   }

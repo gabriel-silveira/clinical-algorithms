@@ -452,6 +452,10 @@ class Element {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         createElement.attr('label/text', `${total}${recommendationAbbreviation[type]}`);
+
+        if (this.editor.metadata.data.pendencyRecommendationTypes.find((value) => value === type)) {
+          createElement.attr('body/fill', '#FF0000');
+        }
       },
     };
   }
