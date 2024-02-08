@@ -33,6 +33,7 @@
             push
             @click="addBlock"
           />
+          {{ editor.metadata.data.pendency }}
         </div>
       </div>
 

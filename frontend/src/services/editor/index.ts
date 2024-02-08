@@ -94,7 +94,11 @@ class Editor {
         });
 
         this.data.paper.on('blank:pointerup', (/* elementView */) => {
-          this.element.deselectAll();
+          if (this.metadata.pendency.has()) {
+            // alert('has pendency');
+          } else {
+            this.element.deselectAll();
+          }
         });
 
         this.data.paper.on('blank:pointerdown cell:pointerdown', () => {
@@ -134,8 +138,17 @@ class Editor {
         });
 
         this.data.paper.on('element:pointerup', (elementView: dia.ElementView) => {
+          if (this.metadata.pendency.has()) {
+            console.log('Has pendency');
+          }
+
           // do not select lane element if it's in read only mode
-          if (!(this.data.readOnly && elementView.options.model.prop('type') === CustomElement.LANE)) {
+          if (
+            !(
+              this.data.readOnly
+              && elementView.options.model.prop('type') === CustomElement.LANE
+            )
+          ) {
             this.element.select(elementView.options.model.id);
           }
 

@@ -166,6 +166,8 @@ class Graph {
 
   public async save() {
     try {
+      if (this.editor.metadata.pendency.has()) return Promise.resolve(null);
+
       this.data.saving = true;
 
       const { data } = await api.put(`${RESOURCE}/${this.data.graph.id}`, {

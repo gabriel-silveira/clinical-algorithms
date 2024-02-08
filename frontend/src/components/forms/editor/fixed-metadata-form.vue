@@ -163,6 +163,7 @@ import {
   computed,
   onBeforeUnmount,
   onBeforeMount,
+  onMounted,
   reactive,
   inject,
   ref,
@@ -195,7 +196,9 @@ const showDeleteBlockDialog = ref(false);
 
 const refIntervention = ref<QInput>();
 const redComparator = ref<QInput>();
-const validationTimeoutId = ref<ReturnType<typeof setTimeout>>(0);
+
+// we need to set a timeout for each prop (ex: validation[propName] )
+const validation: { [key: string]: ReturnType<typeof setTimeout> } = reactive({});
 
 const data = reactive({
   index: 1,
@@ -222,23 +225,35 @@ const blockName = computed(() => `${props.index}. ${
 const isFormal = computed(() => data.recommendation_type === RECOMMENDATION_TYPES[0].value);
 
 const validate = (propName: string) => {
-  clearTimeout(validationTimeoutId.value);
+  clearTimeout(validation[propName]);
 
-  if (propName === 'intervention') {
+  if (propName === 'intervention' && data.intervention) {
     if (!data.comparator) {
-      validationTimeoutId.value = setTimeout(() => {
+      validation[propName] = setTimeout(() => {
         redComparator.value?.validate();
-      }, 1000);
-    }
-  }
 
-  if (propName === 'comparator') {
-    if (!data.intervention) {
-      validationTimeoutId.value = setTimeout(() => {
-        refIntervention.value?.validate();
-      }, 1000);
+        editor.metadata.pendency.add(data.index, 'comparator');
+      }, 250);
+    } else {
+      editor.metadata.pendency.remove(data.index, 'comparator');
     }
-  }
+  }/*  else {
+    editor.metadata.pendency.add(data.index, 'intervention');
+  } */
+
+  if (propName === 'comparator' && data.comparator) {
+    if (!data.intervention) {
+      validation[propName] = setTimeout(() => {
+        refIntervention.value?.validate();
+
+        editor.metadata.pendency.add(data.index, 'intervention');
+      }, 250);
+    } else {
+      editor.metadata.pendency.remove(data.index, 'intervention');
+    }
+  }/*  else {
+    editor.metadata.pendency.add(data.index, 'comparator');
+  } */
 };
 
 const checkDirectionStrengthRelationship = (value: string) => {
@@ -266,12 +281,9 @@ const checkStrengthDirectionRelationship = (value: string) => {
 const setProp = (propName: string) => {
   editor.metadata.setMetadataProps(props.index, propName, data);
 
-  // strength cant be
-  if (propName === 'direction') {
-    checkDirectionStrengthRelationship(data[propName]);
-  } else if (propName === 'strength') {
-    checkStrengthDirectionRelationship(data[propName]);
-  }
+  if (propName === 'direction') checkDirectionStrengthRelationship(data[propName]);
+
+  if (propName === 'strength') checkStrengthDirectionRelationship(data[propName]);
 
   validate(propName);
 };
@@ -313,7 +325,15 @@ const setInitialValues = () => {
 };
 
 onBeforeMount(() => {
+  editor.metadata.pendency.clear();
+
   setInitialValues();
+});
+
+onMounted(() => {
+  validate('intervention');
+
+  validate('comparator');
 });
 
 onBeforeUnmount(() => {

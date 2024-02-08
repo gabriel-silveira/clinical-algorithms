@@ -361,8 +361,6 @@ class Element {
         // (used for toggle button)
         this.data.recommendationsRelationsMap[originalElementId] = recommendationElementId;
 
-        console.log(`[model-id="${recommendationElementId}"]`);
-
         const domElement = document.querySelector(`[model-id="${recommendationElementId}"]`);
 
         if (domElement) {
