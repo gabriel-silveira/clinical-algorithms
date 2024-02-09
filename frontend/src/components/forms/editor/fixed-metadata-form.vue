@@ -64,6 +64,8 @@
               <q-select
                 v-model="data.direction"
                 :options="DIRECTIONS"
+                :rules="[val => !!val || 'Informe la dirección.']"
+                ref="refDirection"
                 class="q-my-lg"
                 label="Direction"
                 map-options
@@ -76,6 +78,8 @@
                 v-if="isFormal"
                 v-model="data.strength"
                 :options="STRENGTH"
+                :rules="[val => !!val || 'Informe la fuerza del recomendación.']"
+                ref="refStrength"
                 class="q-my-lg"
                 label="Recommendation strength"
                 map-options
@@ -173,15 +177,14 @@ import Editor from 'src/services/editor';
 import MetadataLinksForm from 'components/forms/editor/fixed-metadata-links-form.vue';
 import DeleteModal from 'components/modals/simple-modal.vue';
 
-import { BOTH, DIRECTIONS, IN_FAVOR_OF_THE_INTERVENTION } from 'src/services/editor/constants/metadata/direction';
+import { BOTH, DIRECTIONS } from 'src/services/editor/constants/metadata/direction';
 import { RECOMMENDATION_TYPES } from 'src/services/editor/constants/metadata/recommendation_type';
 import {
   STRENGTH,
-  CONDITIONAL_RECOMMENDATION,
   STRONG_RECOMMENDATION,
 } from 'src/services/editor/constants/metadata/recommendation_strength';
 
-import { QInput } from 'quasar';
+import { QInput, QSelect } from 'quasar';
 
 const editor = inject('editor') as Editor;
 
@@ -196,6 +199,8 @@ const showDeleteBlockDialog = ref(false);
 
 const refIntervention = ref<QInput>();
 const redComparator = ref<QInput>();
+const refDirection = ref<QSelect>();
+const refStrength = ref<QSelect>();
 
 // we need to set a timeout for each prop (ex: validation[propName] )
 const validation: { [key: string]: ReturnType<typeof setTimeout> } = reactive({});
@@ -224,7 +229,7 @@ const blockName = computed(() => `${props.index}. ${
 
 const isFormal = computed(() => data.recommendation_type === RECOMMENDATION_TYPES[0].value);
 
-const validate = (propName: string) => {
+const validateInterventionAndComparator = (propName: string) => {
   clearTimeout(validation[propName]);
 
   if (propName === 'intervention') {
@@ -264,36 +269,54 @@ const validate = (propName: string) => {
   }
 };
 
-const checkDirectionStrengthRelationship = (value: string) => {
-  if (
-    value === BOTH
-    && data.strength === STRONG_RECOMMENDATION
-  ) {
-    data.strength = CONDITIONAL_RECOMMENDATION;
+const validateDirectionAndStrength = (propName?: string) => {
+  if (data.direction && data.strength) {
+    if (
+      data.strength === STRONG_RECOMMENDATION
+      && data.direction === BOTH
+    ) {
+      if (propName === 'strength') {
+        data.direction = '';
 
-    editor.metadata.setMetadataProps(props.index, 'strength', data);
+        editor.metadata.setMetadataProps(props.index, 'direction', data);
+
+        editor.metadata.pendency.add(data, 'direction');
+      } else if (propName === 'direction') {
+        data.strength = '';
+
+        editor.metadata.setMetadataProps(props.index, 'strength', data);
+
+        editor.metadata.pendency.add(data, 'strength');
+      }
+    } else if (data.direction) {
+      editor.metadata.pendency.remove(data, 'strength');
+      editor.metadata.pendency.remove(data, 'direction');
+    }
   }
-};
 
-const checkStrengthDirectionRelationship = (value: string) => {
-  if (
-    value === STRONG_RECOMMENDATION
-    && data.direction === BOTH
-  ) {
-    data.direction = IN_FAVOR_OF_THE_INTERVENTION;
+  if (data.direction && !data.strength) {
+    refStrength.value?.validate();
 
-    editor.metadata.setMetadataProps(props.index, 'direction', data);
+    editor.metadata.pendency.remove(data, 'direction');
+    editor.metadata.pendency.add(data, 'strength');
+  }
+
+  if (data.strength && !data.direction) {
+    refDirection.value?.validate();
+
+    editor.metadata.pendency.remove(data, 'strength');
+    editor.metadata.pendency.add(data, 'direction');
   }
 };
 
 const setProp = (propName: string) => {
   editor.metadata.setMetadataProps(props.index, propName, data);
 
-  if (propName === 'direction') checkDirectionStrengthRelationship(data[propName]);
+  validateInterventionAndComparator(propName);
 
-  if (propName === 'strength') checkStrengthDirectionRelationship(data[propName]);
-
-  validate(propName);
+  if (['direction', 'strength'].includes(propName)) {
+    validateDirectionAndStrength(propName);
+  }
 };
 
 const deleteBlock = () => {
@@ -340,9 +363,14 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  validate('intervention');
+  // check integrity between intervention and comparator
+  validateInterventionAndComparator('intervention');
+  validateInterventionAndComparator('comparator');
 
-  validate('comparator');
+  // check integrity between direction and strength
+  // validateDirection(data.direction);
+  // validateStrength(data.strength);
+  validateDirectionAndStrength();
 });
 
 onBeforeUnmount(() => {

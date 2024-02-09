@@ -34,6 +34,15 @@
       @cancel="exitEditor"
       @confirm="saveGraph"
     />
+
+    <div
+      class="absolute-bottom-left q-mx-lg q-pa-md bg-white
+      z-max rounded-borders shadow-light-with-borders"
+      style="margin-bottom: 110px"
+    >
+      <div class="q-pb-md">{{ editor.metadata.data.pendency || 'None' }}</div>
+      <div>{{ editor.metadata.data.pendencyRecommendationTypes }}</div>
+    </div>
   </div>
 </template>
 
