@@ -125,6 +125,8 @@ class Editor {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.data.graph.on('change:position', (cell: dia.Cell) => {
+          this.element.data.wasMoving = true;
+
           this.graph.notSaved();
 
           deselectAllTexts();
@@ -157,9 +159,12 @@ class Editor {
             this.element.select(elementView.options.model.id);
           }
 
-          setTimeout(() => {
+          // redraw recommendations totals after stop moving
+          if (this.element.data.wasMoving) {
             this.element.updateRecommendationsTotals();
-          }, 100);
+
+            this.element.data.wasMoving = false;
+          }
         });
 
         this.data.paper.on('link:snap:connect', () => {

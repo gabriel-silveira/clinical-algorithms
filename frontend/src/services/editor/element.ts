@@ -50,6 +50,7 @@ class Element {
       y: number,
     },
     recommendationsRelationsMap: { [key: dia.Cell.ID]: dia.Cell.ID },
+    wasMoving: boolean,
   } = reactive({
       selectedId: '',
       elementToCreate: '',
@@ -58,6 +59,7 @@ class Element {
         y: 0,
       },
       recommendationsRelationsMap: {},
+      wasMoving: false,
     });
 
   constructor(editor: Editor) {
