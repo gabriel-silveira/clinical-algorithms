@@ -17,7 +17,7 @@ class Metadata {
       data: IFixedMetadata,
     } | null,
     pendency: string[] | null,
-    pendencyRecommendationTypes: string[],
+    pendencyRecommendationTypes: { [key: string]: string[] },
   } = reactive({
       mountingComponent: true,
       loadingBlocks: false,
@@ -26,7 +26,7 @@ class Metadata {
       showPanel: false,
       recommendationToShow: null,
       pendency: null,
-      pendencyRecommendationTypes: [],
+      pendencyRecommendationTypes: {},
     });
 
   constructor(editor: Editor) {
@@ -34,8 +34,25 @@ class Metadata {
   }
 
   get pendency() {
+    const selectedElement = this.editor.element.getSelected();
+
     return {
-      has: () => this.data.pendency !== null && this.data.pendency.length > 0,
+      has: () => {
+        let total = 0;
+
+        const allElements = this.editor.element.getAll();
+
+        for (const element of allElements) {
+          if (
+            this.data.pendencyRecommendationTypes[element.id]
+            && this.data.pendencyRecommendationTypes[element.id].length
+          ) {
+            total += 1;
+          }
+        }
+
+        return total;
+      },
       add: (data: IFixedMetadata, propName: string) => {
         const pendency = `${data.index}-${propName}`;
 
@@ -48,7 +65,7 @@ class Metadata {
 
           this.pendency.addRecommendationType(data.recommendation_type);
 
-          this.editor.element.updateRecommendationsTotals();
+          this.editor.element.updateRecommendationsTotals(selectedElement);
         }
       },
       remove: (data: IFixedMetadata, propName: string) => {
@@ -69,19 +86,26 @@ class Metadata {
         this.data.pendency = null;
       },
       clearRecommendationTypes: () => {
-        this.data.pendencyRecommendationTypes = [];
+        if (selectedElement) {
+          this.data.pendencyRecommendationTypes[selectedElement.id] = [];
+        }
       },
       addRecommendationType: (type: string) => {
-        // if (!this.data.pendencyRecommendationTypes.find((value) => value === type)) {
-        //   this.data.pendencyRecommendationTypes.push(type);
-        // }
-        this.data.pendencyRecommendationTypes.push(type);
+        if (selectedElement) {
+          if (!this.data.pendencyRecommendationTypes[selectedElement.id]) {
+            this.data.pendencyRecommendationTypes[selectedElement.id] = [];
+          }
+
+          this.data.pendencyRecommendationTypes[selectedElement.id].push(type);
+        }
       },
       removeRecommendationType: (type: string) => {
-        this.data.pendencyRecommendationTypes.splice(
-          this.data.pendencyRecommendationTypes.indexOf(type),
-          1,
-        );
+        if (selectedElement) {
+          this.data.pendencyRecommendationTypes[selectedElement.id].splice(
+            this.data.pendencyRecommendationTypes[selectedElement.id].indexOf(type),
+            1,
+          );
+        }
       },
     };
   }
@@ -481,10 +505,10 @@ class Metadata {
     }
   }
 
-  public alertPendency() {
+  public alertPendency(verb = 'guardar') {
     this.editor.quasar.notify({
       type: 'negative',
-      message: 'Resuelva los problemas pendientes antes de guardar.',
+      message: `Resuelva los problemas pendientes antes de ${verb}.`,
     });
   }
 }

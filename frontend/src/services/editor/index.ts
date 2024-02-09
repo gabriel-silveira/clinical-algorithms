@@ -147,10 +147,6 @@ class Editor {
         });
 
         this.data.paper.on('element:pointerup', (elementView: dia.ElementView) => {
-          if (this.metadata.pendency.has()) {
-            console.log('Has pendency');
-          }
-
           // do not select lane element if it's in read only mode
           if (
             !(

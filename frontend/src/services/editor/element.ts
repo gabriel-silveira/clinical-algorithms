@@ -453,7 +453,12 @@ class Element {
         // @ts-ignore
         createElement.attr('label/text', `${total}${recommendationAbbreviation[type]}`);
 
-        if (this.editor.metadata.data.pendencyRecommendationTypes.find((value) => value === type)) {
+        if (
+          this.editor.metadata.data.pendencyRecommendationTypes[element.id]
+          && this.editor.metadata.data.pendencyRecommendationTypes[element.id].find(
+            (value) => value === type,
+          )
+        ) {
           createElement.attr('body/fill', '#FF0000');
         }
       },

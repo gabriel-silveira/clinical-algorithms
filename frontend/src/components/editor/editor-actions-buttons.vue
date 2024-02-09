@@ -100,11 +100,9 @@ import {
 } from 'src/router/routes/algorithms';
 
 import { formatDatetime } from 'src/services/date';
-import { useQuasar } from 'quasar';
 
 const route = useRoute();
 const router = useRouter();
-const $q = useQuasar();
 
 const editor = inject('editor') as Editor;
 
@@ -164,9 +162,15 @@ const editGraph = async () => {
 };
 
 const viewPublicGraph = async () => {
-  if (!editor.graph.isSaved) await editor.graph.save();
+  if (editor.metadata.pendency.has()) {
+    editor.metadata.alertPendency('publicar');
+  } else {
+    if (!editor.graph.isSaved) {
+      await editor.graph.save();
+    }
 
-  await editor.switchToMode();
+    await editor.switchToMode();
+  }
 };
 
 // const toPDF = () => editor.graph.exportPDF();
