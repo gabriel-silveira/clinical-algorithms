@@ -250,7 +250,7 @@ const validateInterventionAndComparator = (propName: string) => {
       } else {
         editor.metadata.pendency.remove(data, 'comparator');
       }
-    } else {
+    } else if (data.comparator) {
       editor.metadata.pendency.add(data, 'intervention');
     }
   }
@@ -268,7 +268,7 @@ const validateInterventionAndComparator = (propName: string) => {
       } else {
         editor.metadata.pendency.remove(data, 'intervention');
       }
-    } else {
+    } else if (data.intervention) {
       editor.metadata.pendency.add(data, 'comparator');
     }
   }
