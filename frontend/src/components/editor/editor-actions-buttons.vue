@@ -140,7 +140,9 @@ const exitEditor = () => {
 };
 
 const goAlgorithmsPage = () => {
-  if (readOnly.value) {
+  if (editor.metadata.pendency.has()) {
+    editor.metadata.alertPendency();
+  } else if (readOnly.value) {
     exitEditor();
   } else if (editor.graph.isSaved) {
     exitEditor();

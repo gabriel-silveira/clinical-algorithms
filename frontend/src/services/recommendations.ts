@@ -10,6 +10,7 @@ import {
 } from 'src/services/editor/constants/metadata/direction';
 
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
+import { FORMAL_RECOMMENDATION } from 'src/services/editor/constants/metadata/recommendation_type';
 
 export const recommendationArrowsImage = (data: IFixedMetadata) => {
   // STRONG, IN FAVOR
@@ -63,7 +64,11 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
   items += '</div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
-  items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
+  if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
+    items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
+  } else {
+    items += '...';
+  }
   items += '</div>';
 
   items += '<div class="col-4 flex items-center text-caption q-pa-sm">';

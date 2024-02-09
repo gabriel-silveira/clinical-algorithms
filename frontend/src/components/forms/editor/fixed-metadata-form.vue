@@ -62,19 +62,6 @@
               />
 
               <q-select
-                v-model="data.direction"
-                :options="DIRECTIONS"
-                :rules="[val => !!val || 'Informe la dirección.']"
-                ref="refDirection"
-                class="q-my-lg"
-                label="Direction"
-                map-options
-                emit-value
-                dense
-                @update:model-value="setProp('direction')"
-              />
-
-              <q-select
                 v-if="isFormal"
                 v-model="data.strength"
                 :options="STRENGTH"
@@ -86,6 +73,19 @@
                 emit-value
                 dense
                 @update:model-value="setProp('strength')"
+              />
+
+              <q-select
+                v-model="data.direction"
+                :options="DIRECTIONS"
+                :rules="[val => !!val || 'Informe la dirección.']"
+                ref="refDirection"
+                class="q-my-lg"
+                label="Direction"
+                map-options
+                emit-value
+                dense
+                @update:model-value="setProp('direction')"
               />
 
               <q-select
@@ -178,7 +178,12 @@ import MetadataLinksForm from 'components/forms/editor/fixed-metadata-links-form
 import DeleteModal from 'components/modals/simple-modal.vue';
 
 import { BOTH, DIRECTIONS } from 'src/services/editor/constants/metadata/direction';
-import { RECOMMENDATION_TYPES } from 'src/services/editor/constants/metadata/recommendation_type';
+
+import {
+  FORMAL_RECOMMENDATION,
+  RECOMMENDATION_TYPES,
+} from 'src/services/editor/constants/metadata/recommendation_type';
+
 import {
   STRENGTH,
   STRONG_RECOMMENDATION,
@@ -270,42 +275,44 @@ const validateInterventionAndComparator = (propName: string) => {
 };
 
 const validateDirectionAndStrength = (propName?: string) => {
-  if (data.direction && data.strength) {
-    if (
-      data.strength === STRONG_RECOMMENDATION
-      && data.direction === BOTH
-    ) {
-      if (propName === 'strength') {
-        data.direction = '';
+  if (data.recommendation_type === FORMAL_RECOMMENDATION) {
+    if (data.direction && data.strength) {
+      if (
+        data.strength === STRONG_RECOMMENDATION
+        && data.direction === BOTH
+      ) {
+        if (propName === 'strength') {
+          data.direction = '';
 
-        editor.metadata.setMetadataProps(props.index, 'direction', data);
+          editor.metadata.setMetadataProps(props.index, 'direction', data);
 
-        editor.metadata.pendency.add(data, 'direction');
-      } else if (propName === 'direction') {
-        data.strength = '';
+          editor.metadata.pendency.add(data, 'direction');
+        } else if (propName === 'direction') {
+          data.strength = '';
 
-        editor.metadata.setMetadataProps(props.index, 'strength', data);
+          editor.metadata.setMetadataProps(props.index, 'strength', data);
 
-        editor.metadata.pendency.add(data, 'strength');
+          editor.metadata.pendency.add(data, 'strength');
+        }
+      } else if (data.direction) {
+        editor.metadata.pendency.remove(data, 'strength');
+        editor.metadata.pendency.remove(data, 'direction');
       }
-    } else if (data.direction) {
-      editor.metadata.pendency.remove(data, 'strength');
-      editor.metadata.pendency.remove(data, 'direction');
     }
-  }
 
-  if (data.direction && !data.strength) {
-    refStrength.value?.validate();
+    if (data.direction && !data.strength) {
+      refStrength.value?.validate();
 
-    editor.metadata.pendency.remove(data, 'direction');
-    editor.metadata.pendency.add(data, 'strength');
-  }
+      editor.metadata.pendency.remove(data, 'direction');
+      editor.metadata.pendency.add(data, 'strength');
+    }
 
-  if (data.strength && !data.direction) {
-    refDirection.value?.validate();
+    if (data.strength && !data.direction) {
+      refDirection.value?.validate();
 
-    editor.metadata.pendency.remove(data, 'strength');
-    editor.metadata.pendency.add(data, 'direction');
+      editor.metadata.pendency.remove(data, 'strength');
+      editor.metadata.pendency.add(data, 'direction');
+    }
   }
 };
 
