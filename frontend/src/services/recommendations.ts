@@ -5,12 +5,24 @@ import {
 
 import {
   AGAINST_THE_INTERVENTION,
-  BOTH,
   IN_FAVOR_OF_THE_INTERVENTION,
+  BOTH,
 } from 'src/services/editor/constants/metadata/direction';
 
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { FORMAL_RECOMMENDATION } from 'src/services/editor/constants/metadata/recommendation_type';
+
+export const goodPracticeArrowsImage = (data: IFixedMetadata) => {
+  if (data.direction === IN_FAVOR_OF_THE_INTERVENTION) {
+    return 'imgs/recommendation_arrows/in_favor.png';
+  }
+
+  if (data.direction === AGAINST_THE_INTERVENTION) {
+    return 'imgs/recommendation_arrows/against.png';
+  }
+
+  return 'imgs/recommendation_arrows/both.png';
+};
 
 export const recommendationArrowsImage = (data: IFixedMetadata) => {
   // STRONG, IN FAVOR
@@ -67,7 +79,7 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
   if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
     items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
   } else {
-    items += '...';
+    items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
   }
   items += '</div>';
 
