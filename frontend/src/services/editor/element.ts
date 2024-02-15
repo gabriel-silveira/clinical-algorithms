@@ -50,6 +50,7 @@ class Element {
       y: number,
     },
     recommendationsRelationsMap: { [key: dia.Cell.ID]: dia.Cell.ID },
+    wasMoving: boolean,
   } = reactive({
       selectedId: '',
       elementToCreate: '',
@@ -58,6 +59,7 @@ class Element {
         y: 0,
       },
       recommendationsRelationsMap: {},
+      wasMoving: false,
     });
 
   constructor(editor: Editor) {
@@ -361,8 +363,6 @@ class Element {
         // (used for toggle button)
         this.data.recommendationsRelationsMap[originalElementId] = recommendationElementId;
 
-        console.log(`[model-id="${recommendationElementId}"]`);
-
         const domElement = document.querySelector(`[model-id="${recommendationElementId}"]`);
 
         if (domElement) {
@@ -454,6 +454,15 @@ class Element {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         createElement.attr('label/text', `${total}${recommendationAbbreviation[type]}`);
+
+        if (
+          this.editor.metadata.data.pendencyRecommendationTypes[element.id]
+          && this.editor.metadata.data.pendencyRecommendationTypes[element.id].find(
+            (value) => value === type,
+          )
+        ) {
+          createElement.attr('body/fill', '#FF0000');
+        }
       },
     };
   }

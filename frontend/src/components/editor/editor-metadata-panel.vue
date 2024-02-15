@@ -123,7 +123,9 @@ const elementLabel = computed(() => {
   let label = '';
 
   if (recommendation.value?.originalElementId) {
-    const recommendationElement = editor.element.getById(recommendation.value?.originalElementId);
+    const recommendationElement = editor.element.getById(
+      String(recommendation.value?.originalElementId),
+    );
 
     if (recommendationElement) {
       label = editor.element.getLabel(recommendationElement);

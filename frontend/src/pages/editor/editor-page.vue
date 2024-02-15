@@ -34,6 +34,17 @@
       @cancel="exitEditor"
       @confirm="saveGraph"
     />
+
+    <!-- RECOMMENDATION VALIDATION LOG PANEL -->
+    <div
+      v-if="showRecommendationLogPanel"
+      class="absolute-bottom-left q-mx-lg q-pa-md bg-white
+      z-max rounded-borders shadow-light-with-borders"
+      style="margin-bottom: 110px"
+    >
+      <div class="q-pb-md">{{ editor.metadata.data.pendency || 'None' }}</div>
+      <div>{{ editor.metadata.data.pendencyRecommendationTypes }}</div>
+    </div>
   </div>
 </template>
 
@@ -73,6 +84,8 @@ const width = computed(
 
 const readOnly = computed(() => editor.data.readOnly);
 
+const showRecommendationLogPanel = computed(() => window.location.host.includes('192.168.1.68:8080'));
+
 const exitEditor = () => {
   if (route.query.search) {
     return router.push({
@@ -86,10 +99,20 @@ const exitEditor = () => {
   return router.push({ name: ALGORITHMS_INDEX });
 };
 
-const saveGraph = () => {
-  editor.graph.save();
+const toggleSaveDialog = () => {
+  editor.toggleSaveDialog();
+};
 
-  exitEditor();
+const saveGraph = () => {
+  if (editor.metadata.pendency.has()) {
+    editor.metadata.alertPendency('salir');
+
+    editor.toggleSaveDialog();
+  } else {
+    editor.graph.save();
+
+    exitEditor();
+  }
 };
 
 onBeforeMount(async () => {
@@ -109,10 +132,6 @@ onBeforeMount(async () => {
     settings.page.setTitle(editor.data.readOnly ? 'Publicación de algoritmo' : 'Editar algoritmo');
   }
 });
-
-const toggleSaveDialog = () => {
-  editor.toggleSaveDialog();
-};
 
 onBeforeRouteLeave(() => {
   settings.page.mainMenu = true;

@@ -62,26 +62,30 @@
               />
 
               <q-select
-                v-model="data.direction"
-                :options="DIRECTIONS"
-                class="q-my-lg"
-                label="Direction"
-                map-options
-                emit-value
-                dense
-                @update:model-value="setProp('direction')"
-              />
-
-              <q-select
                 v-if="isFormal"
                 v-model="data.strength"
                 :options="STRENGTH"
+                :rules="[val => !!val || 'Informe la fuerza del recomendación.']"
+                ref="refStrength"
                 class="q-my-lg"
                 label="Recommendation strength"
                 map-options
                 emit-value
                 dense
                 @update:model-value="setProp('strength')"
+              />
+
+              <q-select
+                v-model="data.direction"
+                :options="DIRECTIONS"
+                :rules="[val => !!val || 'Informe la dirección.']"
+                ref="refDirection"
+                class="q-my-lg"
+                label="Direction"
+                map-options
+                emit-value
+                dense
+                @update:model-value="setProp('direction')"
               />
 
               <q-select
@@ -163,6 +167,7 @@ import {
   computed,
   onBeforeUnmount,
   onBeforeMount,
+  onMounted,
   reactive,
   inject,
   ref,
@@ -172,15 +177,19 @@ import Editor from 'src/services/editor';
 import MetadataLinksForm from 'components/forms/editor/fixed-metadata-links-form.vue';
 import DeleteModal from 'components/modals/simple-modal.vue';
 
-import { BOTH, DIRECTIONS, IN_FAVOR_OF_THE_INTERVENTION } from 'src/services/editor/constants/metadata/direction';
-import { RECOMMENDATION_TYPES } from 'src/services/editor/constants/metadata/recommendation_type';
+import { BOTH, DIRECTIONS } from 'src/services/editor/constants/metadata/direction';
+
+import {
+  FORMAL_RECOMMENDATION,
+  RECOMMENDATION_TYPES,
+} from 'src/services/editor/constants/metadata/recommendation_type';
+
 import {
   STRENGTH,
-  CONDITIONAL_RECOMMENDATION,
   STRONG_RECOMMENDATION,
 } from 'src/services/editor/constants/metadata/recommendation_strength';
 
-import { QInput } from 'quasar';
+import { QInput, QSelect } from 'quasar';
 
 const editor = inject('editor') as Editor;
 
@@ -195,7 +204,11 @@ const showDeleteBlockDialog = ref(false);
 
 const refIntervention = ref<QInput>();
 const redComparator = ref<QInput>();
-const validationTimeoutId = ref<ReturnType<typeof setTimeout>>(0);
+const refDirection = ref<QSelect>();
+const refStrength = ref<QSelect>();
+
+// we need to set a timeout for each prop (ex: validation[propName] )
+const validation: { [key: string]: ReturnType<typeof setTimeout> } = reactive({});
 
 const data = reactive({
   index: 1,
@@ -221,59 +234,96 @@ const blockName = computed(() => `${props.index}. ${
 
 const isFormal = computed(() => data.recommendation_type === RECOMMENDATION_TYPES[0].value);
 
-const validate = (propName: string) => {
-  clearTimeout(validationTimeoutId.value);
+const validateInterventionAndComparator = (propName: string) => {
+  clearTimeout(validation[propName]);
 
   if (propName === 'intervention') {
-    if (!data.comparator) {
-      validationTimeoutId.value = setTimeout(() => {
-        redComparator.value?.validate();
-      }, 1000);
+    if (data.intervention) {
+      editor.metadata.pendency.remove(data, 'intervention');
+
+      if (!data.comparator) {
+        validation[propName] = setTimeout(() => {
+          redComparator.value?.validate();
+
+          editor.metadata.pendency.add(data, 'comparator');
+        }, 250);
+      } else {
+        editor.metadata.pendency.remove(data, 'comparator');
+      }
+    } else if (data.comparator) {
+      editor.metadata.pendency.add(data, 'intervention');
     }
   }
 
   if (propName === 'comparator') {
-    if (!data.intervention) {
-      validationTimeoutId.value = setTimeout(() => {
-        refIntervention.value?.validate();
-      }, 1000);
+    if (data.comparator) {
+      editor.metadata.pendency.remove(data, 'comparator');
+
+      if (!data.intervention) {
+        validation[propName] = setTimeout(() => {
+          refIntervention.value?.validate();
+
+          editor.metadata.pendency.add(data, 'intervention');
+        }, 250);
+      } else {
+        editor.metadata.pendency.remove(data, 'intervention');
+      }
+    } else if (data.intervention) {
+      editor.metadata.pendency.add(data, 'comparator');
     }
   }
 };
 
-const checkDirectionStrengthRelationship = (value: string) => {
-  if (
-    value === BOTH
-    && data.strength === STRONG_RECOMMENDATION
-  ) {
-    data.strength = CONDITIONAL_RECOMMENDATION;
+const validateDirectionAndStrength = (propName?: string) => {
+  if (data.recommendation_type === FORMAL_RECOMMENDATION) {
+    if (data.direction && data.strength) {
+      if (
+        data.strength === STRONG_RECOMMENDATION
+        && data.direction === BOTH
+      ) {
+        if (propName === 'strength') {
+          data.direction = '';
 
-    editor.metadata.setMetadataProps(props.index, 'strength', data);
-  }
-};
+          editor.metadata.setMetadataProps(props.index, 'direction', data);
 
-const checkStrengthDirectionRelationship = (value: string) => {
-  if (
-    value === STRONG_RECOMMENDATION
-    && data.direction === BOTH
-  ) {
-    data.direction = IN_FAVOR_OF_THE_INTERVENTION;
+          editor.metadata.pendency.add(data, 'direction');
+        } else if (propName === 'direction') {
+          data.strength = '';
 
-    editor.metadata.setMetadataProps(props.index, 'direction', data);
+          editor.metadata.setMetadataProps(props.index, 'strength', data);
+
+          editor.metadata.pendency.add(data, 'strength');
+        }
+      } else if (data.direction) {
+        editor.metadata.pendency.remove(data, 'strength');
+        editor.metadata.pendency.remove(data, 'direction');
+      }
+    }
+
+    if (data.direction && !data.strength) {
+      refStrength.value?.validate();
+
+      editor.metadata.pendency.remove(data, 'direction');
+      editor.metadata.pendency.add(data, 'strength');
+    }
+
+    if (data.strength && !data.direction) {
+      refDirection.value?.validate();
+
+      editor.metadata.pendency.remove(data, 'strength');
+      editor.metadata.pendency.add(data, 'direction');
+    }
   }
 };
 
 const setProp = (propName: string) => {
   editor.metadata.setMetadataProps(props.index, propName, data);
 
-  // strength cant be
-  if (propName === 'direction') {
-    checkDirectionStrengthRelationship(data[propName]);
-  } else if (propName === 'strength') {
-    checkStrengthDirectionRelationship(data[propName]);
-  }
+  validateInterventionAndComparator(propName);
 
-  validate(propName);
+  if (['direction', 'strength'].includes(propName)) {
+    validateDirectionAndStrength(propName);
+  }
 };
 
 const deleteBlock = () => {
@@ -313,7 +363,21 @@ const setInitialValues = () => {
 };
 
 onBeforeMount(() => {
+  editor.metadata.pendency.clear();
+  editor.metadata.pendency.clearRecommendationTypes();
+
   setInitialValues();
+});
+
+onMounted(() => {
+  // check integrity between intervention and comparator
+  validateInterventionAndComparator('intervention');
+  validateInterventionAndComparator('comparator');
+
+  // check integrity between direction and strength
+  // validateDirection(data.direction);
+  // validateStrength(data.strength);
+  validateDirectionAndStrength();
 });
 
 onBeforeUnmount(() => {

@@ -10,6 +10,7 @@ import Graph from 'src/services/editor/graph';
 import Metadata from 'src/services/editor/metadata';
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { ALGORITHMS_EDITOR } from 'src/router/routes/algorithms';
+import { QVueGlobals } from 'quasar';
 
 const graph = new joint.dia.Graph({}, { cellNamespace: customElements });
 
@@ -28,6 +29,8 @@ class Editor {
 
   metadata: Metadata;
 
+  quasar: QVueGlobals;
+
   route: RouteLocationNormalizedLoaded;
 
   router: Router;
@@ -40,14 +43,19 @@ class Editor {
     graph,
   });
 
-  constructor(params: { route: RouteLocationNormalizedLoaded, router: Router }) {
+  constructor(
+    quasar: QVueGlobals,
+    route: RouteLocationNormalizedLoaded,
+    router: Router,
+  ) {
+    this.quasar = quasar;
+    this.route = route;
+    this.router = router;
+
     this.element = new Element(this);
     this.ports = new Ports(this);
     this.graph = new Graph(this);
     this.metadata = new Metadata(this);
-
-    this.route = params.route;
-    this.router = params.router;
   }
 
   public reset() {
@@ -94,6 +102,11 @@ class Editor {
         });
 
         this.data.paper.on('blank:pointerup', (/* elementView */) => {
+          // if (this.metadata.pendency.has()) {
+          //   this.metadata.alertPendency();
+          // } else {
+          //   this.element.deselectAll();
+          // }
           this.element.deselectAll();
         });
 
@@ -112,6 +125,8 @@ class Editor {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.data.graph.on('change:position', (cell: dia.Cell) => {
+          this.element.data.wasMoving = true;
+
           this.graph.notSaved();
 
           deselectAllTexts();
@@ -135,13 +150,21 @@ class Editor {
 
         this.data.paper.on('element:pointerup', (elementView: dia.ElementView) => {
           // do not select lane element if it's in read only mode
-          if (!(this.data.readOnly && elementView.options.model.prop('type') === CustomElement.LANE)) {
+          if (
+            !(
+              this.data.readOnly
+              && elementView.options.model.prop('type') === CustomElement.LANE
+            )
+          ) {
             this.element.select(elementView.options.model.id);
           }
 
-          setTimeout(() => {
+          // redraw recommendations totals after stop moving
+          if (this.element.data.wasMoving) {
             this.element.updateRecommendationsTotals();
-          }, 100);
+
+            this.element.data.wasMoving = false;
+          }
         });
 
         this.data.paper.on('link:snap:connect', () => {

@@ -150,7 +150,11 @@ const goAlgorithmsPage = () => {
 };
 
 const saveGraph = () => {
-  editor.graph.save();
+  if (editor.metadata.pendency.has()) {
+    editor.metadata.alertPendency();
+  } else {
+    editor.graph.save();
+  }
 };
 
 const editGraph = async () => {
@@ -158,9 +162,15 @@ const editGraph = async () => {
 };
 
 const viewPublicGraph = async () => {
-  if (!editor.graph.isSaved) await editor.graph.save();
+  if (editor.metadata.pendency.has()) {
+    editor.metadata.alertPendency('publicar');
+  } else {
+    if (!editor.graph.isSaved) {
+      await editor.graph.save();
+    }
 
-  await editor.switchToMode();
+    await editor.switchToMode();
+  }
 };
 
 // const toPDF = () => editor.graph.exportPDF();

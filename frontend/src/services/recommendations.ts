@@ -5,11 +5,24 @@ import {
 
 import {
   AGAINST_THE_INTERVENTION,
-  BOTH,
   IN_FAVOR_OF_THE_INTERVENTION,
+  BOTH,
 } from 'src/services/editor/constants/metadata/direction';
 
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
+import { FORMAL_RECOMMENDATION } from 'src/services/editor/constants/metadata/recommendation_type';
+
+export const goodPracticeArrowsImage = (data: IFixedMetadata) => {
+  if (data.direction === IN_FAVOR_OF_THE_INTERVENTION) {
+    return 'imgs/recommendation_arrows/in_favor.png';
+  }
+
+  if (data.direction === AGAINST_THE_INTERVENTION) {
+    return 'imgs/recommendation_arrows/against.png';
+  }
+
+  return 'imgs/recommendation_arrows/both.png';
+};
 
 export const recommendationArrowsImage = (data: IFixedMetadata) => {
   // STRONG, IN FAVOR
@@ -63,7 +76,15 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
   items += '</div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
-  items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
+  if (recommendation.recommendation_type) {
+    if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
+      if (recommendation.strength && recommendation.direction) {
+        items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
+      }
+    } else if (recommendation.direction) {
+      items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
+    }
+  }
   items += '</div>';
 
   items += '<div class="col-4 flex items-center text-caption q-pa-sm">';

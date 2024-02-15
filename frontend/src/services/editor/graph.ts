@@ -151,13 +151,13 @@ class Graph {
   public notSaved() {
     this.data.saved = false;
 
-    if (this.data.savingTimeout) {
-      clearTimeout(this.data.savingTimeout);
-    }
-
-    this.data.savingTimeout = setTimeout(() => {
-      void this.save();
-    }, 2000);
+    // if (this.data.savingTimeout) {
+    //   clearTimeout(this.data.savingTimeout);
+    // }
+    //
+    // this.data.savingTimeout = setTimeout(() => {
+    //   void this.save();
+    // }, 2000);
   }
 
   public saved() {
