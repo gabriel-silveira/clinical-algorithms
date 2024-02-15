@@ -76,10 +76,14 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
   items += '</div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
-  if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
-    items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
-  } else {
-    items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
+  if (recommendation.recommendation_type) {
+    if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
+      if (recommendation.strength && recommendation.direction) {
+        items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
+      }
+    } else if (recommendation.direction) {
+      items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
+    }
   }
   items += '</div>';
 

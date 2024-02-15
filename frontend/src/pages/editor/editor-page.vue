@@ -53,7 +53,6 @@ import {
   computed,
   onBeforeMount,
   inject,
-  ref,
 } from 'vue';
 
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
