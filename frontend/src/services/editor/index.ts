@@ -149,8 +149,10 @@ class Editor {
         });
 
         this.data.paper.on('element:pointerup', (elementView: dia.ElementView) => {
-          // do not select lane element if it's in read only mode
-          if (
+          if (elementView.options.model.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
+            this.element.toggleRecommendation(elementView.options.model.id);
+          } else if (
+            // do not select [lane, recommendation_toggler] element if it's in read only mode
             !(
               this.data.readOnly
               && elementView.options.model.prop('type') === CustomElement.LANE

@@ -101,7 +101,7 @@ class Graph {
 
             this.editor.element.createRecommendations();
 
-            this.editor.element.showAllTools();
+            // this.editor.element.showAllTools();
 
             if (this.editor.route.query.node) {
               this.editor.element.select(String(this.editor.route.query.node));
