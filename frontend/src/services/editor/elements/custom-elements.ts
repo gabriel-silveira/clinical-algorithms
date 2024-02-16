@@ -1,6 +1,7 @@
 import * as joint from 'jointjs';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { recommendationArrowsLine } from 'src/services/recommendations';
+import icons from 'src/services/editor/elements/svg_icons';
 
 export enum CustomElement {
   START = 'StartElement',
@@ -8,6 +9,7 @@ export enum CustomElement {
   EVALUATION = 'EvaluationElement',
   RECOMMENDATION = 'RecommendationElement',
   RECOMMENDATION_TOTAL = 'RecommendationTotalElement',
+  RECOMMENDATION_TOGGLER = 'RecommendationTogglerElement',
   END = 'EndElement',
   LINK = 'LinkElement',
   // CARD = 'ElementCardExample',
@@ -22,6 +24,7 @@ export const elementName: {
   [CustomElement.EVALUATION]: 'Evaluation',
   [CustomElement.RECOMMENDATION]: 'Recommendation',
   [CustomElement.RECOMMENDATION_TOTAL]: 'RecommendationTotal',
+  [CustomElement.RECOMMENDATION_TOGGLER]: 'RecommendationToggler',
   [CustomElement.END]: 'End',
   [CustomElement.LINK]: 'Link',
   [CustomElement.LANE]: 'Time',
@@ -122,37 +125,46 @@ const customElements = {
     }],
   }),
 
-  [CustomElement.START]: joint.dia.Element.define(CustomElement.START, {
-    attrs: {
-      body: {
-        width: 'calc(w)',
-        height: 'calc(h)',
-        rx: 25,
-        ry: 25,
-        fill: 'white',
-        stroke: '#21BA45',
-        strokeWidth: 3,
+  [CustomElement.RECOMMENDATION_TOGGLER]: joint.dia.Element.define(
+    CustomElement.RECOMMENDATION_TOGGLER,
+    {
+      attrs: {
+        button: {
+          r: 12,
+          fill: '#DDDDDD',
+          cursor: 'pointer',
+        },
+        icon: {
+          d: icons.plus,
+          fill: '#999999',
+          pointerEvents: 'none',
+          cursor: 'pointer',
+        },
       },
     },
-  }, {
-    markup: [{
-      tagName: 'rect',
-      selector: 'body',
-    }, {
-      tagName: 'text',
-      selector: 'label',
-    }, {
-      tagName: 'path',
-      selector: 'icon',
-    }],
-  }),
+    {
+      markup: [{
+        tagName: 'circle',
+        selector: 'button',
+      }, {
+        tagName: 'path',
+        selector: 'icon',
+      }],
+    },
+  ),
 
   [CustomElement.RECOMMENDATION]: (recommendations: IFixedMetadata[]) => {
     let items = '';
 
     // only the 3 first recommendations
     for (const recommendation of recommendations) {
-      items += `<div class="row bg-white" data-index="${recommendation.index}">${recommendationArrowsLine(recommendation)}</div>`;
+      if (recommendation.intervention && recommendation.comparator) {
+        items += `<div class="row bg-white" data-index="${recommendation.index}">`;
+
+        items += recommendationArrowsLine(recommendation);
+
+        items += '</div>';
+      }
     }
 
     return joint.dia.Element.define(CustomElement.RECOMMENDATION, {
@@ -215,6 +227,31 @@ const customElements = {
       }],
     },
   ),
+
+  [CustomElement.START]: joint.dia.Element.define(CustomElement.START, {
+    attrs: {
+      body: {
+        width: 'calc(w)',
+        height: 'calc(h)',
+        rx: 25,
+        ry: 25,
+        fill: 'white',
+        stroke: '#21BA45',
+        strokeWidth: 3,
+      },
+    },
+  }, {
+    markup: [{
+      tagName: 'rect',
+      selector: 'body',
+    }, {
+      tagName: 'text',
+      selector: 'label',
+    }, {
+      tagName: 'path',
+      selector: 'icon',
+    }],
+  }),
 
   [CustomElement.ACTION]: joint.dia.Element.define(CustomElement.ACTION, {
     attrs: {
