@@ -50,6 +50,7 @@ class Element {
       y: number,
     },
     recommendationsRelationsMap: { [key: dia.Cell.ID]: dia.Cell.ID },
+    recommendationsTogglerRelationsMap: { [key: dia.Cell.ID]: dia.Cell.ID },
     wasMoving: boolean,
   } = reactive({
       selectedId: '',
@@ -59,6 +60,7 @@ class Element {
         y: 0,
       },
       recommendationsRelationsMap: {},
+      recommendationsTogglerRelationsMap: {},
       wasMoving: false,
     });
 
@@ -149,64 +151,24 @@ class Element {
     });
   }
 
-  private createExpandRecommendationsButton(
-    allTools: (joint.elementTools.Button | joint.elementTools.Boundary)[],
-    position: { x: number, y: number },
-    recommendationToggleButtonIndex: number,
-  ) {
-    const recommendationExpandButton = new joint.elementTools.Button({
-      focusOpacity: 0.5,
-      x: position.x,
-      y: position.y,
-      offset: { x: -5, y: -5 },
-      action: (clickEvent) => {
-        const originalElementId = clickEvent.currentTarget.getAttribute('model-id');
+  public toggleRecommendation(togglerButtonId: string) {
+    const togglerButton = this.getById(togglerButtonId);
 
-        const recommendationElementId = this.data.recommendationsRelationsMap[originalElementId];
+    if (togglerButton) {
+      const domElement = document.querySelector(`[model-id="${this.data.recommendationsTogglerRelationsMap[togglerButtonId]}"]`);
 
-        const domElement = document.querySelector(`[model-id="${recommendationElementId}"]`);
+      if (domElement) {
+        if (domElement.getAttribute('display')) {
+          domElement.removeAttribute('display');
 
-        const recommendationToggleButton = document.querySelectorAll(`[model-id="${originalElementId}"]`);
+          togglerButton.attr('icon/d', icons.minus);
+        } else {
+          domElement.setAttribute('display', 'none');
 
-        // path element can be the second or third element...
-        const path = recommendationToggleButton[recommendationToggleButtonIndex].getElementsByTagName('path');
-
-        if (domElement && path && path.length) {
-          if (domElement.getAttribute('display')) {
-            domElement.removeAttribute('display');
-
-            path[0].setAttribute('d', icons.minus);
-          } else {
-            domElement.setAttribute('display', 'none');
-
-            path[0].setAttribute('d', icons.plus);
-          }
+          togglerButton.attr('icon/d', icons.plus);
         }
-      },
-      markup: [
-        {
-          tagName: 'circle',
-          selector: 'button',
-          attributes: {
-            r: 12,
-            fill: '#DDDDDD',
-            cursor: 'pointer',
-          },
-        },
-        {
-          tagName: 'path',
-          selector: 'icon',
-          attributes: {
-            d: icons.plus,
-            fill: '#999999',
-            pointerEvents: 'none',
-            cursor: 'pointer',
-          },
-        },
-      ],
-    });
-
-    allTools.push(recommendationExpandButton);
+      }
+    }
   }
 
   private static createBoundaryTool() {
@@ -238,18 +200,8 @@ class Element {
   private createTools(element: dia.Element, params?: { removeButtons: { x: number, y: number } }) {
     const allTools: (joint.elementTools.Button | joint.elementTools.Boundary)[] = [];
 
-    // tools for public mode
-    if (this.editor.data.readOnly) {
-      const metadata = this.editor.metadata.getFromElement(element);
-
-      if (metadata?.fixed && metadata.fixed.length) {
-        this.createExpandRecommendationsButton(
-          allTools,
-          { ...Element.getExpandRecommendationButtonPosition(element) },
-          1,
-        );
-      }
-    } else { // tools for edit mode
+    // tools for edit mode
+    if (!this.editor.data.readOnly) {
       allTools.push(Element.createBoundaryTool());
 
       const removeButton = this.customRemoveButton(
@@ -335,23 +287,48 @@ class Element {
 
         // deselectAllTexts();
       },
-      Recommendation: async (x: number, y: number, element: dia.Element) => {
-        const metadata = this.editor.metadata.getFromElement(element);
+      RecommendationTogglerButton: (
+        originalElement: dia.Element,
+        recommendationElement: dia.Element,
+      ) => {
+        const { width, height } = originalElement.size();
+        const { x, y } = originalElement.position();
+
+        const togglerElement = new customElements.RecommendationTogglerElement({
+          position: {
+            x: x + width + 23,
+            y: y + height - 8,
+          },
+        }).addTo(this.editor.data.graph);
+
+        this.data.recommendationsTogglerRelationsMap[togglerElement.id] = recommendationElement.id;
+      },
+      Recommendation: async (x: number, y: number, originalElement: dia.Element) => {
+        const metadata = this.editor.metadata.getFromElement(originalElement);
 
         if (metadata && metadata.fixed) {
           const RecommendationElement = customElements.RecommendationElement(metadata.fixed);
 
-          const createdRecommendationElement = new RecommendationElement({
+          const recommendationElement = new RecommendationElement({
             position: {
               x,
               y,
             },
-          }).resize(500, 175).addTo(this.editor.data.graph);
+          }).resize(500, 175);
 
-          // create click event handlers for each recommendation
-          this.create.RecommendationEventHandlers(createdRecommendationElement.id, element.id);
+          this.create.RecommendationTogglerButton(originalElement, recommendationElement);
 
-          createdRecommendationElement.attr('./display', 'none');
+          recommendationElement.attr('./display', 'none');
+
+          setTimeout(() => {
+            recommendationElement.addTo(this.editor.data.graph);
+
+            // create click event handlers for each recommendation
+            this.create.RecommendationEventHandlers(
+              recommendationElement.id,
+              originalElement.id,
+            );
+          }, 100);
         }
       },
       RecommendationEventHandlers: (
@@ -518,11 +495,11 @@ class Element {
       const metadata = this.editor.metadata.getFromElement(element);
 
       if (metadata?.fixed && metadata.fixed.length) {
-        this.createExpandRecommendationsButton(
-          allTools,
-          { ...Element.getExpandRecommendationButtonPosition(element) },
-          showBoundary ? 2 : 1,
-        );
+        // this.createExpandRecommendationsButton(
+        //   allTools,
+        //   { ...Element.getExpandRecommendationButtonPosition(element) },
+        //   showBoundary ? 2 : 1,
+        // );
       }
 
       const toolsView = new joint.dia.ToolsView({
