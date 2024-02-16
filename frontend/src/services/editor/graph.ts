@@ -148,8 +148,8 @@ class Graph {
     }
   }
 
-  public notSaved() {
-    this.data.saved = false;
+  public notSaved(value = false) {
+    this.data.saved = value;
 
     // if (this.data.savingTimeout) {
     //   clearTimeout(this.data.savingTimeout);

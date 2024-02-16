@@ -151,31 +151,24 @@ class Element {
     });
   }
 
-  public toggleRecommendation(originalElementId: string) {
-    console.log(originalElementId);
-    console.log(this.data.recommendationsTogglerRelationsMap[originalElementId]);
-    console.log(this.data.recommendationsTogglerRelationsMap);
+  public toggleRecommendation(togglerButtonId: string) {
+    const togglerButton = this.getById(togglerButtonId);
 
-    const domElement = document.querySelector(`[model-id="${this.data.recommendationsTogglerRelationsMap[originalElementId]}"]`);
-    console.log(domElement);
-    if (domElement) {
-      if (domElement.getAttribute('display')) {
-        domElement.removeAttribute('display');
-      } else {
-        domElement.setAttribute('display', 'none');
+    if (togglerButton) {
+      const domElement = document.querySelector(`[model-id="${this.data.recommendationsTogglerRelationsMap[togglerButtonId]}"]`);
+
+      if (domElement) {
+        if (domElement.getAttribute('display')) {
+          domElement.removeAttribute('display');
+
+          togglerButton.attr('icon/d', icons.minus);
+        } else {
+          domElement.setAttribute('display', 'none');
+
+          togglerButton.attr('icon/d', icons.plus);
+        }
       }
     }
-    // if (domElement && path && path.length) {
-    //   if (domElement.getAttribute('display')) {
-    //     domElement.removeAttribute('display');
-    //
-    //     path[0].setAttribute('d', icons.minus);
-    //   } else {
-    //     domElement.setAttribute('display', 'none');
-    //
-    //     path[0].setAttribute('d', icons.plus);
-    //   }
-    // }
   }
 
   private static createBoundaryTool() {
@@ -207,18 +200,8 @@ class Element {
   private createTools(element: dia.Element, params?: { removeButtons: { x: number, y: number } }) {
     const allTools: (joint.elementTools.Button | joint.elementTools.Boundary)[] = [];
 
-    // tools for public mode
-    if (this.editor.data.readOnly) {
-      // const metadata = this.editor.metadata.getFromElement(element);
-      //
-      // if (metadata?.fixed && metadata.fixed.length) {
-      //   this.createExpandRecommendationsButton(
-      //     allTools,
-      //     { ...Element.getExpandRecommendationButtonPosition(element) },
-      //     1,
-      //   );
-      // }
-    } else { // tools for edit mode
+    // tools for edit mode
+    if (!this.editor.data.readOnly) {
       allTools.push(Element.createBoundaryTool());
 
       const removeButton = this.customRemoveButton(
@@ -310,9 +293,6 @@ class Element {
       ) => {
         const { width, height } = originalElement.size();
         const { x, y } = originalElement.position();
-
-        console.log('Original:', originalElement.id);
-        console.log('Recommendation:', recommendationElement.id);
 
         const togglerElement = new customElements.RecommendationTogglerElement({
           position: {

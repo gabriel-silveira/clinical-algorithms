@@ -60,6 +60,11 @@ class Editor {
 
   public reset() {
     this.graph.data.savingTimeout = null;
+    this.graph.notSaved(true);
+
+    this.element.data.selectedId = '';
+
+    this.data.showSaveDialog = false;
     this.data.graph.clear();
   }
 
