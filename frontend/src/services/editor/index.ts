@@ -192,6 +192,12 @@ class Editor {
           this.graph.notSaved();
         });
 
+        this.data.paper.on('link:mouseover', (linkView) => {
+          if (this.data.readOnly) {
+            Element.removeLinkToolButtons(linkView);
+          }
+        });
+
         resolve(true);
       } catch (error) {
         reject(error);

@@ -704,6 +704,25 @@ class Element {
     }
   }
 
+  static removeLinkToolButtons(linkView: dia.LinkView) {
+    console.log(this);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    linkView.$el[0].getElementsByClassName('link-tools')[0]?.remove();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const markVertexGroups = linkView.$el[0].getElementsByClassName('marker-vertex-group');
+
+    if (markVertexGroups && markVertexGroups.length) {
+      for (const markVertexGroup of markVertexGroups) {
+        markVertexGroup.getElementsByClassName('marker-vertex-remove-area')[0]?.remove();
+        markVertexGroup.getElementsByClassName('marker-vertex-remove')[0]?.remove();
+      }
+    }
+  }
+
   public createRecommendationsTotals(element: dia.Element) {
     if (
       [CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))
