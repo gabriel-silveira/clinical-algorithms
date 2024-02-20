@@ -18,6 +18,7 @@ class LoginData(BaseModel):
 @router.post("/login")
 async def index(login_data: LoginData):
     user = account.login(login_data.username, login_data.password)
+
     if user:
         return {
             "id": user['id'],
