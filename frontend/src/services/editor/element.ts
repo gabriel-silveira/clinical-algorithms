@@ -705,8 +705,6 @@ class Element {
   }
 
   static removeLinkToolButtons(linkView: dia.LinkView) {
-    console.log(this);
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     linkView.$el[0].getElementsByClassName('link-tools')[0]?.remove();

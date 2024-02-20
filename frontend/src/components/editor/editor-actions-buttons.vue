@@ -68,7 +68,7 @@
     />
 
     <q-btn
-      v-if="readOnly && showEditButton"
+      v-if="readOnly && notPublicView && editor.data.isMaintainer"
       :loading="savingGraph"
       label="Editar algoritmo"
       class="float-right"
@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import {
   computed,
-  onBeforeMount,
+  onMounted,
   inject,
   ref,
 } from 'vue';
@@ -111,8 +111,7 @@ const savingGraph = computed(() => editor.graph.data.saving);
 // const exportingPDF = computed(() => editor.graph.data.exportingPDF);
 const lastUpdate = computed(() => editor.graph.lastUpdate);
 const readOnly = computed(() => editor.data.readOnly);
-
-const showEditButton = ref(false);
+const notPublicView = computed(() => route.name !== ALGORITHMS_PUBLIC_EDITOR);
 
 const exitEditor = () => {
   if (route.name === ALGORITHMS_PUBLIC_EDITOR) {
@@ -174,14 +173,6 @@ const viewPublicGraph = async () => {
 };
 
 // const toPDF = () => editor.graph.exportPDF();
-
-onBeforeMount(async () => {
-  if (editor.data.isMaintainer) {
-    showEditButton.value = true;
-  } else {
-    showEditButton.value = route.name !== ALGORITHMS_PUBLIC_EDITOR;
-  }
-});
 </script>
 
 <style lang="sass">

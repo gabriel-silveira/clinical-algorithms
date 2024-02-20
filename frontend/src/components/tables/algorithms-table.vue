@@ -21,9 +21,13 @@
     </template>
 
     <template v-slot:body="props">
-      <q-tr :props="props">
+      <q-tr
+        :props="props"
+        class="cursor-pointer"
+        @click="editFlowchart(props.row.id, publicView ? 'public' : 'edit', publicViewInAdmin)"
+      >
         <q-td :props="props" key="title">
-          <div class="cursor-pointer q-py-sm">
+          <div class="q-py-sm">
             <b>{{ props.row.title }}</b>
           </div>
         </q-td>
@@ -40,43 +44,52 @@
           key="action"
           :props="props"
         >
-          <div
-            v-if="publicView"
+          <q-btn
+            v-if="!publicView"
+            icon="chevron_right"
+            color="primary"
+            flat
+            @click.stop="viewFlowchartData(props.row)"
           >
-            <q-btn
-              class="q-px-md"
-              label="Ver algoritmo"
-              color="primary"
-              no-caps
-              push
-              @click.stop="editFlowchart(props.row.id, 'public')"
-            />
-          </div>
+            <q-tooltip>Ver datos básicos</q-tooltip>
+          </q-btn>
+<!--          <div-->
+<!--            v-if="publicView"-->
+<!--          >-->
+<!--            <q-btn-->
+<!--              class="q-px-md"-->
+<!--              label="Ver algoritmo"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="editFlowchart(props.row.id, 'public')"-->
+<!--            />-->
+<!--          </div>-->
+
+<!--          <div-->
+<!--            v-else-if="!publicViewInAdmin"-->
+<!--          >-->
+<!--            <q-btn-->
+<!--              class="q-px-md"-->
+<!--              label="Ver datos básicos"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="viewFlowchartData(props.row)"-->
+<!--            />-->
+
+<!--            <q-btn-->
+<!--              class="q-px-md q-ml-md"-->
+<!--              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="editFlowchart(props.row.id)"-->
+<!--            />-->
+<!--          </div>-->
 
           <div
-            v-else-if="!publicViewInAdmin"
-          >
-            <q-btn
-              class="q-px-md"
-              label="Ver datos básicos"
-              color="primary"
-              no-caps
-              push
-              @click.stop="viewFlowchartData(props.row)"
-            />
-
-            <q-btn
-              class="q-px-md q-ml-md"
-              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"
-              color="primary"
-              no-caps
-              push
-              @click.stop="editFlowchart(props.row.id)"
-            />
-          </div>
-
-          <div
-            v-else-if="publicViewInAdmin"
+            v-if="publicViewInAdmin"
           >
             <q-btn
               class="q-px-md q-ml-md"
