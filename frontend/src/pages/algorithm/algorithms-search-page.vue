@@ -128,7 +128,9 @@ const clearSearch = () => {
   }
 };
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  await users.get();
+
   if (route.query.keyword) {
     data.initialKeyword = String(route.query.keyword);
   }

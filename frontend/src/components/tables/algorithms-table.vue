@@ -23,19 +23,17 @@
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td :props="props" key="title">
-          <div
-            class="cursor-pointer q-py-sm"
-          >
+          <div class="cursor-pointer q-py-sm">
             <b>{{ props.row.title }}</b>
           </div>
         </q-td>
 
-        <q-td key="version" :props="props">
-          {{ props.row.version }}
-        </q-td>
-
         <q-td key="user_id" :props="props">
           {{ users.getUserName(props.row.user_id) }}
+        </q-td>
+
+        <q-td key="updated_at" :props="props">
+          {{ props.row.updated_at }}
         </q-td>
 
         <q-td
@@ -129,21 +127,21 @@ const columns = [
     align: 'left',
     label: 'Título',
     field: 'title',
-    style: 'width:25%',
-  },
-  {
-    name: 'version',
-    align: 'center',
-    label: 'Versión',
-    field: 'version',
-    style: 'width:100px',
+    style: 'width:40%',
   },
   {
     name: 'user_id',
     align: 'left',
     label: 'Autor',
     field: 'user_id',
-    style: 'width:25%',
+    style: 'width:10%',
+  },
+  {
+    name: 'updated_at',
+    align: 'center',
+    label: 'Última actualización.',
+    field: 'updated_at',
+    style: 'width:10%',
   },
   {
     name: 'action',
