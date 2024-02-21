@@ -81,7 +81,7 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
       if (recommendation.strength && recommendation.direction) {
         items += `<img src="${recommendationArrowsImage(recommendation)}" alt="" />`;
       }
-    } else if (recommendation.direction) {
+    } else if (recommendation.direction && recommendation.direction !== BOTH) {
       items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
     }
   }
