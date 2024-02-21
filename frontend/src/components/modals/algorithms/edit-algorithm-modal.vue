@@ -50,46 +50,49 @@
       </div>
 
       <!-- AUTHOR / VERSION  -->
-      <div class="row">
-        <div class="col-4">
-          <q-input
-            v-if="canEdit"
-            v-model="algorithms.data.algorithm.updated_at"
-            label="Última actualización"
-            maxlength="10"
-            clearable
-            :rules="[val => !!val || 'Introduce la fecha de actualización']"
-            lazy-rules
-          >
-            <template v-slot:append>
-              <q-icon
-                name="event"
-                class="cursor-pointer"
-              >
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                >
-                  <q-date
-                    v-model="algorithms.data.algorithm.updated_at"
-                    :locale="myLocale"
-                    mask="DD/MM/YYYY"
-                  >
-                    <div class="row items-center justify-end">
-                      <q-btn
-                        v-close-popup
-                        label="Concluir"
-                        color="primary"
-                        flat
-                      />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <div v-else>
+      <div
+        v-if="algorithms.data.algorithm.id"
+        class="row"
+      >
+        <div class="col-6">
+<!--          <q-input-->
+<!--            v-if="canEdit"-->
+<!--            v-model="algorithms.data.algorithm.updated_at"-->
+<!--            label="Última actualización"-->
+<!--            maxlength="10"-->
+<!--            clearable-->
+<!--            :rules="[val => !!val || 'Introduce la fecha de actualización']"-->
+<!--            lazy-rules-->
+<!--          >-->
+<!--            <template v-slot:append>-->
+<!--              <q-icon-->
+<!--                name="event"-->
+<!--                class="cursor-pointer"-->
+<!--              >-->
+<!--                <q-popup-proxy-->
+<!--                  cover-->
+<!--                  transition-show="scale"-->
+<!--                  transition-hide="scale"-->
+<!--                >-->
+<!--                  <q-date-->
+<!--                    v-model="algorithms.data.algorithm.updated_at"-->
+<!--                    :locale="myLocale"-->
+<!--                    mask="DD/MM/YYYY"-->
+<!--                  >-->
+<!--                    <div class="row items-center justify-end">-->
+<!--                      <q-btn-->
+<!--                        v-close-popup-->
+<!--                        label="Concluir"-->
+<!--                        color="primary"-->
+<!--                        flat-->
+<!--                      />-->
+<!--                    </div>-->
+<!--                  </q-date>-->
+<!--                </q-popup-proxy>-->
+<!--              </q-icon>-->
+<!--            </template>-->
+<!--          </q-input>-->
+          <div>
             <div class="text-caption text-grey-7">Última actualización:</div>
             <div>{{ algorithms.data.algorithm.updated_at }}</div>
           </div>
@@ -110,7 +113,7 @@
 <!--        </div>-->
 
         <div
-          class="col-3 q-pl-xl"
+          class="col-6 q-pl-xl"
           :class="canEdit ? 'q-mt-sm' : ''"
         >
           <div class="text-caption text-grey-7">Autor:</div>

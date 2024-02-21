@@ -7,12 +7,17 @@ from pymysql import Error
 
 def update_graph(algorithm_graph: AlgorithmGraphSchema):
     try:
+        now = datetime.now()
+
         fields = ["graph", "updated_at"]
-        values = [algorithm_graph.graph, datetime.now()]
+        values = [algorithm_graph.graph, now]
 
         update("graphs", fields, values, "id", algorithm_graph.id)
 
         nodes.map_nodes(algorithm_graph.graph, algorithm_graph.algorithm_id)
+
+        # update algorithm updated_at
+        update("algorithms", ["updated_at"], [now], "id", algorithm_graph.algorithm_id)
 
         return show(algorithm_graph.algorithm_id)
     except Error as e:
