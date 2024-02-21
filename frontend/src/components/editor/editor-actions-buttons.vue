@@ -83,9 +83,7 @@
 <script setup lang="ts">
 import {
   computed,
-  onMounted,
   inject,
-  ref,
 } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
