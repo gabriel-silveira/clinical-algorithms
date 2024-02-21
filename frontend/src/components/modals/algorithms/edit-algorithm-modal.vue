@@ -95,19 +95,19 @@
           </div>
         </div>
 
-        <div class="col-3 q-pl-xl">
-          <q-input
-            v-if="canEdit"
-            v-model="algorithms.data.algorithm.version"
-            label="Versión"
-            :rules="[val => !!val || 'Ingrese la versión']"
-            lazy-rules
-          />
-          <div v-else>
-            <div class="text-caption text-grey-7">Versión:</div>
-            <div>{{ algorithms.data.algorithm.version }}</div>
-          </div>
-        </div>
+<!--        <div class="col-3 q-pl-xl">-->
+<!--          <q-input-->
+<!--            v-if="canEdit"-->
+<!--            v-model="algorithms.data.algorithm.version"-->
+<!--            label="Versión"-->
+<!--            :rules="[val => !!val || 'Ingrese la versión']"-->
+<!--            lazy-rules-->
+<!--          />-->
+<!--          <div v-else>-->
+<!--            <div class="text-caption text-grey-7">Versión:</div>-->
+<!--            <div>{{ algorithms.data.algorithm.version }}</div>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <div
           class="col-3 q-pl-xl"

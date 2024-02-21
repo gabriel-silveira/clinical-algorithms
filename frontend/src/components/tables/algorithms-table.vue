@@ -45,7 +45,7 @@
           :props="props"
         >
           <q-btn
-            v-if="!publicView"
+            v-if="!publicView && !publicViewInAdmin"
             icon="chevron_right"
             color="primary"
             flat
@@ -88,18 +88,18 @@
 <!--            />-->
 <!--          </div>-->
 
-          <div
-            v-if="publicViewInAdmin"
-          >
-            <q-btn
-              class="q-px-md q-ml-md"
-              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"
-              color="primary"
-              no-caps
-              push
-              @click.stop="editFlowchart(props.row.id, 'public', true)"
-            />
-          </div>
+<!--          <div-->
+<!--            v-if="publicViewInAdmin"-->
+<!--          >-->
+<!--            <q-btn-->
+<!--              class="q-px-md q-ml-md"-->
+<!--              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="editFlowchart(props.row.id, 'public', true)"-->
+<!--            />-->
+<!--          </div>-->
         </q-td>
       </q-tr>
     </template>
@@ -200,6 +200,14 @@ const editFlowchart = (
 };
 
 const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartData(flowchart);
+
+const handleClickViewButton = (row: IAlgorithm) => {
+  if (publicViewInAdmin.value) {
+    editFlowchart(row.id, 'public', true);
+  } else {
+    viewFlowchartData(row);
+  }
+};
 
 onBeforeMount(() => {
   algorithms.getAll();

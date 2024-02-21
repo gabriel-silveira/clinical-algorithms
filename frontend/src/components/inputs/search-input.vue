@@ -50,6 +50,7 @@ function emitClear() {
 }
 
 onMounted(() => {
+  console.log('props.value', props.value);
   if (props.value) {
     text.value = props.value;
 

@@ -3,6 +3,7 @@
     <div class="row q-mx-md q-py-sm">
       <div class="col-3">
         <search-input
+          v-if="data.mountSearchInput"
           :value="data.initialKeyword"
           label="Palabra clave para la búsqueda de algoritmos"
           @clear="clearSearch"
@@ -89,11 +90,13 @@ const data: {
   results: IAlgorithmThoroughSearchResult[] | null,
   initialKeyword: string,
   keyword: string,
+  mountSearchInput: boolean,
 } = reactive({
   searching: false,
   results: null,
   initialKeyword: '',
   keyword: '',
+  mountSearchInput: false,
 });
 
 const hasResults = computed(() => {
@@ -140,6 +143,8 @@ onBeforeMount(async () => {
   } else {
     settings.page.setTitle('Publicación de algoritmos (visualización para usuarios finales)');
   }
+
+  data.mountSearchInput = true;
 });
 </script>
 
