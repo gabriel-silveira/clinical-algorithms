@@ -189,7 +189,7 @@ import {
   useQuasar,
 } from 'quasar';
 
-import { myLocale } from 'src/services/locale';
+// import { myLocale } from 'src/services/locale';
 
 import Algorithms from 'src/services/algorithms';
 import EditModal from 'components/modals/edit-modal.vue';

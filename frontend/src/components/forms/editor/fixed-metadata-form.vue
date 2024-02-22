@@ -313,6 +313,14 @@ const validateDirectionAndStrength = (propName?: string) => {
       editor.metadata.pendency.remove(data, 'strength');
       editor.metadata.pendency.add(data, 'direction');
     }
+
+    if (!data.direction && !data.strength) {
+      refStrength.value?.validate();
+      editor.metadata.pendency.add(data, 'strength');
+
+      refDirection.value?.validate();
+      editor.metadata.pendency.add(data, 'direction');
+    }
   }
 };
 
@@ -323,6 +331,22 @@ const setProp = (propName: string) => {
 
   if (['direction', 'strength'].includes(propName)) {
     validateDirectionAndStrength(propName);
+  }
+
+  if (propName === 'recommendation_type') {
+    if (data.recommendation_type === FORMAL_RECOMMENDATION) {
+      console.log('IS FORMAL', data.strength);
+
+      setTimeout(() => {
+        console.log(refStrength.value);
+        refStrength.value?.validate();
+        editor.metadata.pendency.add(data, 'strength');
+        refDirection.value?.validate();
+        editor.metadata.pendency.add(data, 'direction');
+      }, 100);
+    } else {
+      console.log('NOT FORMAL');
+    }
   }
 };
 
@@ -375,8 +399,6 @@ onMounted(() => {
   validateInterventionAndComparator('comparator');
 
   // check integrity between direction and strength
-  // validateDirection(data.direction);
-  // validateStrength(data.strength);
   validateDirectionAndStrength();
 });
 

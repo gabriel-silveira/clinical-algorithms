@@ -114,12 +114,12 @@ import Algorithms, { IAlgorithm } from 'src/services/algorithms';
 import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import Users from 'src/services/users';
 
-const componentProps = defineProps({
-  isMaintainer: {
-    type: Boolean,
-    default: false,
-  },
-});
+// const componentProps = defineProps({
+//   isMaintainer: {
+//     type: Boolean,
+//     default: false,
+//   },
+// });
 
 const settings = inject('settings') as Settings;
 
@@ -200,14 +200,6 @@ const editFlowchart = (
 };
 
 const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartData(flowchart);
-
-const handleClickViewButton = (row: IAlgorithm) => {
-  if (publicViewInAdmin.value) {
-    editFlowchart(row.id, 'public', true);
-  } else {
-    viewFlowchartData(row);
-  }
-};
 
 onBeforeMount(() => {
   algorithms.getAll();
