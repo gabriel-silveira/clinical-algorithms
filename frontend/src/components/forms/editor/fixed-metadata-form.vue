@@ -321,6 +321,16 @@ const validateDirectionAndStrength = (propName?: string) => {
       refDirection.value?.validate();
       editor.metadata.pendency.add(data, 'direction');
     }
+  } else if (
+    // non-formal recommendations must have direction
+    data.recommendation_type
+  ) {
+    if (!data.direction) {
+      refDirection.value?.validate();
+      editor.metadata.pendency.add(data, 'direction');
+    } else {
+      editor.metadata.pendency.remove(data, 'direction');
+    }
   }
 };
 
@@ -334,19 +344,26 @@ const setProp = (propName: string) => {
   }
 
   if (propName === 'recommendation_type') {
-    if (data.recommendation_type === FORMAL_RECOMMENDATION) {
-      console.log('IS FORMAL', data.strength);
+    setTimeout(() => {
+      if (data.recommendation_type === FORMAL_RECOMMENDATION) {
+        if (!data.strength) {
+          refStrength.value?.validate();
+          editor.metadata.pendency.add(data, 'strength');
+        }
 
-      setTimeout(() => {
-        console.log(refStrength.value);
-        refStrength.value?.validate();
-        editor.metadata.pendency.add(data, 'strength');
-        refDirection.value?.validate();
-        editor.metadata.pendency.add(data, 'direction');
-      }, 100);
-    } else {
-      console.log('NOT FORMAL');
-    }
+        if (!data.direction) {
+          refDirection.value?.validate();
+          editor.metadata.pendency.add(data, 'direction');
+        }
+      } else { // non-formal recommendation...
+        if (!data.direction) {
+          refDirection.value?.validate();
+          editor.metadata.pendency.add(data, 'direction');
+        }
+
+        editor.metadata.pendency.remove(data, 'strength');
+      }
+    }, 100);
   }
 };
 
