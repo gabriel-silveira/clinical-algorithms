@@ -10,7 +10,9 @@
 
     <div id="editor-content" class="bg-white overflow-auto">
       <!-- ELEMENTS -->
-      <editor-elements-toolbar v-if="!readOnly" />
+      <editor-elements-toolbar
+        v-if="!readOnly"
+      />
 
       <!-- STAGE -->
       <editor-stage />

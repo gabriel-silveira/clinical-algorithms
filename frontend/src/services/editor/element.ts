@@ -91,7 +91,14 @@ class Element {
   }
 
   public setCreationPosition(x: number, y: number) {
-    this.data.creationPosition = { x, y };
+    const stringX = String(x);
+    const stringY = String(y);
+
+    // ...respecting 10px paper grid
+    const fixedX = x - Number(stringX[stringX.length - 1]);
+    const fixedY = y - Number(stringY[stringY.length - 1]);
+
+    this.data.creationPosition = { x: fixedX, y: fixedY };
   }
 
   private removeSelected() {
