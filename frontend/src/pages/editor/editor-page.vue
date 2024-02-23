@@ -85,7 +85,8 @@ const width = computed(
 const readOnly = computed(() => editor.data.readOnly);
 
 const showRecommendationLogPanel = computed(
-  () => window.location.host.includes('192.168.1.68:8080'),
+  // () => window.location.host.includes('192.168.1.68:8080'),
+  () => window.location.host.includes('000.168.1.68:8080'),
 );
 
 const exitEditor = () => {

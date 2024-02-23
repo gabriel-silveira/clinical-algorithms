@@ -266,7 +266,7 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToStart(),
-        }).resize(50, 50).addTo(this.editor.data.graph);
+        }).resize(40, 40).addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -279,7 +279,7 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToAction(),
-        }).resize(200, 84).addTo(this.editor.data.graph);
+        }).resize(200, 100).addTo(this.editor.data.graph);
 
         this.createTools(element);
 

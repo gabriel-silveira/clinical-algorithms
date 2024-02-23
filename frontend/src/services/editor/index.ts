@@ -86,8 +86,16 @@ class Editor {
           cellViewNamespace: customElements,
           preventDefaultViewAction: false,
 
-          drawGrid: false,
-          gridSize: 2,
+          // drawGrid: true,
+          gridSize: 10,
+          drawGrid: {
+            name: 'mesh',
+            args: {
+              color: '#D8D8D8',
+              thickness: 1,
+            },
+          },
+
           background: {
             color: '#EAEAEA',
           },
