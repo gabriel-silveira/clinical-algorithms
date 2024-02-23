@@ -297,7 +297,7 @@ class Element {
         const togglerElement = new customElements.RecommendationTogglerElement({
           position: {
             x: x + width + 23,
-            y: y + height - 8,
+            y: y + height - 11,
           },
         }).addTo(this.editor.data.graph);
 
@@ -378,7 +378,7 @@ class Element {
             x: this.data.creationPosition.x,
             y: this.data.creationPosition.y,
           },
-        }).addTo(this.editor.data.graph);
+        }).resize(40, 40).addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -694,7 +694,7 @@ class Element {
         if (element.prop('type') === CustomElement.ACTION) {
           const { x, y } = element.position();
 
-          void this.create.Recommendation(x, y + 94, element);
+          void this.create.Recommendation(x, y + 106, element);
         } else if (element.prop('type') === CustomElement.EVALUATION) {
           const { x, y } = element.position();
 

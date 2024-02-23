@@ -233,8 +233,8 @@ const customElements = {
       body: {
         width: 'calc(w)',
         height: 'calc(h)',
-        rx: 25,
-        ry: 25,
+        rx: 20,
+        ry: 20,
         fill: 'white',
         stroke: '#21BA45',
         strokeWidth: 3,
@@ -364,20 +364,29 @@ const customElements = {
   }),
 
   [CustomElement.END]: joint.dia.Element.define(CustomElement.END, {
-    size: {
-      width: 50,
-      height: 50,
-    },
+    // size: {
+    //   width: 40,
+    //   height: 40,
+    // },
     attrs: {
       body: {
-        width: 50,
-        height: 50,
-        rx: 25,
-        ry: 25,
+        width: 'calc(w)',
+        height: 'calc(h)',
+        rx: 20,
+        ry: 20,
         fill: 'white',
         stroke: '#FF0000',
         strokeWidth: 3,
       },
+      // body: {
+      //   width: 40,
+      //   height: 40,
+      //   rx: 25,
+      //   ry: 25,
+      //   fill: 'white',
+      //   stroke: '#FF0000',
+      //   strokeWidth: 3,
+      // },
     },
   }, {
     markup: [{
