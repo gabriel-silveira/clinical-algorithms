@@ -49,6 +49,12 @@
       <router-view />
     </q-page-container>
 
+    <div
+      class="fixed-bottom-left z-max bg-white q-pa-sm app-version shadow-light-with-borders"
+    >
+      Version: {{ appVersion }}
+    </div>
+
     <simple-modal
       :show="showLogoutDialog"
       confirm-label="Salir"
@@ -90,6 +96,7 @@ const isMaster = ref(false);
 const showLogoutDialog = ref(false);
 
 const userName = computed(() => LocalStorage.getItem('user_name'));
+const appVersion = computed(() => process.env.APP_VERSION || 0);
 
 const toggleLeftDrawer = () => {
   settings.page.mainMenu = !settings.page.mainMenu;
@@ -121,3 +128,10 @@ onBeforeMount(async () => {
   isMaster.value = await settings.isMaster();
 });
 </script>
+
+<style lang="sass">
+.app-version
+  -webkit-border-top-right-radius: 8px
+  -moz-border-radius-topright: 8px
+  border-top-right-radius: 8px
+</style>

@@ -4,9 +4,9 @@
       <b>Title:</b> {{ algorithm.title }}
     </div>
 
-    <div class="inline-block q-mr-xl">
-      <b>Version:</b> {{ algorithm.version }}
-    </div>
+<!--    <div class="inline-block q-mr-xl">-->
+<!--      <b>Version:</b> {{ algorithm.version }}-->
+<!--    </div>-->
 
     <div class="inline-block">
       <b class="q-mr-sm">Categories:</b>
