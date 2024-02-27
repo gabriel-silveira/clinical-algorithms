@@ -43,7 +43,7 @@
           class="q-pt-md"
           style="word-break: break-all"
         >
-          <div><b>Description</b></div>
+          <div><b>Original transcription</b></div>
 
           <div>{{ fixedMetadata.description }}</div>
         </div>

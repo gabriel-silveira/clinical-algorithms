@@ -23,7 +23,7 @@
 
               <q-input
                 v-model="data.description"
-                label="Description"
+                label="Original transcription"
                 type="textarea"
                 spellcheck="false"
                 dense
