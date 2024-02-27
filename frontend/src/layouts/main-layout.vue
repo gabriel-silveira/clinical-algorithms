@@ -50,7 +50,7 @@
     </q-page-container>
 
     <div
-      class="fixed-bottom-left z-max bg-white q-pa-sm app-version shadow-light-with-borders"
+      class="fixed-bottom-left bg-white q-pa-sm app-version shadow-light-with-borders"
     >
       Version: {{ appVersion }}
     </div>
@@ -131,7 +131,12 @@ onBeforeMount(async () => {
 
 <style lang="sass">
 .app-version
+  z-index: 1000
+  bottom: 16px
   -webkit-border-top-right-radius: 8px
+  -webkit-border-bottom-right-radius: 8px
   -moz-border-radius-topright: 8px
+  -moz-border-radius-bottomright: 8px
   border-top-right-radius: 8px
+  border-bottom-right-radius: 8px
 </style>
