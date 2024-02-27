@@ -624,7 +624,7 @@ class Element {
           // this.textarea.
         }
       },
-      setValues: (elements: dia.Element[], prefix?: string) => {
+      setValues: (elements: dia.Element[]) => {
         elements.forEach((element) => {
           if (
             this.isAction(element)
@@ -634,9 +634,7 @@ class Element {
             const textarea = this.textarea.getFromEditorElement(element.id);
 
             if (textarea) {
-              if (prefix) textarea.value = `${prefix} - `;
-
-              textarea.value = textarea.value + element.prop('props/label') || '';
+              textarea.value = element.prop('props/label') || '';
             }
           }
 
@@ -850,9 +848,11 @@ class Element {
     if (selectedElement) {
       this.deselectAll();
 
+      const labelPrefix = 'Clone';
+
       const clonedElement = selectedElement.clone();
 
-      clonedElement.prop('props/label', selectedElement.prop('props/label'));
+      clonedElement.prop('props/label', `${labelPrefix} - ${selectedElement.prop('props/label')}`);
 
       clonedElement.translate(40, 40);
 
@@ -861,10 +861,12 @@ class Element {
       this.createTools(clonedElement);
 
       setTimeout(() => {
-        this.editor.element.textarea.setValues([clonedElement], 'Clone');
+        this.editor.element.textarea.setValues([clonedElement]);
+
+        clonedElement.toFront();
 
         this.select(clonedElement.id);
-      }, 200);
+      }, 100);
     }
   }
 }

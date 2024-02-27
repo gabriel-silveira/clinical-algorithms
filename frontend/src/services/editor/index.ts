@@ -261,9 +261,10 @@ class Editor {
     if (
       eventObject.keyCode === 68
       && eventObject.ctrlKey
-      && !this.data.readOnly
     ) {
-      this.element.clone();
+      if (!this.data.readOnly) {
+        this.element.clone();
+      }
 
       eventObject.preventDefault();
     }
