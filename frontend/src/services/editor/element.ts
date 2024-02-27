@@ -624,7 +624,7 @@ class Element {
           // this.textarea.
         }
       },
-      setValues: (elements: dia.Element[]) => {
+      setValues: (elements: dia.Element[], prefix?: string) => {
         elements.forEach((element) => {
           if (
             this.isAction(element)
@@ -634,7 +634,9 @@ class Element {
             const textarea = this.textarea.getFromEditorElement(element.id);
 
             if (textarea) {
-              textarea.value = element.prop('props/label') || '';
+              if (prefix) textarea.value = `${prefix} - `;
+
+              textarea.value = textarea.value + element.prop('props/label') || '';
             }
           }
 
@@ -839,6 +841,30 @@ class Element {
 
         Editor.setScroll({ y: newY, x: newX });
       }
+    }
+  }
+
+  public clone() {
+    const selectedElement = this.getSelected();
+
+    if (selectedElement) {
+      this.deselectAll();
+
+      const clonedElement = selectedElement.clone();
+
+      clonedElement.prop('props/label', selectedElement.prop('props/label'));
+
+      clonedElement.translate(40, 40);
+
+      clonedElement.addTo(this.editor.data.graph);
+
+      this.createTools(clonedElement);
+
+      setTimeout(() => {
+        this.editor.element.textarea.setValues([clonedElement], 'Clone');
+
+        this.select(clonedElement.id);
+      }, 200);
     }
   }
 }

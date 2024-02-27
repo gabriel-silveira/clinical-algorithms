@@ -54,6 +54,7 @@
 import {
   computed,
   onBeforeMount,
+  onMounted,
   inject,
 } from 'vue';
 
@@ -142,6 +143,10 @@ onBeforeRouteLeave(() => {
   settings.page.mainMenu = true;
 
   editor.reset();
+});
+
+onMounted(() => {
+  document.onkeydown = editor.keyPress;
 });
 </script>
 

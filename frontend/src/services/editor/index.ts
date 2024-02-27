@@ -256,6 +256,18 @@ class Editor {
   public setIsMaintainer(value: boolean) {
     this.data.isMaintainer = value;
   }
+
+  public keyPress = (eventObject: KeyboardEvent) => {
+    if (
+      eventObject.keyCode === 68
+      && eventObject.ctrlKey
+      && !this.data.readOnly
+    ) {
+      this.element.clone();
+
+      eventObject.preventDefault();
+    }
+  };
 }
 
 export default Editor;
