@@ -133,20 +133,22 @@ onBeforeMount(async () => {
   ) {
     editor.setIsMaintainer(await settings.isMaintainer());
 
-    await editor.graph.open(id, mode);
+    editor.setReadOnly(mode);
+
+    await editor.graph.open(id);
 
     settings.page.setTitle(editor.data.readOnly ? 'Publicación de algoritmo' : 'Editar algoritmo');
   }
+});
+
+onMounted(() => {
+  document.onkeydown = editor.keyPress;
 });
 
 onBeforeRouteLeave(() => {
   settings.page.mainMenu = true;
 
   editor.reset();
-});
-
-onMounted(() => {
-  document.onkeydown = editor.keyPress;
 });
 </script>
 

@@ -1,5 +1,8 @@
 <template>
-  <div id="editor-stage-wrapper" class="overflow-auto">
+  <div
+    id="editor-stage-wrapper"
+    class="overflow-auto"
+  >
     <div id="editor-stage"></div>
   </div>
 </template>
