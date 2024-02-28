@@ -37,7 +37,7 @@ class Ports {
   }
 
   public static generateToEvaluation() {
-    return Ports.generate(32, 44, EVALUATION_PORT);
+    return Ports.generate(31, 38, EVALUATION_PORT);
   }
 }
 

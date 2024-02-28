@@ -82,11 +82,11 @@ export const EVALUATION_PORT = {
   attrs: {
     body: {
       magnet: true,
-      width: 136,
+      width: 138,
       height: 11,
       x: 0,
       y: 0,
-      fill: '#DABF5E',
+      fill: '#ef7542',
       rx: 5,
       ry: 5,
     },
@@ -269,14 +269,7 @@ const customElements = {
           xmlns="http://www.w3.org/1999/xhtml"
           class="editor-action-element"
         >
-          <div class="element-textarea-container">
-            <!--<input
-              class="${TEXTAREA_CLASSNAME}"
-              placeholder="Acción"
-              contenteditable="true"
-              maxlength="70"
-              spellcheck="false"
-            />-->
+          <div class="editor-action-element-bevel">
             <textarea
               class="${TEXTAREA_CLASSNAME}"
               autocomplete="off"
