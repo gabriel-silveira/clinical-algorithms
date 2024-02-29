@@ -20,6 +20,7 @@ import {
   INFORMAL_RECOMMENDATION,
   GOOD_PRACTICES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
+import { COLOR_PRIMARY } from 'src/services/colors';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -111,7 +112,7 @@ class Element {
     this.editor.graph.notSaved();
   }
 
-  private customRemoveButton(x = 0, y = 0) {
+  private customRemoveButton(x = -10, y = -10) {
     return new joint.elementTools.Button({
       focusOpacity: 0.5,
       // x,
@@ -135,8 +136,8 @@ class Element {
         tagName: 'path',
         selector: 'icon',
         attributes: {
-          d: 'M 2.59 -4 L 0 -1.41 L -2.59 -4 L -4 -2.59 L -1 0 L -4 2.59 L -2.59 4 L 0 1.41 L 2.59 4 L 4 2.59 L 1.41 0 L 4 -2.59 L 2.59 -4 z M 0 -10 C -5.53 -10 -10 -5.53 -10 0 s 4.47 10 10 10 s 10 -4.47 10 -10 S 5.53 -10 0 -10 z m 0 18 c -4.41 0 -8 -3.59 -8 -8 s 3.59 -8 8 -8 s 8 3.59 8 8 s -3.59 8 -8 8 z',
-          fill: 'red',
+          d: 'M 6.1 -3.972 L 4.972 -5.1 L 0.5 -0.628 L -3.972 -5.1 L -5.1 -3.972 L -0.628 0.5 L -5.1 4.972 L -3.972 6.1 L 0.5 1.628 L 4.972 6.1 L 6.1 4.972 L 1.628 0.5 L 6.1 -3.972 z',
+          fill: COLOR_PRIMARY,
           cursor: 'pointer',
         },
       }],

@@ -40,7 +40,7 @@
       v-model="settings.page.mainMenu"
       show-if-above
       bordered
-      class="bg-secondary"
+      class="bg-info"
     >
       <main-menu />
     </q-drawer>
