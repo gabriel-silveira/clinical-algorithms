@@ -2,6 +2,7 @@ import * as joint from 'jointjs';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { recommendationArrowsLine } from 'src/services/recommendations';
 import icons from 'src/services/editor/elements/svg_icons';
+import { COLOR_PRIMARY } from 'src/services/colors';
 
 export enum CustomElement {
   START = 'StartElement',
@@ -131,12 +132,12 @@ const customElements = {
       attrs: {
         button: {
           r: 12,
-          fill: '#DDDDDD',
+          fill: COLOR_PRIMARY,
           cursor: 'pointer',
         },
         icon: {
           d: icons.plus,
-          fill: '#999999',
+          fill: 'white',
           pointerEvents: 'none',
           cursor: 'pointer',
         },

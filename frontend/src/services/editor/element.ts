@@ -303,8 +303,8 @@ class Element {
 
         const togglerElement = new customElements.RecommendationTogglerElement({
           position: {
-            x: x + width + 23,
-            y: y + height - 11,
+            x: x + width + 21,
+            y: y + height - 10,
           },
         }).addTo(this.editor.data.graph);
 
