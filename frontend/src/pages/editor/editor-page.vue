@@ -6,6 +6,10 @@
   >
     <div id="editor-header">
       <editor-stage-header />
+
+      <zooming-bar
+        class="absolute-top-right"
+      />
     </div>
 
     <div id="editor-content" class="bg-white overflow-auto">
@@ -73,6 +77,8 @@ import {
   ALGORITHMS_INDEX,
   ALGORITHMS_SEARCH,
 } from 'src/router/routes/algorithms';
+
+import ZoomingBar from 'components/bar/zooming-bar.vue';
 
 const route = useRoute();
 const router = useRouter();
