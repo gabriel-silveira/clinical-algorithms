@@ -10,7 +10,7 @@ import Graph from 'src/services/editor/graph';
 import Metadata from 'src/services/editor/metadata';
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { ALGORITHMS_EDITOR } from 'src/router/routes/algorithms';
-import { QVueGlobals } from 'quasar';
+import { LocalStorage, QVueGlobals } from 'quasar';
 
 const graph = new joint.dia.Graph({}, { cellNamespace: customElements });
 
@@ -77,7 +77,7 @@ class Editor {
       try {
         this.paperDiv = document.getElementById(elementId) || undefined;
 
-        this.data.paper = new joint.dia.Paper({
+        const options = {
           el: this.paperDiv,
           model: this.data.graph,
           width: 3000,
@@ -86,15 +86,8 @@ class Editor {
           cellViewNamespace: customElements,
           preventDefaultViewAction: false,
 
-          // drawGrid: true,
-          gridSize: 10,
-          drawGrid: {
-            name: 'mesh',
-            args: {
-              color: '#D8D8D8',
-              thickness: 1,
-            },
-          },
+          gridSize: 0,
+          drawGrid: false,
 
           background: {
             color: '#EAEAEA',
@@ -112,7 +105,31 @@ class Editor {
               },
             },
           }),
-        });
+        };
+
+        if (this.data.readOnly) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          options.drawGrid = false;
+
+          options.gridSize = 0;
+
+          options.background.color = '#FFFFFF';
+        } else {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          options.drawGrid = {
+            name: 'mesh',
+            args: {
+              color: '#D8D8D8',
+              thickness: 1,
+            },
+          };
+
+          options.gridSize = 10;
+        }
+
+        this.data.paper = new joint.dia.Paper(options);
 
         this.data.paper.on('blank:pointerup', (/* elementView */) => {
           // if (this.metadata.pendency.has()) {
@@ -222,7 +239,13 @@ class Editor {
   }
 
   public setReadOnly(mode: string) {
-    this.data.readOnly = !this.data.isMaintainer || mode === 'public';
+    const loggedUserId = LocalStorage.getItem('user');
+
+    if (!loggedUserId) {
+      this.data.readOnly = true;
+    } else {
+      this.data.readOnly = !this.data.isMaintainer || mode === 'public';
+    }
   }
 
   public async switchToMode() {

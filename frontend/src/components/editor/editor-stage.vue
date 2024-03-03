@@ -15,7 +15,7 @@ import Editor from 'src/services/editor';
 const editor = inject('editor') as Editor;
 
 onMounted(async () => {
-  await editor.init('editor-stage');
+  // await editor.init('editor-stage');
 });
 </script>
 

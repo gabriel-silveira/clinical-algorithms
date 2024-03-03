@@ -141,13 +141,15 @@ onBeforeMount(async () => {
 
     editor.setReadOnly(mode);
 
+    await editor.init('editor-stage');
+
     await editor.graph.open(id);
 
     settings.page.setTitle(editor.data.readOnly ? 'Publicación de algoritmo' : 'Editar algoritmo');
   }
 });
 
-onMounted(() => {
+onMounted(async () => {
   document.onkeydown = editor.keyPress;
 });
 
