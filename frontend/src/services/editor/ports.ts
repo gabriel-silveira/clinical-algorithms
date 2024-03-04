@@ -29,15 +29,15 @@ class Ports {
   }
 
   public static generateToStart() {
-    return Ports.generate(19, 26, ROUND_PORT);
+    return Ports.generate(14, 20, ROUND_PORT);
   }
 
   public static generateToAction() {
-    return Ports.generate(0, 35, ACTION_PORT);
+    return Ports.generate(0, 40, ACTION_PORT);
   }
 
   public static generateToEvaluation() {
-    return Ports.generate(32, 44, EVALUATION_PORT);
+    return Ports.generate(31, 38, EVALUATION_PORT);
   }
 }
 

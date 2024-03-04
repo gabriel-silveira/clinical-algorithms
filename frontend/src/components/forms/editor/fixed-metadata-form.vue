@@ -23,7 +23,7 @@
 
               <q-input
                 v-model="data.description"
-                label="Description"
+                label="Original transcription"
                 type="textarea"
                 spellcheck="false"
                 dense
@@ -313,6 +313,24 @@ const validateDirectionAndStrength = (propName?: string) => {
       editor.metadata.pendency.remove(data, 'strength');
       editor.metadata.pendency.add(data, 'direction');
     }
+
+    if (!data.direction && !data.strength) {
+      refStrength.value?.validate();
+      editor.metadata.pendency.add(data, 'strength');
+
+      refDirection.value?.validate();
+      editor.metadata.pendency.add(data, 'direction');
+    }
+  } else if (
+    // non-formal recommendations must have direction
+    data.recommendation_type
+  ) {
+    if (!data.direction) {
+      refDirection.value?.validate();
+      editor.metadata.pendency.add(data, 'direction');
+    } else {
+      editor.metadata.pendency.remove(data, 'direction');
+    }
   }
 };
 
@@ -323,6 +341,29 @@ const setProp = (propName: string) => {
 
   if (['direction', 'strength'].includes(propName)) {
     validateDirectionAndStrength(propName);
+  }
+
+  if (propName === 'recommendation_type') {
+    setTimeout(() => {
+      if (data.recommendation_type === FORMAL_RECOMMENDATION) {
+        if (!data.strength) {
+          refStrength.value?.validate();
+          editor.metadata.pendency.add(data, 'strength');
+        }
+
+        if (!data.direction) {
+          refDirection.value?.validate();
+          editor.metadata.pendency.add(data, 'direction');
+        }
+      } else { // non-formal recommendation...
+        if (!data.direction) {
+          refDirection.value?.validate();
+          editor.metadata.pendency.add(data, 'direction');
+        }
+
+        editor.metadata.pendency.remove(data, 'strength');
+      }
+    }, 100);
   }
 };
 
@@ -375,8 +416,6 @@ onMounted(() => {
   validateInterventionAndComparator('comparator');
 
   // check integrity between direction and strength
-  // validateDirection(data.direction);
-  // validateStrength(data.strength);
   validateDirectionAndStrength();
 });
 

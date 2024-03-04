@@ -7,6 +7,9 @@
     :editing="data.editing"
     :hide-delete="!props.isMaintainer || !algorithms.data.algorithm.id"
     :hide-confirm="!props.isMaintainer"
+    edit-icon="edit"
+    delete-icon="delete"
+    :hide-labels="true"
     @delete="showDeleteDialog"
     @edit="setEditing"
     @save="submitFlowchartForm"
@@ -47,67 +50,70 @@
       </div>
 
       <!-- AUTHOR / VERSION  -->
-      <div class="row">
-        <div class="col-4">
-          <q-input
-            v-if="canEdit"
-            v-model="algorithms.data.algorithm.updated_at"
-            label="Última actualización"
-            maxlength="10"
-            clearable
-            :rules="[val => !!val || 'Introduce la fecha de actualización']"
-            lazy-rules
-          >
-            <template v-slot:append>
-              <q-icon
-                name="event"
-                class="cursor-pointer"
-              >
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                >
-                  <q-date
-                    v-model="algorithms.data.algorithm.updated_at"
-                    :locale="myLocale"
-                    mask="DD/MM/YYYY"
-                  >
-                    <div class="row items-center justify-end">
-                      <q-btn
-                        v-close-popup
-                        label="Concluir"
-                        color="primary"
-                        flat
-                      />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <div v-else>
+      <div
+        v-if="algorithms.data.algorithm.id"
+        class="row"
+      >
+        <div class="col-6">
+<!--          <q-input-->
+<!--            v-if="canEdit"-->
+<!--            v-model="algorithms.data.algorithm.updated_at"-->
+<!--            label="Última actualización"-->
+<!--            maxlength="10"-->
+<!--            clearable-->
+<!--            :rules="[val => !!val || 'Introduce la fecha de actualización']"-->
+<!--            lazy-rules-->
+<!--          >-->
+<!--            <template v-slot:append>-->
+<!--              <q-icon-->
+<!--                name="event"-->
+<!--                class="cursor-pointer"-->
+<!--              >-->
+<!--                <q-popup-proxy-->
+<!--                  cover-->
+<!--                  transition-show="scale"-->
+<!--                  transition-hide="scale"-->
+<!--                >-->
+<!--                  <q-date-->
+<!--                    v-model="algorithms.data.algorithm.updated_at"-->
+<!--                    :locale="myLocale"-->
+<!--                    mask="DD/MM/YYYY"-->
+<!--                  >-->
+<!--                    <div class="row items-center justify-end">-->
+<!--                      <q-btn-->
+<!--                        v-close-popup-->
+<!--                        label="Concluir"-->
+<!--                        color="primary"-->
+<!--                        flat-->
+<!--                      />-->
+<!--                    </div>-->
+<!--                  </q-date>-->
+<!--                </q-popup-proxy>-->
+<!--              </q-icon>-->
+<!--            </template>-->
+<!--          </q-input>-->
+          <div>
             <div class="text-caption text-grey-7">Última actualización:</div>
             <div>{{ algorithms.data.algorithm.updated_at }}</div>
           </div>
         </div>
 
-        <div class="col-3 q-pl-xl">
-          <q-input
-            v-if="canEdit"
-            v-model="algorithms.data.algorithm.version"
-            label="Versión"
-            :rules="[val => !!val || 'Ingrese la versión']"
-            lazy-rules
-          />
-          <div v-else>
-            <div class="text-caption text-grey-7">Versión:</div>
-            <div>{{ algorithms.data.algorithm.version }}</div>
-          </div>
-        </div>
+<!--        <div class="col-3 q-pl-xl">-->
+<!--          <q-input-->
+<!--            v-if="canEdit"-->
+<!--            v-model="algorithms.data.algorithm.version"-->
+<!--            label="Versión"-->
+<!--            :rules="[val => !!val || 'Ingrese la versión']"-->
+<!--            lazy-rules-->
+<!--          />-->
+<!--          <div v-else>-->
+<!--            <div class="text-caption text-grey-7">Versión:</div>-->
+<!--            <div>{{ algorithms.data.algorithm.version }}</div>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <div
-          class="col-3 q-pl-xl"
+          class="col-6 q-pl-xl"
           :class="canEdit ? 'q-mt-sm' : ''"
         >
           <div class="text-caption text-grey-7">Autor:</div>
@@ -183,7 +189,7 @@ import {
   useQuasar,
 } from 'quasar';
 
-import { myLocale } from 'src/services/locale';
+// import { myLocale } from 'src/services/locale';
 
 import Algorithms from 'src/services/algorithms';
 import EditModal from 'components/modals/edit-modal.vue';

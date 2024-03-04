@@ -21,74 +21,85 @@
     </template>
 
     <template v-slot:body="props">
-      <q-tr :props="props">
+      <q-tr
+        :props="props"
+        class="cursor-pointer"
+        @click="editFlowchart(props.row.id, publicView ? 'public' : 'edit', publicViewInAdmin)"
+      >
         <q-td :props="props" key="title">
-          <div
-            class="cursor-pointer q-py-sm"
-          >
+          <div class="q-py-sm">
             <b>{{ props.row.title }}</b>
           </div>
-        </q-td>
-
-        <q-td key="version" :props="props">
-          {{ props.row.version }}
         </q-td>
 
         <q-td key="user_id" :props="props">
           {{ users.getUserName(props.row.user_id) }}
         </q-td>
 
+        <q-td key="updated_at" :props="props">
+          {{ props.row.updated_at }}
+        </q-td>
+
         <q-td
           key="action"
           :props="props"
         >
-          <div
-            v-if="publicView"
+          <q-btn
+            v-if="!publicView && !publicViewInAdmin"
+            icon="chevron_right"
+            color="primary"
+            flat
+            @click.stop="viewFlowchartData(props.row)"
           >
-            <q-btn
-              class="q-px-md"
-              label="Ver algoritmo"
-              color="primary"
-              no-caps
-              push
-              @click.stop="editFlowchart(props.row.id, 'public')"
-            />
-          </div>
+            <q-tooltip>Ver datos básicos</q-tooltip>
+          </q-btn>
+<!--          <div-->
+<!--            v-if="publicView"-->
+<!--          >-->
+<!--            <q-btn-->
+<!--              class="q-px-md"-->
+<!--              label="Ver algoritmo"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="editFlowchart(props.row.id, 'public')"-->
+<!--            />-->
+<!--          </div>-->
 
-          <div
-            v-else-if="!publicViewInAdmin"
-          >
-            <q-btn
-              class="q-px-md"
-              label="Ver datos básicos"
-              color="primary"
-              no-caps
-              push
-              @click.stop="viewFlowchartData(props.row)"
-            />
+<!--          <div-->
+<!--            v-else-if="!publicViewInAdmin"-->
+<!--          >-->
+<!--            <q-btn-->
+<!--              class="q-px-md"-->
+<!--              label="Ver datos básicos"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="viewFlowchartData(props.row)"-->
+<!--            />-->
 
-            <q-btn
-              class="q-px-md q-ml-md"
-              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"
-              color="primary"
-              no-caps
-              push
-              @click.stop="editFlowchart(props.row.id)"
-            />
-          </div>
+<!--            <q-btn-->
+<!--              class="q-px-md q-ml-md"-->
+<!--              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="editFlowchart(props.row.id)"-->
+<!--            />-->
+<!--          </div>-->
 
-          <div
-            v-else-if="publicViewInAdmin"
-          >
-            <q-btn
-              class="q-px-md q-ml-md"
-              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"
-              color="primary"
-              no-caps
-              push
-              @click.stop="editFlowchart(props.row.id, 'public', true)"
-            />
-          </div>
+<!--          <div-->
+<!--            v-if="publicViewInAdmin"-->
+<!--          >-->
+<!--            <q-btn-->
+<!--              class="q-px-md q-ml-md"-->
+<!--              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"-->
+<!--              color="primary"-->
+<!--              no-caps-->
+<!--              push-->
+<!--              @click.stop="editFlowchart(props.row.id, 'public', true)"-->
+<!--            />-->
+<!--          </div>-->
         </q-td>
       </q-tr>
     </template>
@@ -103,12 +114,12 @@ import Algorithms, { IAlgorithm } from 'src/services/algorithms';
 import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import Users from 'src/services/users';
 
-const componentProps = defineProps({
-  isMaintainer: {
-    type: Boolean,
-    default: false,
-  },
-});
+// const componentProps = defineProps({
+//   isMaintainer: {
+//     type: Boolean,
+//     default: false,
+//   },
+// });
 
 const settings = inject('settings') as Settings;
 
@@ -129,21 +140,21 @@ const columns = [
     align: 'left',
     label: 'Título',
     field: 'title',
-    style: 'width:25%',
-  },
-  {
-    name: 'version',
-    align: 'center',
-    label: 'Versión',
-    field: 'version',
-    style: 'width:100px',
+    style: 'width:40%',
   },
   {
     name: 'user_id',
     align: 'left',
     label: 'Autor',
     field: 'user_id',
-    style: 'width:25%',
+    style: 'width:10%',
+  },
+  {
+    name: 'updated_at',
+    align: 'center',
+    label: 'Última actualización.',
+    field: 'updated_at',
+    style: 'width:10%',
   },
   {
     name: 'action',

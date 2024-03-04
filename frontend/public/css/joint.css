@@ -263,7 +263,7 @@ Do not allow adding new vertices: .connection-wrap { pointer-events: none; }
 
 /* <circle> element inside .marker-vertex-group <g> element */
 .joint-link.joint-theme-default .marker-vertex {
-    fill: #0099D9;
+    fill: #1998DD;
 }
 .joint-link.joint-theme-default .marker-vertex:hover {
     fill: #FFAA00;
@@ -271,7 +271,7 @@ Do not allow adding new vertices: .connection-wrap { pointer-events: none; }
 }
 
 .joint-link.joint-theme-default .marker-arrowhead {
-    fill: #0099D9;
+    fill: #1998DD;
 }
 .joint-link.joint-theme-default .marker-arrowhead:hover {
     fill: #FFAA00;

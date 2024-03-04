@@ -2,6 +2,7 @@ import pymysql.cursors
 from pymysql import Error
 from typing import List
 from dotenv import dotenv_values
+from datetime import datetime
 
 config = dotenv_values(".env")
 
@@ -59,7 +60,7 @@ def insert(table: str, fields: List[str], values: List[str | int]):
         db_error(e)
 
 
-def update(table: str, fields: List[str], values: List[str | int], key_field: str, key_value: str | int):
+def update(table: str, fields: List[str], values: List[str | int | datetime], key_field: str, key_value: str | int):
     try:
         db = conn()
 

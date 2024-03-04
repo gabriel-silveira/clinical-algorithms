@@ -1,7 +1,6 @@
 from app.services import nodes
 from app.schemas.algorithm import AlgorithmSchema
 from app.schemas.algorithm_category import AlgorithmCategorySchema
-from .data_handler import to_iso_date
 from app.services import graphs
 from app.services.pymsql import insert, update, select, delete, db_error
 from pymysql import Error
@@ -28,7 +27,7 @@ def algorithm_categories(algorithm_id: int):
         db_error(e)
 
 
-def search(keyword: str, category_id = 0, user_id = 0, thorough=False):
+def search(keyword: str, category_id=0, user_id=0, thorough=False):
     try:
         if thorough:
             # return select("SELECT * FROM algorithms WHERE title REGEXP %s", "[[:<:]]"+keyword+"[[:>:]]")
@@ -43,7 +42,6 @@ def search(keyword: str, category_id = 0, user_id = 0, thorough=False):
 
                 return select(query, [category_id])
 
-
             # search by keyword and category
             if keyword and category_id and not user_id:
                 query = """SELECT a.*
@@ -53,7 +51,6 @@ def search(keyword: str, category_id = 0, user_id = 0, thorough=False):
                         AND ac.category_id = %s"""
 
                 return select(query, ["%"+keyword+"%", category_id])
-
 
             # search by category and user
             if not keyword and category_id and user_id:
@@ -65,20 +62,17 @@ def search(keyword: str, category_id = 0, user_id = 0, thorough=False):
 
                 return select(query, [category_id, user_id])
 
-
             # search by keyword and user
             if keyword and not category_id and user_id:
                 query = """SELECT * FROM algorithms WHERE title LIKE %s AND user_id = %s"""
 
                 return select(query, ["%"+keyword+"%", user_id])
 
-
             # search by user only
             if not keyword and not category_id and user_id:
                 query = """SELECT * FROM algorithms WHERE user_id = %s"""
 
                 return select(query, [user_id])
-
 
             # search by keyword, category and user_id
             if keyword and category_id and user_id:
@@ -90,7 +84,6 @@ def search(keyword: str, category_id = 0, user_id = 0, thorough=False):
                         AND a.user_id = %s"""
 
                 return select(query, ["%"+keyword+"%", category_id, user_id])
-
 
             return select("SELECT * FROM algorithms WHERE title LIKE %s", "%"+keyword+"%")
     except Error as e:
@@ -164,7 +157,7 @@ def store(algorithm: AlgorithmSchema):
                 algorithm.title,
                 algorithm.description,
                 algorithm.version,
-                to_iso_date(algorithm.updated_at),
+                datetime.now(),
             ],
         )
 
@@ -216,7 +209,7 @@ def update_algorithm(algorithm: AlgorithmSchema):
             algorithm.title,
             algorithm.description,
             algorithm.version,
-            to_iso_date(algorithm.updated_at),
+            datetime.now(),
         ]
         
         updated_algorithm_id = update("algorithms", fields, values, "id", algorithm.id)

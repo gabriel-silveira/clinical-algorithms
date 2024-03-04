@@ -10,7 +10,7 @@ import Graph from 'src/services/editor/graph';
 import Metadata from 'src/services/editor/metadata';
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { ALGORITHMS_EDITOR } from 'src/router/routes/algorithms';
-import { QVueGlobals } from 'quasar';
+import { LocalStorage, QVueGlobals } from 'quasar';
 
 const graph = new joint.dia.Graph({}, { cellNamespace: customElements });
 
@@ -77,7 +77,7 @@ class Editor {
       try {
         this.paperDiv = document.getElementById(elementId) || undefined;
 
-        this.data.paper = new joint.dia.Paper({
+        const options = {
           el: this.paperDiv,
           model: this.data.graph,
           width: 3000,
@@ -86,8 +86,9 @@ class Editor {
           cellViewNamespace: customElements,
           preventDefaultViewAction: false,
 
+          gridSize: 0,
           drawGrid: false,
-          gridSize: 2,
+
           background: {
             color: '#EAEAEA',
           },
@@ -104,7 +105,31 @@ class Editor {
               },
             },
           }),
-        });
+        };
+
+        if (this.data.readOnly) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          options.drawGrid = false;
+
+          options.gridSize = 0;
+
+          options.background.color = '#FFFFFF';
+        } else {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          options.drawGrid = {
+            name: 'mesh',
+            args: {
+              color: '#D8D8D8',
+              thickness: 1,
+            },
+          };
+
+          options.gridSize = 10;
+        }
+
+        this.data.paper = new joint.dia.Paper(options);
 
         this.data.paper.on('blank:pointerup', (/* elementView */) => {
           // if (this.metadata.pendency.has()) {
@@ -192,6 +217,12 @@ class Editor {
           this.graph.notSaved();
         });
 
+        this.data.paper.on('link:mouseover', (linkView) => {
+          if (this.data.readOnly) {
+            Element.removeLinkToolButtons(linkView);
+          }
+        });
+
         resolve(true);
       } catch (error) {
         reject(error);
@@ -208,7 +239,13 @@ class Editor {
   }
 
   public setReadOnly(mode: string) {
-    this.data.readOnly = !this.data.isMaintainer || mode === 'public';
+    const loggedUserId = LocalStorage.getItem('user');
+
+    if (!loggedUserId) {
+      this.data.readOnly = true;
+    } else {
+      this.data.readOnly = !this.data.isMaintainer || mode === 'public';
+    }
   }
 
   public async switchToMode() {
@@ -242,6 +279,19 @@ class Editor {
   public setIsMaintainer(value: boolean) {
     this.data.isMaintainer = value;
   }
+
+  public keyPress = (eventObject: KeyboardEvent) => {
+    if (
+      eventObject.keyCode === 68
+      && eventObject.ctrlKey
+    ) {
+      if (!this.data.readOnly) {
+        this.element.clone();
+      }
+
+      eventObject.preventDefault();
+    }
+  };
 }
 
 export default Editor;

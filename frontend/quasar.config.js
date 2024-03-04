@@ -17,6 +17,11 @@ const { configure } = require('quasar/wrappers');
 
 require('dotenv').config();
 
+const fs = require('fs');
+
+const packageJson = fs.readFileSync('./package.json');
+const appVersion = JSON.parse(packageJson).version || 0;
+
 module.exports = configure((ctx) => ({
   // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
   supportTS: {
@@ -64,6 +69,7 @@ module.exports = configure((ctx) => ({
 
     env: {
       API_URL: process.env.API_URL,
+      APP_VERSION: appVersion,
     },
 
     // transpile: false,

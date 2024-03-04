@@ -31,23 +31,31 @@
               v-if="!props.hideDelete && !props.editing"
               :loading="props.deleting"
               class="float-right"
-              style="padding: 0 30px"
-              label="Borrar"
+              icon="delete"
               color="negative"
               push
+              flat
               @click="emitEvent('delete', true)"
-            />
+            >
+              <q-tooltip>
+                Borrar
+              </q-tooltip>
+            </q-btn>
 
             <q-btn
               v-if="!props.editing && !hideDelete"
               :loading="props.editing"
               class="float-right q-mr-md"
-              style="padding: 0 30px"
-              label="Editar"
+              icon="edit"
               color="primary"
               push
+              flat
               @click="emitEvent('edit', true)"
-            />
+            >
+              <q-tooltip>
+                Editar
+              </q-tooltip>
+            </q-btn>
 
             <q-btn
               v-else-if="!props.hideConfirm"
@@ -99,6 +107,22 @@ const props = defineProps({
   hideConfirm: {
     type: Boolean,
     default: false,
+  },
+  hideLabels: {
+    type: Boolean,
+    default: false,
+  },
+  editIcon: {
+    type: String,
+    default: '',
+  },
+  deleteIcon: {
+    type: String,
+    default: '',
+  },
+  cancelIcon: {
+    type: String,
+    default: '',
   },
 });
 

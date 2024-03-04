@@ -2,6 +2,7 @@ import * as joint from 'jointjs';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { recommendationArrowsLine } from 'src/services/recommendations';
 import icons from 'src/services/editor/elements/svg_icons';
+import { COLOR_PRIMARY } from 'src/services/colors';
 
 export enum CustomElement {
   START = 'StartElement',
@@ -82,11 +83,11 @@ export const EVALUATION_PORT = {
   attrs: {
     body: {
       magnet: true,
-      width: 136,
+      width: 138,
       height: 11,
       x: 0,
       y: 0,
-      fill: '#DABF5E',
+      fill: '#ef7542',
       rx: 5,
       ry: 5,
     },
@@ -131,12 +132,12 @@ const customElements = {
       attrs: {
         button: {
           r: 12,
-          fill: '#DDDDDD',
+          fill: COLOR_PRIMARY,
           cursor: 'pointer',
         },
         icon: {
           d: icons.plus,
-          fill: '#999999',
+          fill: 'white',
           pointerEvents: 'none',
           cursor: 'pointer',
         },
@@ -233,8 +234,8 @@ const customElements = {
       body: {
         width: 'calc(w)',
         height: 'calc(h)',
-        rx: 25,
-        ry: 25,
+        rx: 20,
+        ry: 20,
         fill: 'white',
         stroke: '#21BA45',
         strokeWidth: 3,
@@ -269,18 +270,11 @@ const customElements = {
           xmlns="http://www.w3.org/1999/xhtml"
           class="editor-action-element"
         >
-          <div class="element-textarea-container">
-            <!--<input
-              class="${TEXTAREA_CLASSNAME}"
-              placeholder="Acción"
-              contenteditable="true"
-              maxlength="70"
-              spellcheck="false"
-            />-->
+          <div class="editor-action-element-bevel">
             <textarea
               class="${TEXTAREA_CLASSNAME}"
               autocomplete="off"
-              placeholder="Ação"
+              placeholder="Acción"
               contenteditable="true"
               maxlength="60"
               spellcheck="false"
@@ -364,20 +358,29 @@ const customElements = {
   }),
 
   [CustomElement.END]: joint.dia.Element.define(CustomElement.END, {
-    size: {
-      width: 50,
-      height: 50,
-    },
+    // size: {
+    //   width: 40,
+    //   height: 40,
+    // },
     attrs: {
       body: {
-        width: 50,
-        height: 50,
-        rx: 25,
-        ry: 25,
+        width: 'calc(w)',
+        height: 'calc(h)',
+        rx: 20,
+        ry: 20,
         fill: 'white',
         stroke: '#FF0000',
         strokeWidth: 3,
       },
+      // body: {
+      //   width: 40,
+      //   height: 40,
+      //   rx: 25,
+      //   ry: 25,
+      //   fill: 'white',
+      //   stroke: '#FF0000',
+      //   strokeWidth: 3,
+      // },
     },
   }, {
     markup: [{

@@ -76,6 +76,7 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
   items += '</div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
+
   if (recommendation.recommendation_type) {
     if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
       if (recommendation.strength && recommendation.direction) {
@@ -85,6 +86,7 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
       items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
     }
   }
+
   items += '</div>';
 
   items += '<div class="col-4 flex items-center text-caption q-pa-sm">';

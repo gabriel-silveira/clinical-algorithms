@@ -20,6 +20,7 @@ import {
   INFORMAL_RECOMMENDATION,
   GOOD_PRACTICES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
+import { COLOR_PRIMARY } from 'src/services/colors';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -91,7 +92,14 @@ class Element {
   }
 
   public setCreationPosition(x: number, y: number) {
-    this.data.creationPosition = { x, y };
+    const stringX = String(x);
+    const stringY = String(y);
+
+    // ...respecting 10px paper grid
+    const fixedX = x - Number(stringX[stringX.length - 1]);
+    const fixedY = y - Number(stringY[stringY.length - 1]);
+
+    this.data.creationPosition = { x: fixedX, y: fixedY };
   }
 
   private removeSelected() {
@@ -104,7 +112,7 @@ class Element {
     this.editor.graph.notSaved();
   }
 
-  private customRemoveButton(x = 0, y = 0) {
+  private customRemoveButton(x = -10, y = -10) {
     return new joint.elementTools.Button({
       focusOpacity: 0.5,
       // x,
@@ -128,8 +136,8 @@ class Element {
         tagName: 'path',
         selector: 'icon',
         attributes: {
-          d: 'M 2.59 -4 L 0 -1.41 L -2.59 -4 L -4 -2.59 L -1 0 L -4 2.59 L -2.59 4 L 0 1.41 L 2.59 4 L 4 2.59 L 1.41 0 L 4 -2.59 L 2.59 -4 z M 0 -10 C -5.53 -10 -10 -5.53 -10 0 s 4.47 10 10 10 s 10 -4.47 10 -10 S 5.53 -10 0 -10 z m 0 18 c -4.41 0 -8 -3.59 -8 -8 s 3.59 -8 8 -8 s 8 3.59 8 8 s -3.59 8 -8 8 z',
-          fill: 'red',
+          d: 'M 6.1 -3.972 L 4.972 -5.1 L 0.5 -0.628 L -3.972 -5.1 L -5.1 -3.972 L -0.628 0.5 L -5.1 4.972 L -3.972 6.1 L 0.5 1.628 L 4.972 6.1 L 6.1 4.972 L 1.628 0.5 L 6.1 -3.972 z',
+          fill: COLOR_PRIMARY,
           cursor: 'pointer',
         },
       }],
@@ -266,7 +274,7 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToStart(),
-        }).resize(50, 50).addTo(this.editor.data.graph);
+        }).resize(40, 40).addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -279,7 +287,7 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToAction(),
-        }).resize(200, 84).addTo(this.editor.data.graph);
+        }).resize(200, 100).addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -296,8 +304,8 @@ class Element {
 
         const togglerElement = new customElements.RecommendationTogglerElement({
           position: {
-            x: x + width + 23,
-            y: y + height - 8,
+            x: x + width + 21,
+            y: y + height - 10,
           },
         }).addTo(this.editor.data.graph);
 
@@ -378,7 +386,7 @@ class Element {
             x: this.data.creationPosition.x,
             y: this.data.creationPosition.y,
           },
-        }).addTo(this.editor.data.graph);
+        }).resize(40, 40).addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -694,12 +702,29 @@ class Element {
         if (element.prop('type') === CustomElement.ACTION) {
           const { x, y } = element.position();
 
-          void this.create.Recommendation(x, y + 94, element);
+          void this.create.Recommendation(x, y + 106, element);
         } else if (element.prop('type') === CustomElement.EVALUATION) {
           const { x, y } = element.position();
 
           void this.create.Recommendation(x + 1, y + 111, element);
         }
+      }
+    }
+  }
+
+  static removeLinkToolButtons(linkView: dia.LinkView) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    linkView.$el[0].getElementsByClassName('link-tools')[0]?.remove();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const markVertexGroups = linkView.$el[0].getElementsByClassName('marker-vertex-group');
+
+    if (markVertexGroups && markVertexGroups.length) {
+      for (const markVertexGroup of markVertexGroups) {
+        markVertexGroup.getElementsByClassName('marker-vertex-remove-area')[0]?.remove();
+        markVertexGroup.getElementsByClassName('marker-vertex-remove')[0]?.remove();
       }
     }
   }
@@ -815,6 +840,34 @@ class Element {
 
         Editor.setScroll({ y: newY, x: newX });
       }
+    }
+  }
+
+  public clone() {
+    const selectedElement = this.getSelected();
+
+    if (selectedElement) {
+      this.deselectAll();
+
+      const labelPrefix = 'Clone';
+
+      const clonedElement = selectedElement.clone();
+
+      clonedElement.prop('props/label', `${labelPrefix} - ${selectedElement.prop('props/label')}`);
+
+      clonedElement.translate(40, 40);
+
+      clonedElement.addTo(this.editor.data.graph);
+
+      this.createTools(clonedElement);
+
+      setTimeout(() => {
+        this.editor.element.textarea.setValues([clonedElement]);
+
+        clonedElement.toFront();
+
+        this.select(clonedElement.id);
+      }, 100);
     }
   }
 }

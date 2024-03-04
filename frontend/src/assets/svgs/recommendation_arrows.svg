@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.6497561"
-     inkscape:cx="396.72531"
-     inkscape:cy="384.60231"
+     inkscape:zoom="1.4107256"
+     inkscape:cx="396.60441"
+     inkscape:cy="433.46488"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="0"
@@ -119,5 +119,15 @@
        id="path19"
        style="fill:#ff0000;fill-opacity:1;stroke:#b10000;stroke-width:1.05833333;stroke-dasharray:none;stroke-opacity:1"
        d="m 60.702371,149.53538 v 4.85064 h 12.035161 v 7.28699 H 60.702371 v 4.85063 l -11.060163,-8.49422 z" />
+    <path
+       id="path20"
+       style="fill:#3465a4;fill-opacity:1;stroke:#254773;stroke-width:1.05833;stroke-dasharray:none;stroke-opacity:1"
+       d="m 60.702368,175.69964 v 4.85064 h 28.939306 v 7.28699 H 60.702368 v 4.85063 l -11.060163,-8.49422 z"
+       sodipodi:nodetypes="cccccccc" />
+    <path
+       id="path21"
+       style="fill:#3465a4;fill-opacity:1;stroke:#254773;stroke-width:1.05833;stroke-dasharray:none;stroke-opacity:1"
+       d="m 149.29763,175.69964 v 4.85064 h -28.93931 v 7.28699 h 28.93931 v 4.85063 l 11.06016,-8.49422 z"
+       sodipodi:nodetypes="cccccccc" />
   </g>
 </svg>

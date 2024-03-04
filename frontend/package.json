@@ -1,6 +1,6 @@
 {
   "name": "paho",
-  "version": "0.0.1",
+  "version": "0.8.0",
   "description": "PAHO flowchart editor.",
   "productName": "PAHO Frontend",
   "author": "Gabriel <gabriel@gabrielsilveira.com.br>",
@@ -19,7 +19,7 @@
     "axios": "^1.2.1",
     "core-js": "^3.6.5",
     "dotenv": "^16.3.1",
-    "jointjs": "^3.7.6",
+    "jointjs": "^3.7.7",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",

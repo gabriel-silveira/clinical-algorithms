@@ -32,14 +32,11 @@
     </div>
 
     <div
-      class="create-element-button cursor-pointer text-center q-mb-md"
-      style="border: 2px solid #09F"
+      class="create-element-button cursor-pointer text-center"
       draggable="true"
       @dragstart="setCreatingElement(CustomElement.ACTION)"
     >
-      <div style="margin-top:8px;color:#09F">
-        <b>Acción</b>
-      </div>
+      <img src="imgs/new_action_element.png" />
     </div>
 
     <div
@@ -47,14 +44,7 @@
       draggable="true"
       @dragstart="setCreatingElement(CustomElement.EVALUATION)"
     >
-      <div
-        class="absolute"
-        style="margin-top:20px;margin-left:30px;color:#caaf4e"
-      >
-        <b>Evaluación</b>
-      </div>
-
-      <img src="../../assets/imgs/elements/action_element.png" />
+      <img src="imgs/new_evaluation_element.png" />
     </div>
 
     <div
