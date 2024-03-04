@@ -337,7 +337,9 @@ const validateDirectionAndStrength = (propName?: string) => {
 const setProp = (propName: string) => {
   editor.metadata.setMetadataProps(props.index, propName, data);
 
-  validateInterventionAndComparator(propName);
+  if (['intervention', 'comparator'].includes(propName)) {
+    validateInterventionAndComparator(propName);
+  }
 
   if (['direction', 'strength'].includes(propName)) {
     validateDirectionAndStrength(propName);
@@ -403,6 +405,15 @@ const setInitialValues = () => {
   }, 500);
 };
 
+const validateAllFields = () => {
+  // check integrity between intervention and comparator
+  validateInterventionAndComparator('intervention');
+  validateInterventionAndComparator('comparator');
+
+  // check integrity between direction and strength
+  validateDirectionAndStrength();
+};
+
 onBeforeMount(() => {
   editor.metadata.pendency.clear();
   editor.metadata.pendency.clearRecommendationTypes();
@@ -411,12 +422,7 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  // check integrity between intervention and comparator
-  validateInterventionAndComparator('intervention');
-  validateInterventionAndComparator('comparator');
-
-  // check integrity between direction and strength
-  validateDirectionAndStrength();
+  validateAllFields();
 });
 
 onBeforeUnmount(() => {

@@ -853,7 +853,7 @@ class Element {
 
       const clonedElement = selectedElement.clone();
 
-      clonedElement.prop('props/label', `${labelPrefix} - ${selectedElement.prop('props/label')}`);
+      clonedElement.prop('props/label', `${labelPrefix} - ${selectedElement.prop('props/label') || ''}`);
 
       clonedElement.translate(40, 40);
 
