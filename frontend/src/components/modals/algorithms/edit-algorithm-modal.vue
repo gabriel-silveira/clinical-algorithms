@@ -55,62 +55,11 @@
         class="row"
       >
         <div class="col-6">
-<!--          <q-input-->
-<!--            v-if="canEdit"-->
-<!--            v-model="algorithms.data.algorithm.updated_at"-->
-<!--            label="Última actualización"-->
-<!--            maxlength="10"-->
-<!--            clearable-->
-<!--            :rules="[val => !!val || 'Introduce la fecha de actualización']"-->
-<!--            lazy-rules-->
-<!--          >-->
-<!--            <template v-slot:append>-->
-<!--              <q-icon-->
-<!--                name="event"-->
-<!--                class="cursor-pointer"-->
-<!--              >-->
-<!--                <q-popup-proxy-->
-<!--                  cover-->
-<!--                  transition-show="scale"-->
-<!--                  transition-hide="scale"-->
-<!--                >-->
-<!--                  <q-date-->
-<!--                    v-model="algorithms.data.algorithm.updated_at"-->
-<!--                    :locale="myLocale"-->
-<!--                    mask="DD/MM/YYYY"-->
-<!--                  >-->
-<!--                    <div class="row items-center justify-end">-->
-<!--                      <q-btn-->
-<!--                        v-close-popup-->
-<!--                        label="Concluir"-->
-<!--                        color="primary"-->
-<!--                        flat-->
-<!--                      />-->
-<!--                    </div>-->
-<!--                  </q-date>-->
-<!--                </q-popup-proxy>-->
-<!--              </q-icon>-->
-<!--            </template>-->
-<!--          </q-input>-->
           <div>
             <div class="text-caption text-grey-7">Última actualización:</div>
-            <div>{{ algorithms.data.algorithm.updated_at }}</div>
+            <div>{{ formatDatetime(algorithms.data.algorithm.updated_at) }}</div>
           </div>
         </div>
-
-<!--        <div class="col-3 q-pl-xl">-->
-<!--          <q-input-->
-<!--            v-if="canEdit"-->
-<!--            v-model="algorithms.data.algorithm.version"-->
-<!--            label="Versión"-->
-<!--            :rules="[val => !!val || 'Ingrese la versión']"-->
-<!--            lazy-rules-->
-<!--          />-->
-<!--          <div v-else>-->
-<!--            <div class="text-caption text-grey-7">Versión:</div>-->
-<!--            <div>{{ algorithms.data.algorithm.version }}</div>-->
-<!--          </div>-->
-<!--        </div>-->
 
         <div
           class="col-6 q-pl-xl"
@@ -196,6 +145,7 @@ import EditModal from 'components/modals/edit-modal.vue';
 import DeleteModal from 'components/modals/simple-modal.vue';
 import AlgorithmsCategories from 'src/services/algorithms-categories';
 import Users from 'src/services/users';
+import { formatDatetime } from 'src/services/date';
 
 const props = defineProps({
   isMaintainer: {

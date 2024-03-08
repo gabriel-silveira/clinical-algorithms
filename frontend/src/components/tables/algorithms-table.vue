@@ -37,7 +37,7 @@
         </q-td>
 
         <q-td key="updated_at" :props="props">
-          {{ props.row.updated_at }}
+          {{ formatDatetime(props.row.updated_at) }}
         </q-td>
 
         <q-td
@@ -53,53 +53,6 @@
           >
             <q-tooltip>Ver datos básicos</q-tooltip>
           </q-btn>
-<!--          <div-->
-<!--            v-if="publicView"-->
-<!--          >-->
-<!--            <q-btn-->
-<!--              class="q-px-md"-->
-<!--              label="Ver algoritmo"-->
-<!--              color="primary"-->
-<!--              no-caps-->
-<!--              push-->
-<!--              @click.stop="editFlowchart(props.row.id, 'public')"-->
-<!--            />-->
-<!--          </div>-->
-
-<!--          <div-->
-<!--            v-else-if="!publicViewInAdmin"-->
-<!--          >-->
-<!--            <q-btn-->
-<!--              class="q-px-md"-->
-<!--              label="Ver datos básicos"-->
-<!--              color="primary"-->
-<!--              no-caps-->
-<!--              push-->
-<!--              @click.stop="viewFlowchartData(props.row)"-->
-<!--            />-->
-
-<!--            <q-btn-->
-<!--              class="q-px-md q-ml-md"-->
-<!--              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"-->
-<!--              color="primary"-->
-<!--              no-caps-->
-<!--              push-->
-<!--              @click.stop="editFlowchart(props.row.id)"-->
-<!--            />-->
-<!--          </div>-->
-
-<!--          <div-->
-<!--            v-if="publicViewInAdmin"-->
-<!--          >-->
-<!--            <q-btn-->
-<!--              class="q-px-md q-ml-md"-->
-<!--              :label="componentProps.isMaintainer ? 'Editar algoritmo' : 'Ver algoritmo'"-->
-<!--              color="primary"-->
-<!--              no-caps-->
-<!--              push-->
-<!--              @click.stop="editFlowchart(props.row.id, 'public', true)"-->
-<!--            />-->
-<!--          </div>-->
         </q-td>
       </q-tr>
     </template>
@@ -113,6 +66,7 @@ import Settings from 'src/services/settings';
 import Algorithms, { IAlgorithm } from 'src/services/algorithms';
 import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import Users from 'src/services/users';
+import { formatDatetime } from 'src/services/date';
 
 // const componentProps = defineProps({
 //   isMaintainer: {

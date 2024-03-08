@@ -179,7 +179,7 @@ class Algorithms {
     this.data.algorithm = { ...flowchart };
 
     // convert to brazilian date (DD/MM/YYYY)
-    this.data.algorithm.updated_at = date.toBR(flowchart.updated_at);
+    // this.data.algorithm.updated_at = date.toBR(flowchart.updated_at);
 
     await this.toggleEditDialog();
   }
