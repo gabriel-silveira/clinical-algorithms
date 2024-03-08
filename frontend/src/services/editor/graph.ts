@@ -78,7 +78,7 @@ class Graph {
         const graphJson = JSON.parse(data.graph);
 
         if (graphJson) {
-          this.editor.data.graph.fromJSON(JSON.parse(data.graph));
+          this.editor.data.graph.fromJSON(graphJson);
 
           const allElements = this.editor.data.graph.getElements();
 

@@ -2,6 +2,7 @@ import Editor from 'src/services/editor/index';
 import { dia } from 'jointjs';
 import { reactive } from 'vue';
 import { IFixedMetadata, IFixedMetadataLink } from 'src/services/editor/constants/metadata';
+import { FORMAL_RECOMMENDATION, GOOD_PRACTICES, INFORMAL_RECOMMENDATION } from './constants/metadata/recommendation_type';
 
 class Metadata {
   editor: Editor;
@@ -494,7 +495,15 @@ class Metadata {
     // @ts-ignore
     await this.editor.element.setProp(`metadata/fixed/${index - 1}/${propName}`, data[propName]);
 
-    if (propName === 'recommendation_type') {
+    if (
+      [
+        'recommendation_type',
+        'strength',
+        'direction',
+        'intervention',
+        'comparator',
+      ].includes(propName)
+    ) {
       setTimeout(() => {
         this.editor.element.updateRecommendationsTotals();
 
@@ -510,6 +519,54 @@ class Metadata {
       type: 'negative',
       message: `Resuelva los problemas pendientes antes de ${verb}.`,
     });
+  }
+
+  static hasFormalRecommendationPendency(fixedMetadata: IFixedMetadata) {
+    if (
+      (fixedMetadata.intervention && !fixedMetadata.comparator)
+      || (!fixedMetadata.intervention && fixedMetadata.comparator)
+    ) {
+      return true;
+    }
+
+    return !fixedMetadata.strength || !fixedMetadata.direction;
+  }
+
+  static hasOtherTypePendency(fixedMetadata: IFixedMetadata) {
+    return !fixedMetadata.direction;
+  }
+
+  public hasTypePendency(element: dia.Element, type: string) {
+    const metadata = this.getFromElement(element);
+
+    if (metadata && metadata.fixed && metadata.fixed.length) {
+      for (const fixedMetadata of metadata.fixed) {
+        if (
+          type === FORMAL_RECOMMENDATION
+          && fixedMetadata.recommendation_type === FORMAL_RECOMMENDATION
+        ) {
+          if (Metadata.hasFormalRecommendationPendency(fixedMetadata)) {
+            return true;
+          }
+        } else if (
+          type === INFORMAL_RECOMMENDATION
+          && fixedMetadata.recommendation_type === INFORMAL_RECOMMENDATION
+        ) {
+          if (Metadata.hasOtherTypePendency(fixedMetadata)) {
+            return true;
+          }
+        } else if (
+          type === GOOD_PRACTICES
+          && fixedMetadata.recommendation_type === GOOD_PRACTICES
+        ) {
+          if (Metadata.hasOtherTypePendency(fixedMetadata)) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 }
 

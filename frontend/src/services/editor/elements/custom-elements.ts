@@ -96,6 +96,51 @@ export const EVALUATION_PORT = {
 
 export const TEXTAREA_CLASSNAME = 'element-textarea-input';
 
+const getRecommendationTotalAttributes = () => ({
+  attrs: {
+    body: {
+      width: 'calc(w)',
+      height: 'calc(h)',
+      strokeWidth: 0,
+      fill: '#445566',
+      rx: 2,
+      ry: 2,
+    },
+    label: {
+      textVerticalAnchor: 'middle',
+      textAnchor: 'middle',
+      x: 'calc(0.5*w)',
+      y: 'calc(0.55*h)',
+      fontSize: 12,
+      fontFamily: 'Courier New, sans-serif',
+      fill: 'white',
+      text: '1RF',
+    },
+  },
+});
+
+export const RecommendationTotalConstructor = (hasPendency: boolean) => {
+  const params = { ...getRecommendationTotalAttributes() };
+
+  params.attrs.body.fill = hasPendency ? '#FF0000' : params.attrs.body.fill;
+
+  return joint.dia.Element.define(
+    CustomElement.RECOMMENDATION_TOTAL,
+    {
+      ...params,
+    },
+    {
+      markup: [{
+        tagName: 'rect',
+        selector: 'body',
+      }, {
+        tagName: 'text',
+        selector: 'label',
+      }],
+    },
+  );
+};
+
 const customElements = {
   [CustomElement.LINK]: joint.dia.Link.define(CustomElement.LINK, {
     connector: { name: 'rounded' },
@@ -196,27 +241,7 @@ const customElements = {
   [CustomElement.RECOMMENDATION_TOTAL]: joint.dia.Element.define(
     CustomElement.RECOMMENDATION_TOTAL,
     {
-      attrs: {
-        body: {
-          width: 'calc(w)',
-          height: 'calc(h)',
-          strokeWidth: 0,
-          // stroke: '#000000',
-          fill: '#445566',
-          rx: 2,
-          ry: 2,
-        },
-        label: {
-          textVerticalAnchor: 'middle',
-          textAnchor: 'middle',
-          x: 'calc(0.5*w)',
-          y: 'calc(0.55*h)',
-          fontSize: 12,
-          fontFamily: 'Courier New, sans-serif',
-          fill: 'white',
-          text: '1RF',
-        },
-      },
+      ...getRecommendationTotalAttributes(),
     },
     {
       markup: [{

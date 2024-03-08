@@ -238,38 +238,14 @@ const validateInterventionAndComparator = (propName: string) => {
   clearTimeout(validation[propName]);
 
   if (propName === 'intervention') {
-    if (data.intervention) {
-      editor.metadata.pendency.remove(data, 'intervention');
-
-      if (!data.comparator) {
-        validation[propName] = setTimeout(() => {
-          redComparator.value?.validate();
-
-          editor.metadata.pendency.add(data, 'comparator');
-        }, 250);
-      } else {
-        editor.metadata.pendency.remove(data, 'comparator');
-      }
-    } else if (data.comparator) {
-      editor.metadata.pendency.add(data, 'intervention');
+    if (data.intervention && !data.comparator) {
+      redComparator.value?.validate();
     }
   }
 
   if (propName === 'comparator') {
-    if (data.comparator) {
-      editor.metadata.pendency.remove(data, 'comparator');
-
-      if (!data.intervention) {
-        validation[propName] = setTimeout(() => {
-          refIntervention.value?.validate();
-
-          editor.metadata.pendency.add(data, 'intervention');
-        }, 250);
-      } else {
-        editor.metadata.pendency.remove(data, 'intervention');
-      }
-    } else if (data.intervention) {
-      editor.metadata.pendency.add(data, 'comparator');
+    if (data.comparator && !data.intervention) {
+      refIntervention.value?.validate();
     }
   }
 };
@@ -285,41 +261,26 @@ const validateDirectionAndStrength = (propName?: string) => {
           data.direction = '';
 
           editor.metadata.setMetadataProps(props.index, 'direction', data);
-
-          editor.metadata.pendency.add(data, 'direction');
         } else if (propName === 'direction') {
           data.strength = '';
 
           editor.metadata.setMetadataProps(props.index, 'strength', data);
-
-          editor.metadata.pendency.add(data, 'strength');
         }
-      } else if (data.direction) {
-        editor.metadata.pendency.remove(data, 'strength');
-        editor.metadata.pendency.remove(data, 'direction');
       }
     }
 
     if (data.direction && !data.strength) {
       refStrength.value?.validate();
-
-      editor.metadata.pendency.remove(data, 'direction');
-      editor.metadata.pendency.add(data, 'strength');
     }
 
     if (data.strength && !data.direction) {
       refDirection.value?.validate();
-
-      editor.metadata.pendency.remove(data, 'strength');
-      editor.metadata.pendency.add(data, 'direction');
     }
 
     if (!data.direction && !data.strength) {
       refStrength.value?.validate();
-      editor.metadata.pendency.add(data, 'strength');
 
       refDirection.value?.validate();
-      editor.metadata.pendency.add(data, 'direction');
     }
   } else if (
     // non-formal recommendations must have direction
@@ -327,16 +288,11 @@ const validateDirectionAndStrength = (propName?: string) => {
   ) {
     if (!data.direction) {
       refDirection.value?.validate();
-      editor.metadata.pendency.add(data, 'direction');
-    } else {
-      editor.metadata.pendency.remove(data, 'direction');
     }
   }
 };
 
 const setProp = (propName: string) => {
-  editor.metadata.setMetadataProps(props.index, propName, data);
-
   if (['intervention', 'comparator'].includes(propName)) {
     validateInterventionAndComparator(propName);
   }
@@ -346,27 +302,20 @@ const setProp = (propName: string) => {
   }
 
   if (propName === 'recommendation_type') {
-    setTimeout(() => {
-      if (data.recommendation_type === FORMAL_RECOMMENDATION) {
-        if (!data.strength) {
-          refStrength.value?.validate();
-          editor.metadata.pendency.add(data, 'strength');
-        }
-
-        if (!data.direction) {
-          refDirection.value?.validate();
-          editor.metadata.pendency.add(data, 'direction');
-        }
-      } else { // non-formal recommendation...
-        if (!data.direction) {
-          refDirection.value?.validate();
-          editor.metadata.pendency.add(data, 'direction');
-        }
-
-        editor.metadata.pendency.remove(data, 'strength');
+    if (data.recommendation_type === FORMAL_RECOMMENDATION) {
+      if (!data.strength) {
+        refStrength.value?.validate();
       }
-    }, 100);
+
+      if (!data.direction) {
+        refDirection.value?.validate();
+      }
+    } else if (!data.direction) {
+      refDirection.value?.validate();
+    }
   }
+
+  editor.metadata.setMetadataProps(props.index, propName, data);
 };
 
 const deleteBlock = () => {
@@ -415,8 +364,8 @@ const validateAllFields = () => {
 };
 
 onBeforeMount(() => {
-  editor.metadata.pendency.clear();
-  editor.metadata.pendency.clearRecommendationTypes();
+  // editor.metadata.pendency.clear();
+  // editor.metadata.pendency.clearRecommendationTypes();
 
   setInitialValues();
 });

@@ -7,6 +7,7 @@ import Ports from 'src/services/editor/ports';
 import customElements, {
   CustomElement,
   elementName,
+  RecommendationTotalConstructor,
   TEXTAREA_CLASSNAME,
 } from 'src/services/editor/elements/custom-elements';
 
@@ -414,9 +415,11 @@ class Element {
       RecommendationTotal: async (
         element: dia.Element,
         type: string,
-        total: number,
+        totalRecommendations: number,
         refY: number,
       ) => {
+        const hasPendency = this.editor.metadata.hasTypePendency(element, type);
+
         const recommendationAbbreviation = {
           [FORMAL_RECOMMENDATION]: 'RF',
           [INFORMAL_RECOMMENDATION]: 'RI',
@@ -427,7 +430,9 @@ class Element {
 
         const { width } = element.size();
 
-        const createElement = new customElements.RecommendationTotalElement({
+        const RTEConstructor = RecommendationTotalConstructor(hasPendency);
+
+        const createElement = new RTEConstructor({
           position: {
             x: x + width + 9,
             y: y + refY,
@@ -438,16 +443,7 @@ class Element {
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        createElement.attr('label/text', `${total}${recommendationAbbreviation[type]}`);
-
-        if (
-          this.editor.metadata.data.pendencyRecommendationTypes[element.id]
-          && this.editor.metadata.data.pendencyRecommendationTypes[element.id].find(
-            (value) => value === type,
-          )
-        ) {
-          createElement.attr('body/fill', '#FF0000');
-        }
+        createElement.attr('label/text', `${totalRecommendations}${recommendationAbbreviation[type]}`);
       },
     };
   }
@@ -729,39 +725,44 @@ class Element {
     }
   }
 
-  public createRecommendationsTotals(element: dia.Element) {
-    if (
-      [CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))
-    ) {
-      const totals: { [key: string]: number } = {};
+  public createRecommendationsTotals(element?: dia.Element) {
+    const currentElement = element || this.getSelected();
 
-      const metadata = this.editor.metadata.getFromElement(element);
+    if (currentElement) {
+      if (
+        [CustomElement.ACTION, CustomElement.EVALUATION].includes(currentElement.prop('type'))
+      ) {
+        const totals: { [key: string]: number } = {};
 
-      if (metadata && metadata.fixed.length) {
-        for (const fixedMetadata of metadata.fixed) {
-          if (fixedMetadata) {
-            if (!totals[fixedMetadata.recommendation_type]) {
-              totals[fixedMetadata.recommendation_type] = 1;
-            } else {
-              totals[fixedMetadata.recommendation_type] += 1;
+        const metadata = this.editor.metadata.getFromElement(element);
+
+        if (metadata && metadata.fixed.length) {
+          for (const fixedMetadata of metadata.fixed) {
+            if (fixedMetadata) {
+              if (!totals[fixedMetadata.recommendation_type]) {
+                totals[fixedMetadata.recommendation_type] = 1;
+              } else {
+                totals[fixedMetadata.recommendation_type] += 1;
+              }
             }
           }
-        }
 
-        if (Object.keys(totals).length) {
-          let y = 2;
+          if (Object.keys(totals).length) {
+            let y = 2;
 
-          const recommendationsTypes = [
-            FORMAL_RECOMMENDATION,
-            INFORMAL_RECOMMENDATION,
-            GOOD_PRACTICES,
-          ];
+            const recommendationsTypes = [
+              FORMAL_RECOMMENDATION,
+              INFORMAL_RECOMMENDATION,
+              GOOD_PRACTICES,
+            ];
 
-          for (const type of recommendationsTypes) {
-            if (totals[type]) {
-              void this.create.RecommendationTotal(element, type, totals[type], y);
+            for (const type of recommendationsTypes) {
+              if (totals[type]) {
+                console.log(type, totals[type]);
+                void this.create.RecommendationTotal(currentElement, type, totals[type], y);
 
-              y += 20;
+                y += 20;
+              }
             }
           }
         }
