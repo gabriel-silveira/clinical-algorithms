@@ -1,8 +1,17 @@
-import Editor from 'src/services/editor/index';
 import { dia } from 'jointjs';
 import { reactive } from 'vue';
+
+import Editor from 'src/services/editor/index';
 import { IFixedMetadata, IFixedMetadataLink } from 'src/services/editor/constants/metadata';
-import { FORMAL_RECOMMENDATION, GOOD_PRACTICES, INFORMAL_RECOMMENDATION } from './constants/metadata/recommendation_type';
+
+import { CustomElement } from 'src/services/editor/elements/custom-elements';
+
+import {
+  FORMAL_RECOMMENDATION,
+  GOOD_PRACTICES,
+  INFORMAL_RECOMMENDATION,
+  RECOMMENDATION_TYPES,
+} from './constants/metadata/recommendation_type';
 
 class Metadata {
   editor: Editor;
@@ -17,8 +26,7 @@ class Metadata {
       originalElementId: dia.Cell.ID,
       data: IFixedMetadata,
     } | null,
-    pendency: string[] | null,
-    pendencyRecommendationTypes: { [key: string]: string[] },
+    hasPendency: boolean,
   } = reactive({
       mountingComponent: true,
       loadingBlocks: false,
@@ -26,15 +34,14 @@ class Metadata {
       totalLinks: {},
       showPanel: false,
       recommendationToShow: null,
-      pendency: null,
-      pendencyRecommendationTypes: {},
+      hasPendency: false,
     });
 
   constructor(editor: Editor) {
     this.editor = editor;
   }
 
-  get pendency() {
+  /* get pendency() {
     const selectedElement = this.editor.element.getSelected();
 
     return {
@@ -109,7 +116,7 @@ class Metadata {
         }
       },
     };
-  }
+  } */
 
   public clearMetadata() {
     this.data.mountingComponent = true;
@@ -481,7 +488,7 @@ class Metadata {
     }
   }
 
-  public async setMetadataProps(index: number, propName: string, data: IFixedMetadata) {
+  public async setMetadata(index: number, propName: string, data: IFixedMetadata) {
     const metadata = this.getFromElement();
 
     // create metadata block if it doesn't exist
@@ -536,6 +543,14 @@ class Metadata {
     return !fixedMetadata.direction;
   }
 
+  public createPendency() {
+    this.data.hasPendency = true;
+  }
+
+  public clearPendency() {
+    this.data.hasPendency = false;
+  }
+
   public hasTypePendency(element: dia.Element, type: string) {
     const metadata = this.getFromElement(element);
 
@@ -561,6 +576,24 @@ class Metadata {
         ) {
           if (Metadata.hasOtherTypePendency(fixedMetadata)) {
             return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  public hasPendency() {
+    const allElements = this.editor.element.getAll();
+
+    if (allElements && allElements.length) {
+      for (const element of allElements) {
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))) {
+          for (const { value } of RECOMMENDATION_TYPES) {
+            const hasPendency = this.hasTypePendency(element, value);
+
+            if (hasPendency) return true;
           }
         }
       }

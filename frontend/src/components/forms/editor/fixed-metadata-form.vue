@@ -260,11 +260,11 @@ const validateDirectionAndStrength = (propName?: string) => {
         if (propName === 'strength') {
           data.direction = '';
 
-          editor.metadata.setMetadataProps(props.index, 'direction', data);
+          editor.metadata.setMetadata(props.index, 'direction', data);
         } else if (propName === 'direction') {
           data.strength = '';
 
-          editor.metadata.setMetadataProps(props.index, 'strength', data);
+          editor.metadata.setMetadata(props.index, 'strength', data);
         }
       }
     }
@@ -315,7 +315,7 @@ const setProp = (propName: string) => {
     }
   }
 
-  editor.metadata.setMetadataProps(props.index, propName, data);
+  editor.metadata.setMetadata(props.index, propName, data);
 };
 
 const deleteBlock = () => {

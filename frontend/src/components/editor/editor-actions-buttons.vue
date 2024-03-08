@@ -147,7 +147,7 @@ const goAlgorithmsPage = () => {
 };
 
 const saveGraph = () => {
-  if (editor.metadata.pendency.has()) {
+  if (editor.metadata.hasPendency()) {
     editor.metadata.alertPendency();
   } else {
     editor.graph.save();
@@ -159,7 +159,7 @@ const editGraph = async () => {
 };
 
 const viewPublicGraph = async () => {
-  if (editor.metadata.pendency.has()) {
+  if (editor.metadata.hasPendency()) {
     editor.metadata.alertPendency('publicar');
   } else {
     if (!editor.graph.isSaved) {

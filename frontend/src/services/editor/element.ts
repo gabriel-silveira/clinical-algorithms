@@ -19,7 +19,7 @@ import icons from 'src/services/editor/elements/svg_icons';
 import {
   FORMAL_RECOMMENDATION,
   INFORMAL_RECOMMENDATION,
-  GOOD_PRACTICES,
+  GOOD_PRACTICES, RECOMMENDATION_TYPES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 import { COLOR_PRIMARY } from 'src/services/colors';
 
@@ -420,6 +420,8 @@ class Element {
       ) => {
         const hasPendency = this.editor.metadata.hasTypePendency(element, type);
 
+        if (hasPendency) this.editor.metadata.createPendency();
+
         const recommendationAbbreviation = {
           [FORMAL_RECOMMENDATION]: 'RF',
           [INFORMAL_RECOMMENDATION]: 'RI',
@@ -750,16 +752,9 @@ class Element {
           if (Object.keys(totals).length) {
             let y = 2;
 
-            const recommendationsTypes = [
-              FORMAL_RECOMMENDATION,
-              INFORMAL_RECOMMENDATION,
-              GOOD_PRACTICES,
-            ];
-
-            for (const type of recommendationsTypes) {
-              if (totals[type]) {
-                console.log(type, totals[type]);
-                void this.create.RecommendationTotal(currentElement, type, totals[type], y);
+            for (const { value } of RECOMMENDATION_TYPES) {
+              if (totals[value]) {
+                void this.create.RecommendationTotal(currentElement, value, totals[value], y);
 
                 y += 20;
               }
@@ -791,6 +786,8 @@ class Element {
     const parentElement = element || this.getSelected();
 
     if (parentElement) {
+      this.editor.metadata.clearPendency();
+
       this.createRecommendationsTotals(parentElement);
     }
   }
