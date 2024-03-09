@@ -6,6 +6,13 @@
     <q-card-section class="q-pa-none">
       <div class="q-pa-md">
         <div>
+          <q-img
+            v-if="fixedMetadata.recommendation_type === FORMAL_RECOMMENDATION"
+            :src="GradeIcon"
+            width="60px"
+            class="float-right"
+          />
+
           <div
             class="text-body1 text-bold"
             style="text-transform: uppercase"
@@ -151,9 +158,15 @@ import {
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 
 import Editor from 'src/services/editor';
-import { RECOMMENDATION_TYPES } from 'src/services/editor/constants/metadata/recommendation_type';
+
+import {
+  FORMAL_RECOMMENDATION,
+  RECOMMENDATION_TYPES,
+} from 'src/services/editor/constants/metadata/recommendation_type';
+
 import RecommendationArrows from 'components/items/recommendations/recommendation-arrows.vue';
-// import { getDirectionIcon, getStrengthIcon } from 'src/services/editor/elements/recommendations';
+
+import GradeIcon from 'src/assets/imgs/grade_logo.png';
 
 const editor = inject('editor') as Editor;
 

@@ -205,9 +205,9 @@ const customElements = {
     // only the 3 first recommendations
     for (const recommendation of recommendations) {
       if (recommendation.intervention && recommendation.comparator) {
-        items += `<div class="row bg-white" data-index="${recommendation.index}">`;
+        items += `<div class="bg-white" data-index="${recommendation.index}">`;
 
-        items += recommendationArrowsLine(recommendation);
+        items += recommendationArrowsLine(recommendation, true);
 
         items += '</div>';
       }

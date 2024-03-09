@@ -12,6 +12,8 @@ import {
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { FORMAL_RECOMMENDATION } from 'src/services/editor/constants/metadata/recommendation_type';
 
+import GradeIcon from 'src/assets/imgs/grade_logo.png';
+
 export const goodPracticeArrowsImage = (data: IFixedMetadata) => {
   if (data.direction === IN_FAVOR_OF_THE_INTERVENTION) {
     return 'imgs/recommendation_arrows/in_favor.png';
@@ -68,9 +70,21 @@ export const recommendationArrowsImage = (data: IFixedMetadata) => {
   return '';
 };
 
-export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
+export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGradeLogo = false) => {
   let items = '';
 
+  if (
+    recommendation.recommendation_type === FORMAL_RECOMMENDATION
+    && showGradeLogo
+  ) {
+    items += '<div class="row">';
+    items += '<div class="col-2 flex items-center justify-center">';
+    items += `<img src="${GradeIcon}" style="width:75%" />`;
+    items += '</div>';
+    items += `<div class="col-10 flex items-center">`;
+  }
+
+  items += '<div class="row">';
   items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
   items += recommendation.comparator;
   items += '</div>';
@@ -92,6 +106,15 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
   items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
   items += recommendation.intervention;
   items += '</div>';
+
+  items += '</div>';
+
+  if (
+    recommendation.recommendation_type === FORMAL_RECOMMENDATION
+    && showGradeLogo
+  ) {
+    items += '</div></div>';
+  }
 
   return items;
 };
