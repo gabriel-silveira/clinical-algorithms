@@ -42,6 +42,14 @@
             class="col-6"
           >
             <b>Certainty of evidence</b><br/>{{ fixedMetadata.certainty_of_the_evidence }}
+
+            <q-img
+              v-for="index in certaintyRange"
+              :src="CertaintyIcon"
+              :key="`certainty${index}`"
+              width="24px"
+              class="q-ml-sm"
+            />
           </div>
         </div>
 
@@ -167,6 +175,8 @@ import {
 import RecommendationArrows from 'components/items/recommendations/recommendation-arrows.vue';
 
 import GradeIcon from 'src/assets/imgs/grade_logo.png';
+import CertaintyIcon from 'src/assets/imgs/certainty.png';
+import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
 
 const editor = inject('editor') as Editor;
 
@@ -178,6 +188,7 @@ const props = defineProps({
 });
 
 const fixedMetadata = ref<IFixedMetadata | null>(null);
+const certaintyRange = ref(0);
 
 const isFormal = computed(
   () => fixedMetadata.value
@@ -198,6 +209,24 @@ onBeforeMount(() => {
       const { fixed } = metadata;
 
       fixedMetadata.value = { ...fixed[props.index - 1] };
+    }
+  }
+
+  if (fixedMetadata.value.certainty_of_the_evidence) {
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.VERY_LOW) {
+      certaintyRange.value = 1;
+    }
+
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.LOW) {
+      certaintyRange.value = 2;
+    }
+
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.MODERATE) {
+      certaintyRange.value = 3;
+    }
+
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.HIGH) {
+      certaintyRange.value = 4;
     }
   }
 });
