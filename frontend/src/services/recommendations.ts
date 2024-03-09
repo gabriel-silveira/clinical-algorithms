@@ -85,9 +85,9 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
   }
 
   items += '<div class="row">';
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Comparator:</b><br/>';
   items += recommendation.comparator;
-  items += '</div>';
+  items += '</div></div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
 
@@ -103,9 +103,9 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
 
   items += '</div>';
 
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Intervention:</b><br/>';
   items += recommendation.intervention;
-  items += '</div>';
+  items += '</div></div>';
 
   items += '</div>';
 
