@@ -78,10 +78,7 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
     && showGradeLogo
   ) {
     items += '<div class="row">';
-    items += '<div class="col-2 flex items-center justify-center">';
-    items += `<img src="${GradeIcon}" style="width:75%" />`;
-    items += '</div>';
-    items += `<div class="col-10 flex items-center">`;
+    items += '<div class="col-10 flex items-center">';
   }
 
   items += '<div class="row">';
@@ -113,7 +110,11 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
     recommendation.recommendation_type === FORMAL_RECOMMENDATION
     && showGradeLogo
   ) {
-    items += '</div></div>';
+    items += '</div>';
+    items += '<div class="col-2 flex items-center justify-center">';
+    items += `<img src="${GradeIcon}" style="width:75%" />`;
+    items += '</div>';
+    items += '</div>';
   }
 
   return items;

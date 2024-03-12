@@ -34,7 +34,35 @@
             v-if="fixedMetadata.intervention_type"
             class="col-6"
           >
-            <b>Type</b><br/>{{ fixedMetadata.intervention_type }}
+            <div class="float-left">
+              <b>Type</b><br/>{{ fixedMetadata.intervention_type }}
+            </div>
+
+            <q-img
+              v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.DIAGNOSIS"
+              :src="DiagnosisIcon"
+              style="margin-top:-4px"
+              width="48px"
+              class="q-ml-sm float-left"
+            />
+
+            <q-img
+              v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.TREATMENT"
+              :src="TreatmentIcon"
+              style="margin-top:-2px"
+              width="48px"
+              class="q-ml-sm float-left"
+            />
+
+            <q-img
+              v-if="
+                fixedMetadata.intervention_type === INTERVENTION_TYPES.POPULATION_CLASSIFICATION
+              "
+              :src="PopulationClassificationIcon"
+              style="margin-top:-7px"
+              width="60px"
+              class="q-ml-sm float-left"
+            />
           </div>
 
           <div
@@ -174,9 +202,14 @@ import {
 
 import RecommendationArrows from 'components/items/recommendations/recommendation-arrows.vue';
 
+import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
+
 import GradeIcon from 'src/assets/imgs/grade_logo.png';
 import CertaintyIcon from 'src/assets/imgs/certainty.png';
-import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
+import DiagnosisIcon from 'src/assets/imgs/diagnosis.png';
+import TreatmentIcon from 'src/assets/imgs/treatment.png';
+import PopulationClassificationIcon from 'src/assets/imgs/population_classification.png';
+import { INTERVENTION_TYPES } from 'src/services/editor/constants/metadata/intervention';
 
 const editor = inject('editor') as Editor;
 
