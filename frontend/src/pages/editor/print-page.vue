@@ -14,7 +14,6 @@
 
 <script setup lang="ts">
 import {
-  onBeforeMount,
   onMounted,
   inject,
 } from 'vue';

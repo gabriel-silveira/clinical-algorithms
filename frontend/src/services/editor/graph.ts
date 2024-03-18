@@ -1,7 +1,7 @@
 import Editor from 'src/services/editor/index';
 import { api } from 'boot/axios';
 import { reactive } from 'vue';
-import { GRAPH_MODE_PRINT, GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
+import { GRAPH_MODE_PRINT } from 'src/services/editor/types';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -202,7 +202,13 @@ class Graph {
       if (stageStage) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        window.html2pdf(stageStage);
+        window.html2pdf(stageStage, {
+          jsPDF: {
+            orientation: 'landscape',
+            unit: 'px',
+            format: [3000, 3000],
+          },
+        });
       }
     } finally {
       setTimeout(() => {

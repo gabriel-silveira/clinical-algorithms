@@ -333,7 +333,7 @@ class Element {
               x,
               y,
             },
-          }).resize(500, 175);
+          }).resize(600, 175);
 
           this.create.RecommendationTogglerButton(originalElement, recommendationElement);
 

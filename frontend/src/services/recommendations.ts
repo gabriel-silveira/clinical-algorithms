@@ -81,13 +81,13 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
     items += '<div class="col-10 flex items-center">';
   }
 
-  items += '<div class="row">';
+  items += '<div class="row full-width">';
+
   items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Comparator:</b><br/>';
   items += recommendation.comparator;
   items += '</div></div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
-
   if (recommendation.recommendation_type) {
     if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
       if (recommendation.strength && recommendation.direction) {
@@ -97,7 +97,6 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
       items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
     }
   }
-
   items += '</div>';
 
   items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Intervention:</b><br/>';
