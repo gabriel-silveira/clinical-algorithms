@@ -1,11 +1,13 @@
 import Editor from 'src/services/editor/index';
 import { api } from 'boot/axios';
 import { reactive } from 'vue';
+import { GRAPH_MODE_PRINT, GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
 
 export interface IEditorData {
+  mode: string,
   graph: {
     id: number,
     algorithm_id: number,
@@ -29,6 +31,7 @@ class Graph {
   editor: Editor;
 
   data: IEditorData = reactive({
+    mode: '',
     graph: {
       id: 0,
       algorithm_id: 0,
@@ -107,6 +110,10 @@ class Graph {
               this.editor.element.select(String(this.editor.route.query.node));
 
               this.editor.element.centerViewOnSelected();
+            }
+
+            if (this.data.mode === GRAPH_MODE_PRINT) {
+              this.editor.element.setToPrint();
             }
           }
         }

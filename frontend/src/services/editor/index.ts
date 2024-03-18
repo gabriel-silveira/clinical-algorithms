@@ -239,12 +239,14 @@ class Editor {
   }
 
   public setReadOnly(mode: string) {
+    this.graph.data.mode = mode;
+
     const loggedUserId = LocalStorage.getItem('user');
 
     if (!loggedUserId) {
       this.data.readOnly = true;
     } else {
-      this.data.readOnly = !this.data.isMaintainer || mode === 'public';
+      this.data.readOnly = !this.data.isMaintainer || ['public', 'print'].includes(mode);
     }
   }
 

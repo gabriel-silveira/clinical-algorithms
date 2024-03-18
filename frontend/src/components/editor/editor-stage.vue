@@ -7,17 +7,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { inject, onMounted } from 'vue';
-
-import Editor from 'src/services/editor';
-
-const editor = inject('editor') as Editor;
-
-onMounted(async () => {
-  // await editor.init('editor-stage');
-});
-</script>
+<script setup lang="ts"></script>
 
 <style lang="sass">
 #editor-stage-wrapper

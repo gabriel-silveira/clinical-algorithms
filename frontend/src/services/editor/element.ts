@@ -268,6 +268,16 @@ class Element {
 
   get create() {
     return {
+      PrintLabel: (x: number, y: number, text: string) => {
+        const textBlock = new joint.shapes.standard.TextBlock();
+        textBlock.resize(160, 94);
+        textBlock.position(x + 20, y);
+        textBlock.attr('body/stroke', '0');
+        textBlock.attr('body/fill', 'transparent');
+        textBlock.attr('label/text', text);
+        textBlock.attr('label/style/color', 'black');
+        textBlock.addTo(this.editor.data.graph);
+      },
       Start: async () => {
         const element = new customElements.StartElement({
           position: {
@@ -866,6 +876,30 @@ class Element {
 
         this.select(clonedElement.id);
       }, 100);
+    }
+  }
+
+  public setToPrint() {
+    const allElements = this.getAll();
+
+    if (allElements.length) {
+      for (const element of allElements) {
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))) {
+          const textarea = this.textarea.getFromEditorElement(element.id);
+
+          if (textarea) {
+            const { value } = textarea;
+
+            const { x, y } = element.position();
+
+            textarea.remove();
+
+            this.create.PrintLabel(x, y, value);
+          }
+        } else if (element.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
+          element.remove();
+        }
+      }
     }
   }
 }
