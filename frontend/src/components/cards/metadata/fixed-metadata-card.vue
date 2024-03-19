@@ -6,6 +6,13 @@
     <q-card-section class="q-pa-none">
       <div class="q-pa-md">
         <div>
+          <q-img
+            v-if="fixedMetadata.recommendation_type === FORMAL_RECOMMENDATION"
+            :src="GradeIcon"
+            width="60px"
+            class="float-right"
+          />
+
           <div
             class="text-body1 text-bold"
             style="text-transform: uppercase"
@@ -27,7 +34,35 @@
             v-if="fixedMetadata.intervention_type"
             class="col-6"
           >
-            <b>Type</b><br/>{{ fixedMetadata.intervention_type }}
+            <div class="float-left">
+              <b>Type</b><br/>{{ fixedMetadata.intervention_type }}
+            </div>
+
+            <q-img
+              v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.DIAGNOSIS"
+              :src="DiagnosisIcon"
+              style="margin-top:-4px"
+              width="48px"
+              class="q-ml-sm float-left"
+            />
+
+            <q-img
+              v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.TREATMENT"
+              :src="TreatmentIcon"
+              style="margin-top:-2px"
+              width="48px"
+              class="q-ml-sm float-left"
+            />
+
+            <q-img
+              v-if="
+                fixedMetadata.intervention_type === INTERVENTION_TYPES.POPULATION_CLASSIFICATION
+              "
+              :src="PopulationClassificationIcon"
+              style="margin-top:-7px"
+              width="60px"
+              class="q-ml-sm float-left"
+            />
           </div>
 
           <div
@@ -35,6 +70,14 @@
             class="col-6"
           >
             <b>Certainty of evidence</b><br/>{{ fixedMetadata.certainty_of_the_evidence }}
+
+            <q-img
+              v-for="index in certaintyRange"
+              :src="CertaintyIcon"
+              :key="`certainty${index}`"
+              width="24px"
+              class="q-ml-sm"
+            />
           </div>
         </div>
 
@@ -151,9 +194,22 @@ import {
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 
 import Editor from 'src/services/editor';
-import { RECOMMENDATION_TYPES } from 'src/services/editor/constants/metadata/recommendation_type';
+
+import {
+  FORMAL_RECOMMENDATION,
+  RECOMMENDATION_TYPES,
+} from 'src/services/editor/constants/metadata/recommendation_type';
+
 import RecommendationArrows from 'components/items/recommendations/recommendation-arrows.vue';
-// import { getDirectionIcon, getStrengthIcon } from 'src/services/editor/elements/recommendations';
+
+import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
+
+import GradeIcon from 'src/assets/imgs/grade_logo.png';
+import CertaintyIcon from 'src/assets/imgs/certainty.png';
+import DiagnosisIcon from 'src/assets/imgs/diagnosis.png';
+import TreatmentIcon from 'src/assets/imgs/treatment.png';
+import PopulationClassificationIcon from 'src/assets/imgs/population_classification.png';
+import { INTERVENTION_TYPES } from 'src/services/editor/constants/metadata/intervention';
 
 const editor = inject('editor') as Editor;
 
@@ -165,6 +221,7 @@ const props = defineProps({
 });
 
 const fixedMetadata = ref<IFixedMetadata | null>(null);
+const certaintyRange = ref(0);
 
 const isFormal = computed(
   () => fixedMetadata.value
@@ -185,6 +242,24 @@ onBeforeMount(() => {
       const { fixed } = metadata;
 
       fixedMetadata.value = { ...fixed[props.index - 1] };
+    }
+  }
+
+  if (fixedMetadata.value.certainty_of_the_evidence) {
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.VERY_LOW) {
+      certaintyRange.value = 1;
+    }
+
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.LOW) {
+      certaintyRange.value = 2;
+    }
+
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.MODERATE) {
+      certaintyRange.value = 3;
+    }
+
+    if (fixedMetadata.value.certainty_of_the_evidence === CERTAINTY.HIGH) {
+      certaintyRange.value = 4;
     }
   }
 });

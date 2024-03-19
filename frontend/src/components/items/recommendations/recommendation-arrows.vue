@@ -2,7 +2,6 @@
   <div
     v-if="fixedMetadata && fixedMetadata.intervention && fixedMetadata.comparator"
     v-html="recommendationArrowsLine(fixedMetadata)"
-    class="row"
   />
 </template>
 

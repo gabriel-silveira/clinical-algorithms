@@ -117,6 +117,12 @@ const showMetadataPanel = computed(
     && (isActionElement.value || isEvaluationElement.value || showRecommendation.value),
 );
 
+watch(showMetadataPanel, () => {
+  if (totalBlocks.value) {
+    editor.element.updateRecommendationsTotals();
+  }
+});
+
 const loadingBlocks = computed(() => editor.metadata.data.loadingBlocks);
 
 const elementLabel = computed(() => {

@@ -7,6 +7,7 @@ import Ports from 'src/services/editor/ports';
 import customElements, {
   CustomElement,
   elementName,
+  RecommendationTotalConstructor,
   TEXTAREA_CLASSNAME,
 } from 'src/services/editor/elements/custom-elements';
 
@@ -18,7 +19,7 @@ import icons from 'src/services/editor/elements/svg_icons';
 import {
   FORMAL_RECOMMENDATION,
   INFORMAL_RECOMMENDATION,
-  GOOD_PRACTICES,
+  GOOD_PRACTICES, RECOMMENDATION_TYPES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 import { COLOR_PRIMARY } from 'src/services/colors';
 
@@ -267,6 +268,16 @@ class Element {
 
   get create() {
     return {
+      PrintLabel: (x: number, y: number, text: string) => {
+        const textBlock = new joint.shapes.standard.TextBlock();
+        textBlock.resize(160, 94);
+        textBlock.position(x + 20, y);
+        textBlock.attr('body/stroke', '0');
+        textBlock.attr('body/fill', 'transparent');
+        textBlock.attr('label/text', text);
+        textBlock.attr('label/style/color', 'black');
+        textBlock.addTo(this.editor.data.graph);
+      },
       Start: async () => {
         const element = new customElements.StartElement({
           position: {
@@ -322,7 +333,7 @@ class Element {
               x,
               y,
             },
-          }).resize(500, 175);
+          }).resize(600, 175);
 
           this.create.RecommendationTogglerButton(originalElement, recommendationElement);
 
@@ -414,9 +425,13 @@ class Element {
       RecommendationTotal: async (
         element: dia.Element,
         type: string,
-        total: number,
+        totalRecommendations: number,
         refY: number,
       ) => {
+        const hasPendency = this.editor.metadata.hasTypePendency(element, type);
+
+        if (hasPendency) this.editor.metadata.createPendency();
+
         const recommendationAbbreviation = {
           [FORMAL_RECOMMENDATION]: 'RF',
           [INFORMAL_RECOMMENDATION]: 'RI',
@@ -427,7 +442,9 @@ class Element {
 
         const { width } = element.size();
 
-        const createElement = new customElements.RecommendationTotalElement({
+        const RTEConstructor = RecommendationTotalConstructor(hasPendency);
+
+        const createElement = new RTEConstructor({
           position: {
             x: x + width + 9,
             y: y + refY,
@@ -438,16 +455,7 @@ class Element {
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        createElement.attr('label/text', `${total}${recommendationAbbreviation[type]}`);
-
-        if (
-          this.editor.metadata.data.pendencyRecommendationTypes[element.id]
-          && this.editor.metadata.data.pendencyRecommendationTypes[element.id].find(
-            (value) => value === type,
-          )
-        ) {
-          createElement.attr('body/fill', '#FF0000');
-        }
+        createElement.attr('label/text', `${totalRecommendations}${recommendationAbbreviation[type]}`);
       },
     };
   }
@@ -729,39 +737,37 @@ class Element {
     }
   }
 
-  public createRecommendationsTotals(element: dia.Element) {
-    if (
-      [CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))
-    ) {
-      const totals: { [key: string]: number } = {};
+  public createRecommendationsTotals(element?: dia.Element) {
+    const currentElement = element || this.getSelected();
 
-      const metadata = this.editor.metadata.getFromElement(element);
+    if (currentElement) {
+      if (
+        [CustomElement.ACTION, CustomElement.EVALUATION].includes(currentElement.prop('type'))
+      ) {
+        const totals: { [key: string]: number } = {};
 
-      if (metadata && metadata.fixed.length) {
-        for (const fixedMetadata of metadata.fixed) {
-          if (fixedMetadata) {
-            if (!totals[fixedMetadata.recommendation_type]) {
-              totals[fixedMetadata.recommendation_type] = 1;
-            } else {
-              totals[fixedMetadata.recommendation_type] += 1;
+        const metadata = this.editor.metadata.getFromElement(element);
+
+        if (metadata && metadata.fixed.length) {
+          for (const fixedMetadata of metadata.fixed) {
+            if (fixedMetadata) {
+              if (!totals[fixedMetadata.recommendation_type]) {
+                totals[fixedMetadata.recommendation_type] = 1;
+              } else {
+                totals[fixedMetadata.recommendation_type] += 1;
+              }
             }
           }
-        }
 
-        if (Object.keys(totals).length) {
-          let y = 2;
+          if (Object.keys(totals).length) {
+            let y = 2;
 
-          const recommendationsTypes = [
-            FORMAL_RECOMMENDATION,
-            INFORMAL_RECOMMENDATION,
-            GOOD_PRACTICES,
-          ];
+            for (const { value } of RECOMMENDATION_TYPES) {
+              if (totals[value]) {
+                void this.create.RecommendationTotal(currentElement, value, totals[value], y);
 
-          for (const type of recommendationsTypes) {
-            if (totals[type]) {
-              void this.create.RecommendationTotal(element, type, totals[type], y);
-
-              y += 20;
+                y += 20;
+              }
             }
           }
         }
@@ -790,6 +796,8 @@ class Element {
     const parentElement = element || this.getSelected();
 
     if (parentElement) {
+      this.editor.metadata.clearPendency();
+
       this.createRecommendationsTotals(parentElement);
     }
   }
@@ -853,7 +861,7 @@ class Element {
 
       const clonedElement = selectedElement.clone();
 
-      clonedElement.prop('props/label', `${labelPrefix} - ${selectedElement.prop('props/label')}`);
+      clonedElement.prop('props/label', `${labelPrefix} - ${selectedElement.prop('props/label') || ''}`);
 
       clonedElement.translate(40, 40);
 
@@ -868,6 +876,30 @@ class Element {
 
         this.select(clonedElement.id);
       }, 100);
+    }
+  }
+
+  public setToPrint() {
+    const allElements = this.getAll();
+
+    if (allElements.length) {
+      for (const element of allElements) {
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))) {
+          const textarea = this.textarea.getFromEditorElement(element.id);
+
+          if (textarea) {
+            const { value } = textarea;
+
+            const { x, y } = element.position();
+
+            textarea.remove();
+
+            this.create.PrintLabel(x, y, value);
+          }
+        } else if (element.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
+          element.remove();
+        }
+      }
     }
   }
 }

@@ -1,11 +1,13 @@
 import Editor from 'src/services/editor/index';
 import { api } from 'boot/axios';
 import { reactive } from 'vue';
+import { GRAPH_MODE_PRINT } from 'src/services/editor/types';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
 
 export interface IEditorData {
+  mode: string,
   graph: {
     id: number,
     algorithm_id: number,
@@ -29,6 +31,7 @@ class Graph {
   editor: Editor;
 
   data: IEditorData = reactive({
+    mode: '',
     graph: {
       id: 0,
       algorithm_id: 0,
@@ -78,7 +81,7 @@ class Graph {
         const graphJson = JSON.parse(data.graph);
 
         if (graphJson) {
-          this.editor.data.graph.fromJSON(JSON.parse(data.graph));
+          this.editor.data.graph.fromJSON(graphJson);
 
           const allElements = this.editor.data.graph.getElements();
 
@@ -107,6 +110,10 @@ class Graph {
               this.editor.element.select(String(this.editor.route.query.node));
 
               this.editor.element.centerViewOnSelected();
+            }
+
+            if (this.data.mode === GRAPH_MODE_PRINT) {
+              this.editor.element.setToPrint();
             }
           }
         }
@@ -195,7 +202,13 @@ class Graph {
       if (stageStage) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        window.html2pdf(stageStage);
+        window.html2pdf(stageStage, {
+          jsPDF: {
+            orientation: 'landscape',
+            unit: 'px',
+            format: [3000, 3000],
+          },
+        });
       }
     } finally {
       setTimeout(() => {

@@ -46,15 +46,15 @@
       @click="viewPublicGraph"
     />
 
-<!--    <q-btn-->
-<!--      :loading="exportingPDF"-->
-<!--      label="PDF"-->
-<!--      class="float-right q-ml-md"-->
-<!--      style="width:120px"-->
-<!--      color="primary"-->
-<!--      push-->
-<!--      @click="toPDF"-->
-<!--    />-->
+   <q-btn
+     :loading="exportingPDF"
+     label="PDF"
+     class="float-right q-ml-lg"
+     style="width:120px"
+     color="primary"
+     push
+     @click="toPDF"
+   />
 
     <q-btn
       v-if="!readOnly"
@@ -93,6 +93,8 @@ import Editor from 'src/services/editor';
 import {
   ALGORITHMS_INDEX,
   ALGORITHMS_PUBLIC_EDITOR,
+  // ALGORITHMS_PUBLIC_EDITOR_PATH,
+  ALGORITHMS_PUBLIC_PRINT_PATH,
   ALGORITHMS_PUBLIC_SEARCH,
   ALGORITHMS_SEARCH,
 } from 'src/router/routes/algorithms';
@@ -106,7 +108,7 @@ const editor = inject('editor') as Editor;
 
 const saved = computed(() => editor.graph.data.saved);
 const savingGraph = computed(() => editor.graph.data.saving);
-// const exportingPDF = computed(() => editor.graph.data.exportingPDF);
+const exportingPDF = computed(() => editor.graph.data.exportingPDF);
 const lastUpdate = computed(() => editor.graph.lastUpdate);
 const readOnly = computed(() => editor.data.readOnly);
 const notPublicView = computed(() => route.name !== ALGORITHMS_PUBLIC_EDITOR);
@@ -147,7 +149,7 @@ const goAlgorithmsPage = () => {
 };
 
 const saveGraph = () => {
-  if (editor.metadata.pendency.has()) {
+  if (editor.metadata.hasPendency()) {
     editor.metadata.alertPendency();
   } else {
     editor.graph.save();
@@ -159,7 +161,7 @@ const editGraph = async () => {
 };
 
 const viewPublicGraph = async () => {
-  if (editor.metadata.pendency.has()) {
+  if (editor.metadata.hasPendency()) {
     editor.metadata.alertPendency('publicar');
   } else {
     if (!editor.graph.isSaved) {
@@ -170,7 +172,11 @@ const viewPublicGraph = async () => {
   }
 };
 
-// const toPDF = () => editor.graph.exportPDF();
+const toPDF = async () => {
+  await editor.graph.save();
+
+  window.open(`${ALGORITHMS_PUBLIC_PRINT_PATH}?id=${route.query.id}`);
+};
 </script>
 
 <style lang="sass">

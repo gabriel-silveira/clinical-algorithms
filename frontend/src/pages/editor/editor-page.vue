@@ -48,8 +48,7 @@
       z-max rounded-borders shadow-light-with-borders"
       style="margin-bottom: 110px"
     >
-      <div class="q-pb-md">{{ editor.metadata.data.pendency || 'None' }}</div>
-      <div>{{ editor.metadata.data.pendencyRecommendationTypes }}</div>
+      <div class="q-pb-md">{{ editor.metadata.data.hasPendency }}</div>
     </div>
   </div>
 </template>
@@ -116,7 +115,7 @@ const toggleSaveDialog = () => {
 };
 
 const saveGraph = () => {
-  if (editor.metadata.pendency.has()) {
+  if (editor.metadata.hasPendency()) {
     editor.metadata.alertPendency('salir');
 
     editor.toggleSaveDialog();

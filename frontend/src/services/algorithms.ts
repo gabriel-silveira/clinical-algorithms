@@ -1,6 +1,5 @@
 import { reactive } from 'vue';
 import { api } from 'boot/axios';
-import date from 'src/services/date';
 import { LocalStorage } from 'quasar';
 
 export interface IFlowchartCategory {
@@ -179,7 +178,7 @@ class Algorithms {
     this.data.algorithm = { ...flowchart };
 
     // convert to brazilian date (DD/MM/YYYY)
-    this.data.algorithm.updated_at = date.toBR(flowchart.updated_at);
+    // this.data.algorithm.updated_at = date.toBR(flowchart.updated_at);
 
     await this.toggleEditDialog();
   }

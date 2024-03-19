@@ -2,7 +2,7 @@ import * as joint from 'jointjs';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { recommendationArrowsLine } from 'src/services/recommendations';
 import icons from 'src/services/editor/elements/svg_icons';
-import { COLOR_PRIMARY } from 'src/services/colors';
+import { COLOR_ACCENT, COLOR_PRIMARY } from 'src/services/colors';
 
 export enum CustomElement {
   START = 'StartElement',
@@ -96,6 +96,51 @@ export const EVALUATION_PORT = {
 
 export const TEXTAREA_CLASSNAME = 'element-textarea-input';
 
+const getRecommendationTotalAttributes = () => ({
+  attrs: {
+    body: {
+      width: 'calc(w)',
+      height: 'calc(h)',
+      strokeWidth: 0,
+      fill: '#445566',
+      rx: 2,
+      ry: 2,
+    },
+    label: {
+      textVerticalAnchor: 'middle',
+      textAnchor: 'middle',
+      x: 'calc(0.5*w)',
+      y: 'calc(0.55*h)',
+      fontSize: 12,
+      fontFamily: 'Courier New, sans-serif',
+      fill: 'white',
+      text: '1RF',
+    },
+  },
+});
+
+export const RecommendationTotalConstructor = (hasPendency: boolean) => {
+  const params = { ...getRecommendationTotalAttributes() };
+
+  params.attrs.body.fill = hasPendency ? '#FF0000' : params.attrs.body.fill;
+
+  return joint.dia.Element.define(
+    CustomElement.RECOMMENDATION_TOTAL,
+    {
+      ...params,
+    },
+    {
+      markup: [{
+        tagName: 'rect',
+        selector: 'body',
+      }, {
+        tagName: 'text',
+        selector: 'label',
+      }],
+    },
+  );
+};
+
 const customElements = {
   [CustomElement.LINK]: joint.dia.Link.define(CustomElement.LINK, {
     connector: { name: 'rounded' },
@@ -160,9 +205,9 @@ const customElements = {
     // only the 3 first recommendations
     for (const recommendation of recommendations) {
       if (recommendation.intervention && recommendation.comparator) {
-        items += `<div class="row bg-white" data-index="${recommendation.index}">`;
+        items += `<div class="bg-white row" data-index="${recommendation.index}">`;
 
-        items += recommendationArrowsLine(recommendation);
+        items += recommendationArrowsLine(recommendation, true);
 
         items += '</div>';
       }
@@ -196,27 +241,7 @@ const customElements = {
   [CustomElement.RECOMMENDATION_TOTAL]: joint.dia.Element.define(
     CustomElement.RECOMMENDATION_TOTAL,
     {
-      attrs: {
-        body: {
-          width: 'calc(w)',
-          height: 'calc(h)',
-          strokeWidth: 0,
-          // stroke: '#000000',
-          fill: '#445566',
-          rx: 2,
-          ry: 2,
-        },
-        label: {
-          textVerticalAnchor: 'middle',
-          textAnchor: 'middle',
-          x: 'calc(0.5*w)',
-          y: 'calc(0.55*h)',
-          fontSize: 12,
-          fontFamily: 'Courier New, sans-serif',
-          fill: 'white',
-          text: '1RF',
-        },
-      },
+      ...getRecommendationTotalAttributes(),
     },
     {
       markup: [{
@@ -263,14 +288,31 @@ const customElements = {
     },
   }, {
     markup: joint.util.svg/* xml */`
+      <rect
+        width="200"
+        height="100"
+        fill="#E2F3FB"
+        rx="5"
+        ry="5"
+        stroke="${COLOR_PRIMARY}"
+        stroke-width="3"
+      />
+
+      <rect
+        x="8"
+        y="8"
+        width="184"
+        height="76"
+        fill="#DAE7EF"
+        rx="2"
+        ry="2"
+      />
+
       <foreignObject
         @selector="foreignObject"
       >
-        <div
-          xmlns="http://www.w3.org/1999/xhtml"
-          class="editor-action-element"
-        >
-          <div class="editor-action-element-bevel">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          <div>
             <textarea
               class="${TEXTAREA_CLASSNAME}"
               autocomplete="off"
@@ -296,13 +338,25 @@ const customElements = {
     },
   }, {
     markup: joint.util.svg/* xml */`
+      <polygon
+        points="1.924,54.525 32.234,2.025 171.614,2.025 201.924,54.525 171.614,107.025 32.234,107.025 "
+        transform="matrix(0.98521761,0,0,0.92490192,0,0)"
+        fill="#fdede3"
+        stroke="${COLOR_ACCENT}"
+        stroke-width="3"
+      />
+
+      <polygon
+        points="166.548,9.025 192.758,54.525 166.548,100.025 37.968,100.025 11.758,54.525 37.968,9.025 "
+        transform="matrix(1,0,0,0.93690874,-2,-1)"
+        fill="#eddbd1"
+        stroke-width="0"
+      />
+
       <foreignObject
         @selector="foreignObject"
       >
-        <div
-          xmlns="http://www.w3.org/1999/xhtml"
-          class="editor-evaluation-element"
-        >
+        <div xmlns="http://www.w3.org/1999/xhtml">
           <div>
             <textarea
               class="${TEXTAREA_CLASSNAME}"
@@ -339,10 +393,8 @@ const customElements = {
           <div
             style="cursor:move"
           >
-            <div
-              style="height:20px;border-bottom:2px solid #777777;margin-top:30px"
-            >
-            </div>
+            <hr style="border-top:2px solid #777777;margin-top:48px" />
+
             <input
               class="${TEXTAREA_CLASSNAME}"
               placeholder="Título"

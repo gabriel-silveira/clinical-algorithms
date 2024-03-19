@@ -12,6 +12,8 @@ import {
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { FORMAL_RECOMMENDATION } from 'src/services/editor/constants/metadata/recommendation_type';
 
+import GradeIcon from 'src/assets/imgs/grade_logo.png';
+
 export const goodPracticeArrowsImage = (data: IFixedMetadata) => {
   if (data.direction === IN_FAVOR_OF_THE_INTERVENTION) {
     return 'imgs/recommendation_arrows/in_favor.png';
@@ -68,15 +70,24 @@ export const recommendationArrowsImage = (data: IFixedMetadata) => {
   return '';
 };
 
-export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
+export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGradeLogo = false) => {
   let items = '';
 
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  if (
+    recommendation.recommendation_type === FORMAL_RECOMMENDATION
+    && showGradeLogo
+  ) {
+    items += '<div class="row">';
+    items += '<div class="col-10 flex items-center">';
+  }
+
+  items += '<div class="row full-width">';
+
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Comparator:</b><br/>';
   items += recommendation.comparator;
-  items += '</div>';
+  items += '</div></div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
-
   if (recommendation.recommendation_type) {
     if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
       if (recommendation.strength && recommendation.direction) {
@@ -86,12 +97,24 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata) => {
       items += `<img src="${goodPracticeArrowsImage(recommendation)}" alt="" />`;
     }
   }
-
   items += '</div>';
 
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Intervention:</b><br/>';
   items += recommendation.intervention;
+  items += '</div></div>';
+
   items += '</div>';
+
+  if (
+    recommendation.recommendation_type === FORMAL_RECOMMENDATION
+    && showGradeLogo
+  ) {
+    items += '</div>';
+    items += '<div class="col-2 flex items-center justify-center">';
+    items += `<img src="${GradeIcon}" style="width:75%" />`;
+    items += '</div>';
+    items += '</div>';
+  }
 
   return items;
 };
