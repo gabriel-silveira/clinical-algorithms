@@ -453,9 +453,12 @@ class Element {
 
         createElement.prop('props/parentElement', element.id);
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        createElement.attr('label/text', `${totalRecommendations}${recommendationAbbreviation[type]}`);
+        createElement.attr(
+          'label/text',
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          `${totalRecommendations}${recommendationAbbreviation[type]}`,
+        );
       },
     };
   }
@@ -527,7 +530,7 @@ class Element {
   }
 
   public select(elementId: dia.Cell.ID) {
-    this.deselectAll();
+    // this.deselectAll();
 
     const element = this.getById(elementId);
 
@@ -624,7 +627,7 @@ class Element {
       getFromEditorElement(elementId: dia.Cell.ID) {
         const domElement = document.querySelector(`[model-id="${elementId}"]`);
 
-        return domElement?.getElementsByTagName('textarea')[0];
+        return domElement?.getElementsByTagName('textarea')[0] as HTMLTextAreaElement | undefined;
       },
       value: () => {
         const selectedElement = this.getSelected();
@@ -696,6 +699,17 @@ class Element {
           for (const input of inputs) {
             input.setAttribute('readonly', 'true');
             input.classList.add('cursor-inherit');
+          }
+        }
+      },
+      focus: () => {
+        const selectedElement = this.getSelected();
+
+        if (selectedElement) {
+          const textarea = this.textarea.getFromEditorElement(selectedElement.id);
+
+          if (textarea) {
+            textarea.focus();
           }
         }
       },

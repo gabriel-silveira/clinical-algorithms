@@ -173,9 +173,15 @@ const viewPublicGraph = async () => {
 };
 
 const toPDF = async () => {
-  await editor.graph.save();
+  if (editor.metadata.hasPendency()) {
+    editor.metadata.alertPendency('publicar');
+  } else {
+    if (editor.graph.isNotSaved) {
+      await editor.graph.save();
+    }
 
-  window.open(`${ALGORITHMS_PUBLIC_PRINT_PATH}?id=${route.query.id}`);
+    window.open(`${ALGORITHMS_PUBLIC_PRINT_PATH}?id=${route.query.id}`);
+  }
 };
 </script>
 
