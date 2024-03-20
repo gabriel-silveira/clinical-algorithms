@@ -55,6 +55,10 @@ class Graph {
     this.editor = editor;
   }
 
+  get isNotSaved() {
+    return this.data.saved === false;
+  }
+
   get isSaved() {
     return this.data.saved === true || this.data.saved === null;
   }
