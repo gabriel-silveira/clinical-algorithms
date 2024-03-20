@@ -140,7 +140,7 @@ class Editor {
           this.element.deselectAll();
         });
 
-        this.data.paper.on('blank:pointerdown cell:pointerdown', () => {
+        this.data.paper.on('blank:pointerdown', () => {
           if (document.activeElement && document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
 

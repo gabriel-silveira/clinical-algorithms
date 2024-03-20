@@ -120,6 +120,8 @@ const showMetadataPanel = computed(
 watch(showMetadataPanel, () => {
   if (totalBlocks.value) {
     editor.element.updateRecommendationsTotals();
+
+    editor.element.textarea.focus();
   }
 });
 

@@ -173,7 +173,10 @@ const viewPublicGraph = async () => {
 };
 
 const toPDF = async () => {
-  await editor.graph.save();
+  console.log('editor.graph.isSaved', editor.graph.isSaved);
+  if (editor.graph.isSaved) {
+    // await editor.graph.save();
+  }
 
   window.open(`${ALGORITHMS_PUBLIC_PRINT_PATH}?id=${route.query.id}`);
 };

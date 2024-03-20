@@ -15,7 +15,10 @@ def map_nodes(graph_string: str, algorithm_id: int):
         graph = json.loads(graph_string)['cells']
 
         for node in graph:
-            print(node)
+            print('Node type:')
+            print(node['type'])
+            print('')
+
             data = [algorithm_id, node['id'], node['type'], "", datetime.now()]
 
             if "props" in node:
