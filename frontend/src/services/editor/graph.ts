@@ -210,7 +210,10 @@ class Graph {
           jsPDF: {
             orientation: 'landscape',
             unit: 'px',
-            format: [3000, 3000],
+            format: [
+              this.editor.data.options.width,
+              this.editor.data.options.height,
+            ],
           },
         });
       }

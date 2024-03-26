@@ -39,6 +39,10 @@ class Editor {
     isMaintainer: false,
     readOnly: false,
     showSaveDialog: false,
+    options: {
+      width: 6000,
+      height: 6000,
+    },
     paper: undefined,
     graph,
   });
@@ -69,10 +73,6 @@ class Editor {
   }
 
   public async init(elementId: string) {
-    await this.setPaper(elementId);
-  }
-
-  private async setPaper(elementId: string) {
     return new Promise((resolve, reject) => {
       try {
         this.paperDiv = document.getElementById(elementId) || undefined;
@@ -80,8 +80,8 @@ class Editor {
         const options = {
           el: this.paperDiv,
           model: this.data.graph,
-          width: 3000,
-          height: 3000,
+          width: this.data.options.width,
+          height: this.data.options.height,
 
           cellViewNamespace: customElements,
           preventDefaultViewAction: false,
