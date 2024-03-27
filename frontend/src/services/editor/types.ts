@@ -8,6 +8,10 @@ export interface IJointData {
   isMaintainer: boolean,
   readOnly: boolean,
   showSaveDialog: boolean,
+  options: {
+    width: number,
+    height: number,
+  },
   paper: dia.Paper | undefined,
   graph: dia.Graph,
 }
