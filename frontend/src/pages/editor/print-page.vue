@@ -24,6 +24,7 @@ const route = useRoute();
 
 import EditorStage from 'components/editor/editor-stage.vue';
 import Editor from 'src/services/editor';
+import { GRAPH_MODE_PRINT } from 'src/services/editor/types';
 
 const editor = inject('editor') as Editor;
 
@@ -33,7 +34,7 @@ onMounted(async () => {
   if (id && typeof id === 'string') {
     editor.setIsMaintainer(false);
 
-    editor.setReadOnly('print');
+    editor.setReadOnly(GRAPH_MODE_PRINT);
 
     await editor.init('editor-stage');
 

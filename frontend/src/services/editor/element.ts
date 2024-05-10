@@ -77,19 +77,22 @@ class Element {
   public isAction(element?: dia.Element) {
     if (element) return element.prop('type') === CustomElement.ACTION;
 
-    return this.getSelected()?.prop('type') === CustomElement.ACTION;
+    return this.getSelected()
+      ?.prop('type') === CustomElement.ACTION;
   }
 
   public isEvaluation(element?: dia.Element) {
     if (element) return element.prop('type') === CustomElement.EVALUATION;
 
-    return this.getSelected()?.prop('type') === CustomElement.EVALUATION;
+    return this.getSelected()
+      ?.prop('type') === CustomElement.EVALUATION;
   }
 
   public isLane(element?: dia.Element) {
     if (element) return element.prop('type') === CustomElement.LANE;
 
-    return this.getSelected()?.prop('type') === CustomElement.LANE;
+    return this.getSelected()
+      ?.prop('type') === CustomElement.LANE;
   }
 
   public setCreationPosition(x: number, y: number) {
@@ -100,13 +103,17 @@ class Element {
     const fixedX = x - Number(stringX[stringX.length - 1]);
     const fixedY = y - Number(stringY[stringY.length - 1]);
 
-    this.data.creationPosition = { x: fixedX, y: fixedY };
+    this.data.creationPosition = {
+      x: fixedX,
+      y: fixedY,
+    };
   }
 
   private removeSelected() {
     this.deleteRecommendationsTotals();
 
-    this.getSelected()?.remove();
+    this.getSelected()
+      ?.remove();
 
     this.deselectAll();
 
@@ -191,7 +198,10 @@ class Element {
   static getExpandRecommendationButtonPosition(element: dia.Element) {
     const type = element.prop('type');
 
-    const { width, height } = element.size();
+    const {
+      width,
+      height,
+    } = element.size();
 
     if (type === CustomElement.ACTION) {
       return {
@@ -268,7 +278,7 @@ class Element {
 
   get create() {
     return {
-      PrintLabel: (x: number, y: number, text: string) => {
+      PrintLabel: (x: number, y: number, text: string, styles?: { [key: string]: string }) => {
         const textBlock = new joint.shapes.standard.TextBlock();
         textBlock.resize(160, 94);
         textBlock.position(x + 20, y);
@@ -276,6 +286,13 @@ class Element {
         textBlock.attr('body/fill', 'transparent');
         textBlock.attr('label/text', text);
         textBlock.attr('label/style/color', 'black');
+
+        if (styles) {
+          for (const style of Object.keys(styles)) {
+            textBlock.attr(`label/style/${style}`, styles[style]);
+          }
+        }
+
         textBlock.addTo(this.editor.data.graph);
       },
       Start: async () => {
@@ -285,7 +302,8 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToStart(),
-        }).resize(40, 40).addTo(this.editor.data.graph);
+        }).resize(40, 40)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -298,7 +316,8 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToAction(),
-        }).resize(200, 100).addTo(this.editor.data.graph);
+        }).resize(200, 100)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -310,8 +329,14 @@ class Element {
         originalElement: dia.Element,
         recommendationElement: dia.Element,
       ) => {
-        const { width, height } = originalElement.size();
-        const { x, y } = originalElement.position();
+        const {
+          width,
+          height,
+        } = originalElement.size();
+        const {
+          x,
+          y,
+        } = originalElement.position();
 
         const togglerElement = new customElements.RecommendationTogglerElement({
           position: {
@@ -383,7 +408,8 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToEvaluation(),
-        }).resize(200, 100).addTo(this.editor.data.graph);
+        }).resize(200, 100)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -397,7 +423,8 @@ class Element {
             x: this.data.creationPosition.x,
             y: this.data.creationPosition.y,
           },
-        }).resize(40, 40).addTo(this.editor.data.graph);
+        }).resize(40, 40)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -409,7 +436,8 @@ class Element {
             x: 0,
             y: this.data.creationPosition.y,
           },
-        }).resize(3000, 50).addTo(this.editor.data.graph);
+        }).resize(this.editor.data.options.width, 50)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element, {
           removeButtons: {
@@ -438,7 +466,10 @@ class Element {
           [GOOD_PRACTICES]: 'BP',
         };
 
-        const { x, y } = element.position();
+        const {
+          x,
+          y,
+        } = element.position();
 
         const { width } = element.size();
 
@@ -449,7 +480,8 @@ class Element {
             x: x + width + 9,
             y: y + refY,
           },
-        }).resize(28, 17).addTo(this.editor.data.graph);
+        }).resize(28, 17)
+          .addTo(this.editor.data.graph);
 
         createElement.prop('props/parentElement', element.id);
 
@@ -470,7 +502,8 @@ class Element {
     elements.forEach((element) => {
       // hide element tools
       if (this.editor.data.paper && !this.editor.data.readOnly) {
-        element.findView(this.editor.data.paper).hideTools();
+        element.findView(this.editor.data.paper)
+          .hideTools();
       } else if (this.editor.data.readOnly) {
         this.createReadonlyTools(element, false);
       }
@@ -483,7 +516,8 @@ class Element {
     propName: string,
     value: boolean | string | number | object | undefined | null,
   ) {
-    this.getSelected()?.prop(`props/${propName}`, value);
+    this.getSelected()
+      ?.prop(`props/${propName}`, value);
 
     // avoid "setNotSavedChanges" without changing anything
     // if (commitChanges) {
@@ -492,13 +526,15 @@ class Element {
   }
 
   public async setAttr(attrName: string, value: string) {
-    this.getSelected()?.attr(attrName, value);
+    this.getSelected()
+      ?.attr(attrName, value);
 
     // await this.joint.setNotSavedChanges(true);
   }
 
   public getById(id: dia.Cell.ID): dia.Element | undefined {
-    return this.editor.data.graph.getElements().find((element) => element.id === id);
+    return this.editor.data.graph.getElements()
+      .find((element) => element.id === id);
   }
 
   private createReadonlyTools(element: dia.Element, showBoundary: boolean) {
@@ -575,11 +611,13 @@ class Element {
   public getLabel(element?: dia.Element) {
     if (element) return element.prop('props/label') || '';
 
-    return this.getSelected()?.prop('props/label') || '';
+    return this.getSelected()
+      ?.prop('props/label') || '';
   }
 
   public getTitle() {
-    return this.getSelected()?.prop('title') || '';
+    return this.getSelected()
+      ?.prop('title') || '';
   }
 
   // PROBABLY DEPRECATED
@@ -590,7 +628,8 @@ class Element {
   // }
 
   public getName() {
-    const elementType = this.getSelected()?.prop('type');
+    const elementType = this.getSelected()
+      ?.prop('type');
 
     if (elementType) return elementName[elementType];
 
@@ -722,11 +761,17 @@ class Element {
     if (allElements.length) {
       for (const element of allElements) {
         if (element.prop('type') === CustomElement.ACTION) {
-          const { x, y } = element.position();
+          const {
+            x,
+            y,
+          } = element.position();
 
           void this.create.Recommendation(x, y + 106, element);
         } else if (element.prop('type') === CustomElement.EVALUATION) {
-          const { x, y } = element.position();
+          const {
+            x,
+            y,
+          } = element.position();
 
           void this.create.Recommendation(x + 1, y + 111, element);
         }
@@ -849,7 +894,10 @@ class Element {
     const selectedElement = this.getSelected();
 
     if (selectedElement) {
-      const { y, x } = selectedElement.position();
+      const {
+        y,
+        x,
+      } = selectedElement.position();
 
       const stageWrapper = document.getElementById('editor-stage-wrapper');
 
@@ -860,7 +908,10 @@ class Element {
         const newY = y - diffToYCenter;
         const newX = x - diffToXCenter;
 
-        Editor.setScroll({ y: newY, x: newX });
+        Editor.setScroll({
+          y: newY,
+          x: newX,
+        });
       }
     }
   }
@@ -893,25 +944,49 @@ class Element {
     }
   }
 
+  /**
+   * Swap some elements in order to be exported as PDF correctly
+   */
   public setToPrint() {
     const allElements = this.getAll();
+    console.clear();
 
     if (allElements.length) {
       for (const element of allElements) {
-        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))) {
+        const elementType = element.prop('type');
+
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
           const textarea = this.textarea.getFromEditorElement(element.id);
 
           if (textarea) {
             const { value } = textarea;
 
-            const { x, y } = element.position();
+            const {
+              x,
+              y,
+            } = element.position();
 
             textarea.remove();
 
             this.create.PrintLabel(x, y, value);
           }
-        } else if (element.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
+        } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
           element.remove();
+        } else if (elementType === CustomElement.LANE) {
+          const input = this.input.getFromEditorElement(element.id);
+
+          if (input) {
+            const { value } = input;
+
+            const {
+              x,
+              y,
+            } = element.position();
+
+            input.remove();
+
+            this.create.PrintLabel(x, y - 32, value, { fontSize: '24px' });
+          }
         }
       }
     }
