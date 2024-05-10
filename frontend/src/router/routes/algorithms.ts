@@ -5,7 +5,7 @@ export const ALGORITHMS_SEARCH = 'search';
 export const ALGORITHMS_PUBLIC_EDITOR_PATH = '/editor';
 export const ALGORITHMS_PUBLIC_EDITOR = 'public-editor';
 
-export const ALGORITHMS_PUBLIC_PRINT_PATH = '/print';
+export const ALGORITHMS_PUBLIC_PRINT_PATH = 'print';
 export const ALGORITHMS_PUBLIC_PRINT = 'public-print';
 
 export const ALGORITHMS_PUBLIC_SEARCH = 'public-search';

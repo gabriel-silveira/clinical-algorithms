@@ -46,15 +46,15 @@
       @click="viewPublicGraph"
     />
 
-   <q-btn
-     :loading="exportingPDF"
-     label="PDF"
-     class="float-right q-ml-lg"
-     style="width:120px"
-     color="primary"
-     push
-     @click="toPDF"
-   />
+    <q-btn
+      :loading="exportingPDF"
+      label="PDF"
+      class="float-right q-ml-lg"
+      style="width:120px"
+      color="primary"
+      push
+      @click="toPDF"
+    />
 
     <q-btn
       v-if="!readOnly"
