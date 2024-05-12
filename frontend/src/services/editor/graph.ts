@@ -89,11 +89,13 @@ class Graph {
 
           const allElements = this.editor.data.graph.getElements();
 
-          this.editor.element.createElementsTools(allElements);
-
           this.editor.element.input.setValues(allElements);
           this.editor.element.textarea.setValues(allElements);
-          this.editor.element.textarea.createEventHandlers();
+
+          if (!this.editor.data.readOnly) {
+            this.editor.element.createElementsTools(allElements);
+            this.editor.element.textarea.createEventHandlers();
+          }
 
           // reset scroll because of createEventHandlers method
           // that focus on input fields
@@ -201,21 +203,21 @@ class Graph {
     try {
       this.data.exportingPDF = true;
 
-      const stageStage = document.getElementById('editor-stage');
+      const stageStage = document.getElementsByTagName('body')[0];
 
       if (stageStage) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        window.html2pdf(stageStage, {
-          jsPDF: {
-            orientation: 'landscape',
-            unit: 'px',
-            format: [
-              this.editor.data.options.width,
-              this.editor.data.options.height,
-            ],
-          },
-        });
+        // window.html2pdf(stageStage, {
+        //   jsPDF: {
+        //     orientation: 'landscape',
+        //     unit: 'px',
+        //     format: [
+        //       this.editor.data.options.width,
+        //       this.editor.data.options.height,
+        //     ],
+        //   },
+        // });
       }
     } finally {
       setTimeout(() => {

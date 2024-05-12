@@ -280,9 +280,10 @@ class Element {
     return {
       PrintLabel: (x: number, y: number, text: string, styles?: { [key: string]: string }) => {
         const textBlock = new joint.shapes.standard.TextBlock();
-        textBlock.resize(160, 94);
-        textBlock.position(x + 20, y);
-        textBlock.attr('body/stroke', '0');
+        textBlock.resize(170, 94);
+        textBlock.position(x + 15, y);
+        textBlock.attr('body/stroke', '');
+        textBlock.attr('body/strokeWidth', '0');
         textBlock.attr('body/fill', 'transparent');
         textBlock.attr('label/text', text);
         textBlock.attr('label/style/color', 'black');
@@ -949,7 +950,6 @@ class Element {
    */
   public setToPrint() {
     const allElements = this.getAll();
-    console.clear();
 
     if (allElements.length) {
       for (const element of allElements) {
