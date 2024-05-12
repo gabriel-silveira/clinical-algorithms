@@ -278,21 +278,40 @@ class Element {
 
   get create() {
     return {
-      PrintLabel: (x: number, y: number, text: string, styles?: { [key: string]: string }) => {
+      PrintLabel: (options: {
+        x: number,
+        y: number,
+        text: string,
+      }) => {
         const textBlock = new joint.shapes.standard.TextBlock();
         textBlock.resize(170, 94);
-        textBlock.position(x + 15, y);
+        textBlock.position(options.x + 15, options.y);
+        textBlock.attr('body/class', 'myTextBlock');
         textBlock.attr('body/stroke', '');
         textBlock.attr('body/strokeWidth', '0');
         textBlock.attr('body/fill', 'transparent');
-        textBlock.attr('label/text', text);
-        textBlock.attr('label/style/color', 'black');
+        textBlock.attr('label/text', options.text);
 
-        if (styles) {
-          for (const style of Object.keys(styles)) {
-            textBlock.attr(`label/style/${style}`, styles[style]);
-          }
-        }
+        textBlock.addTo(this.editor.data.graph);
+      },
+      RectangleLabel: (options: {
+        x: number,
+        y: number,
+        text: string,
+      }) => {
+        const textBlock = new joint.shapes.standard.Rectangle();
+
+        textBlock.resize(1000, 94);
+        textBlock.position(options.x + 16, options.y);
+        textBlock.attr('body/class', 'myTextBlock');
+        textBlock.attr('body/stroke', '');
+        textBlock.attr('body/strokeWidth', '0');
+        textBlock.attr('body/fill', 'transparent');
+        textBlock.attr('label/text', options.text);
+        textBlock.attr('label/text-anchor', 'left');
+        textBlock.attr('label/ref-x', -480);
+
+        textBlock.attr('label/style', 'font-size: 24px; border: 1px solid #F00');
 
         textBlock.addTo(this.editor.data.graph);
       },
@@ -968,7 +987,7 @@ class Element {
 
             textarea.remove();
 
-            this.create.PrintLabel(x, y, value);
+            this.create.PrintLabel({ x, y, text: value });
           }
         } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
           element.remove();
@@ -985,8 +1004,43 @@ class Element {
 
             input.remove();
 
-            this.create.PrintLabel(x, y - 32, value, { fontSize: '24px' });
+            this.create.RectangleLabel({ x, y: y - 32, text: value });
+
+            element.attr('body/textAnchor', 'left');
+            element.attr('textAnchor', 'left');
           }
+        }
+      }
+
+      this.moveAllElementsDown(200);
+    }
+  }
+
+  private moveAllElementsDown(moveY: number) {
+    const allNewElements = this.getAll();
+
+    for (const element of allNewElements) {
+      const { x, y } = element.position();
+
+      element.position(x, y + moveY);
+    }
+
+    const allCells = this.editor.data.graph.getCells();
+
+    for (const cell of allCells) {
+      const elementType = cell.prop('type');
+
+      if (elementType === 'link') {
+        const vertices = cell.prop('vertices');
+
+        if (vertices) {
+          const newVertices: { x: number, y: number }[] = [];
+
+          for (const vertex of vertices) {
+            newVertices.push({ x: vertex.x, y: vertex.y + moveY });
+          }
+
+          cell.prop('vertices', newVertices);
         }
       }
     }
