@@ -1,7 +1,7 @@
 import * as joint from 'jointjs';
 import { dia } from 'jointjs';
 
-import { IJointData } from 'src/services/editor/types';
+import { GRAPH_MODE_PRINT, IJointData } from 'src/services/editor/types';
 import { reactive } from 'vue';
 import customElements, { CustomElement } from 'src/services/editor/elements/custom-elements';
 import Element from 'src/services/editor/element';
@@ -182,8 +182,10 @@ class Editor {
           if (elementView.options.model.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
             this.element.toggleRecommendation(elementView.options.model.id);
           } else if (
+            // not in print mode (PDF export)
+            this.graph.data.mode !== GRAPH_MODE_PRINT
             // do not select [lane, recommendation_toggler] element if it's in read only mode
-            !(
+            && !(
               this.data.readOnly
               && elementView.options.model.prop('type') === CustomElement.LANE
             )

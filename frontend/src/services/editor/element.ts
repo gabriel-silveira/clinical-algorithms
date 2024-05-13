@@ -536,12 +536,12 @@ class Element {
             description: {
               style: 'font-size: 18px',
               refX: 30,
-              refY: 85,
+              refY: 90,
             },
             author: {
               style: 'font-size: 16px',
               refX: 30,
-              refY: 140,
+              refY: 132,
             },
           },
         }, {

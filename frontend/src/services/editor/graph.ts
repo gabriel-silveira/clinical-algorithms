@@ -25,6 +25,10 @@ export interface IEditorData {
   saving: boolean,
   saved: boolean | null,
   savingTimeout: ReturnType<typeof setTimeout> | null,
+  printSize: {
+    width: number,
+    height: number,
+  },
 }
 
 class Graph {
@@ -49,6 +53,10 @@ class Graph {
     saving: false,
     saved: null,
     savingTimeout: null,
+    printSize: {
+      width: 0,
+      height: 0,
+    },
   });
 
   constructor(editor: Editor) {
@@ -247,27 +255,71 @@ class Graph {
 
       await this.editor.element.create.PDFHeader();
     }
+
+    this.cropToContent();
+  }
+
+  private cropToContent() {
+    this.setContentSize();
+
+    this.editor.data.paper?.setDimensions(this.data.printSize.width, this.data.printSize.height);
+  }
+
+  private setContentSize() {
+    let outerX = 0;
+    let lowerY = 0;
+
+    const allCells = this.editor.data.graph.getCells();
+
+    for (const cell of allCells) {
+      const {
+        width,
+        height,
+        x,
+        y,
+      } = cell.getBBox();
+
+      const elementType = cell.prop('type');
+
+      if (![
+        CustomElement.PDF_HEADER,
+        CustomElement.RECOMMENDATION,
+        CustomElement.LINK,
+        'link',
+        'standard.Rectangle',
+        'standard.TextBlock',
+      ].includes(elementType)) {
+        // lanes are not considered to calculate width
+        if (elementType !== CustomElement.LANE) {
+          const refX = x + width;
+          outerX = refX > outerX ? refX : outerX;
+        }
+
+        const refY = y + height;
+        lowerY = refY > lowerY ? refY : lowerY;
+      }
+    }
+
+    this.data.printSize.width = outerX + 200;
+    this.data.printSize.height = lowerY + 200;
   }
 
   public exportPDF() {
     try {
       const stageStage = document.getElementById('editor-stage');
 
-      console.log(this.editor.data.options);
-
       if (stageStage) {
+        const options = {
+          jsPDF: {
+            orientation: this.data.printSize.width > this.data.printSize.height ? 'landscape' : 'portrait',
+            unit: 'px',
+            format: [this.data.printSize.width, this.data.printSize.height],
+          },
+        };
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        /* window.html2pdf(stageStage, {
-          jsPDF: {
-            orientation: 'landscape',
-            unit: 'px',
-            format: [
-              this.editor.data.options.width,
-              this.editor.data.options.height,
-            ],
-          },
-        }); */
+        // window.html2pdf(stageStage, options);
       }
     } catch (error) {
       console.error(error);
