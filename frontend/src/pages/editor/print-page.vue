@@ -53,7 +53,9 @@ onMounted(async () => {
 
     await editor.graph.open(id);
 
-    setTimeout(() => {
+    await editor.graph.setToPrint();
+
+    setTimeout(async () => {
       loading.value = false;
 
       editor.graph.exportPDF();

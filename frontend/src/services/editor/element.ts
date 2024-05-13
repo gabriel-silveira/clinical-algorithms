@@ -23,6 +23,8 @@ import {
 } from 'src/services/editor/constants/metadata/recommendation_type';
 
 import { COLOR_PRIMARY } from 'src/services/colors';
+import { formatDatetime } from 'src/services/date';
+import Users from 'src/services/users';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -279,43 +281,6 @@ class Element {
 
   get create() {
     return {
-      PrintLabel: (options: {
-        x: number,
-        y: number,
-        text: string,
-      }) => {
-        const textBlock = new joint.shapes.standard.TextBlock();
-        textBlock.resize(170, 94);
-        textBlock.position(options.x + 15, options.y);
-        textBlock.attr('body/class', 'myTextBlock');
-        textBlock.attr('body/stroke', '');
-        textBlock.attr('body/strokeWidth', '0');
-        textBlock.attr('body/fill', 'transparent');
-        textBlock.attr('label/text', options.text);
-
-        textBlock.addTo(this.editor.data.graph);
-      },
-      RectangleLabel: (options: {
-        x: number,
-        y: number,
-        text: string,
-      }) => {
-        const textBlock = new joint.shapes.standard.Rectangle();
-
-        textBlock.resize(1000, 94);
-        textBlock.position(options.x + 16, options.y);
-        textBlock.attr('body/class', 'myTextBlock');
-        textBlock.attr('body/stroke', '');
-        textBlock.attr('body/strokeWidth', '0');
-        textBlock.attr('body/fill', 'transparent');
-        textBlock.attr('label/text', options.text);
-        textBlock.attr('label/text-anchor', 'left');
-        textBlock.attr('label/ref-x', -480);
-
-        textBlock.attr('label/style', 'font-size: 24px; border: 1px solid #F00');
-
-        textBlock.addTo(this.editor.data.graph);
-      },
       Start: async () => {
         const element = new customElements.StartElement({
           position: {
@@ -512,6 +477,105 @@ class Element {
           // @ts-ignore
           `${totalRecommendations}${recommendationAbbreviation[type]}`,
         );
+      },
+      PrintLabel: (options: {
+        x: number,
+        y: number,
+        text: string,
+      }) => {
+        const textBlock = new joint.shapes.standard.TextBlock();
+        textBlock.resize(170, 94);
+        textBlock.position(options.x + 15, options.y);
+        textBlock.attr('body/class', 'myTextBlock');
+        textBlock.attr('body/stroke', '');
+        textBlock.attr('body/strokeWidth', '0');
+        textBlock.attr('body/fill', 'transparent');
+        textBlock.attr('label/text', options.text);
+
+        textBlock.addTo(this.editor.data.graph);
+      },
+      RectangleLabel: (options: {
+        x: number,
+        y: number,
+        text: string,
+      }) => {
+        const textBlock = new joint.shapes.standard.Rectangle();
+
+        textBlock.resize(1000, 94);
+        textBlock.position(options.x + 16, options.y);
+        textBlock.attr('body/class', 'myTextBlock');
+        textBlock.attr('body/stroke', '');
+        textBlock.attr('body/strokeWidth', '0');
+        textBlock.attr('body/fill', 'transparent');
+        textBlock.attr('label/text', options.text);
+        textBlock.attr('label/text-anchor', 'left');
+        textBlock.attr('label/ref-x', -480);
+
+        textBlock.attr('label/style', 'font-size: 24px; border: 1px solid #F00');
+
+        textBlock.addTo(this.editor.data.graph);
+      },
+      PDFHeader: async () => {
+        const users = new Users();
+
+        await users.get();
+
+        const PDFHeaderConstructor = joint.dia.Element.define(CustomElement.PDF_HEADER, {
+          attrs: {
+            body: {
+              width: 'calc(w)',
+              height: 'calc(h)',
+              fill: '#F4F4F6',
+              strokeWidth: 0,
+            },
+            title: {
+              style: 'font-size: 32px; font-weight: bold',
+              refX: 30,
+              refY: 35,
+            },
+            description: {
+              style: 'font-size: 18px',
+              refX: 30,
+              refY: 85,
+            },
+            author: {
+              style: 'font-size: 16px',
+              refX: 30,
+              refY: 140,
+            },
+          },
+        }, {
+          markup: [{
+            tagName: 'rect',
+            selector: 'body',
+          }, {
+            tagName: 'text',
+            selector: 'title',
+          }, {
+            tagName: 'text',
+            selector: 'description',
+          }, {
+            tagName: 'text',
+            selector: 'author',
+          }],
+        });
+
+        const PDFHeader = new PDFHeaderConstructor();
+
+        PDFHeader.resize(this.editor.data.options.width, 185);
+
+        const {
+          title,
+          description,
+          user_id: userId,
+          updated_at: updatedAt,
+        } = this.editor.graph.data.algorithm;
+
+        PDFHeader.attr('title/text', title);
+        PDFHeader.attr('description/text', description);
+        PDFHeader.attr('author/text', `Autor: ${users.getUserName(userId)} - Última actualización: ${formatDatetime(updatedAt)}`);
+
+        PDFHeader.addTo(this.editor.data.graph);
       },
     };
   }

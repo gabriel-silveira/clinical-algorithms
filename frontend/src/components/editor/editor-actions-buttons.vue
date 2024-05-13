@@ -47,7 +47,6 @@
     />
 
     <q-btn
-      :loading="exportingPDF"
       label="PDF"
       class="float-right q-ml-lg"
       style="width:120px"
@@ -108,7 +107,6 @@ const editor = inject('editor') as Editor;
 
 const saved = computed(() => editor.graph.data.saved);
 const savingGraph = computed(() => editor.graph.data.saving);
-const exportingPDF = computed(() => editor.graph.data.exportingPDF);
 const lastUpdate = computed(() => editor.graph.lastUpdate);
 const readOnly = computed(() => editor.data.readOnly);
 const notPublicView = computed(() => route.name !== ALGORITHMS_PUBLIC_EDITOR);

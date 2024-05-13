@@ -15,6 +15,7 @@ export interface IEditorData {
   },
   algorithm: {
     id: number,
+    user_id: number,
     title: string,
     description: string,
     version: string,
@@ -24,7 +25,6 @@ export interface IEditorData {
   saving: boolean,
   saved: boolean | null,
   savingTimeout: ReturnType<typeof setTimeout> | null,
-  exportingPDF: boolean,
 }
 
 class Graph {
@@ -39,6 +39,7 @@ class Graph {
     },
     algorithm: {
       id: 0,
+      user_id: 0,
       title: '',
       description: '',
       version: '',
@@ -48,7 +49,6 @@ class Graph {
     saving: false,
     saved: null,
     savingTimeout: null,
-    exportingPDF: false,
   });
 
   constructor(editor: Editor) {
@@ -198,7 +198,7 @@ class Graph {
   /**
    * Swap some elements in order to be exported as PDF correctly
    */
-  public setToPrint() {
+  public async setToPrint() {
     const allElements = this.editor.element.getAll();
 
     if (allElements.length) {
@@ -244,35 +244,33 @@ class Graph {
       }
 
       this.editor.element.moveAllElementsDown(200);
+
+      await this.editor.element.create.PDFHeader();
     }
   }
 
-  exportPDF() {
+  public exportPDF() {
     try {
-      this.data.exportingPDF = true;
+      const stageStage = document.getElementById('editor-stage');
 
-      this.setToPrint();
-
-      const stageStage = document.getElementsByTagName('body')[0];
+      console.log(this.editor.data.options);
 
       if (stageStage) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        // window.html2pdf(stageStage, {
-        //   jsPDF: {
-        //     orientation: 'landscape',
-        //     unit: 'px',
-        //     format: [
-        //       this.editor.data.options.width,
-        //       this.editor.data.options.height,
-        //     ],
-        //   },
-        // });
+        /* window.html2pdf(stageStage, {
+          jsPDF: {
+            orientation: 'landscape',
+            unit: 'px',
+            format: [
+              this.editor.data.options.width,
+              this.editor.data.options.height,
+            ],
+          },
+        }); */
       }
-    } finally {
-      setTimeout(() => {
-        this.data.exportingPDF = false;
-      }, 2000);
+    } catch (error) {
+      console.error(error);
     }
   }
 }
