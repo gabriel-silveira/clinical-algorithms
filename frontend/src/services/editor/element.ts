@@ -21,6 +21,7 @@ import {
   INFORMAL_RECOMMENDATION,
   GOOD_PRACTICES, RECOMMENDATION_TYPES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
+
 import { COLOR_PRIMARY } from 'src/services/colors';
 
 // export interface IElementToolsPadding {
@@ -964,59 +965,7 @@ class Element {
     }
   }
 
-  /**
-   * Swap some elements in order to be exported as PDF correctly
-   */
-  public setToPrint() {
-    const allElements = this.getAll();
-
-    if (allElements.length) {
-      for (const element of allElements) {
-        const elementType = element.prop('type');
-
-        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
-          const textarea = this.textarea.getFromEditorElement(element.id);
-
-          if (textarea) {
-            const { value } = textarea;
-
-            const {
-              x,
-              y,
-            } = element.position();
-
-            textarea.remove();
-
-            this.create.PrintLabel({ x, y, text: value });
-          }
-        } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
-          element.remove();
-        } else if (elementType === CustomElement.LANE) {
-          const input = this.input.getFromEditorElement(element.id);
-
-          if (input) {
-            const { value } = input;
-
-            const {
-              x,
-              y,
-            } = element.position();
-
-            input.remove();
-
-            this.create.RectangleLabel({ x, y: y - 32, text: value });
-
-            element.attr('body/textAnchor', 'left');
-            element.attr('textAnchor', 'left');
-          }
-        }
-      }
-
-      this.moveAllElementsDown(200);
-    }
-  }
-
-  private moveAllElementsDown(moveY: number) {
+  public moveAllElementsDown(moveY: number) {
     const allNewElements = this.getAll();
 
     for (const element of allNewElements) {

@@ -1,7 +1,7 @@
 import Editor from 'src/services/editor/index';
 import { api } from 'boot/axios';
 import { reactive } from 'vue';
-import { GRAPH_MODE_PRINT } from 'src/services/editor/types';
+import { CustomElement } from 'src/services/editor/elements/custom-elements';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -117,10 +117,6 @@ class Graph {
 
               this.editor.element.centerViewOnSelected();
             }
-
-            if (this.data.mode === GRAPH_MODE_PRINT) {
-              this.editor.element.setToPrint();
-            }
           }
         }
       }
@@ -199,9 +195,63 @@ class Graph {
     }
   }
 
+  /**
+   * Swap some elements in order to be exported as PDF correctly
+   */
+  public setToPrint() {
+    const allElements = this.editor.element.getAll();
+
+    if (allElements.length) {
+      for (const element of allElements) {
+        const elementType = element.prop('type');
+
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
+          const textarea = this.editor.element.textarea.getFromEditorElement(element.id);
+
+          if (textarea) {
+            const { value } = textarea;
+
+            const {
+              x,
+              y,
+            } = element.position();
+
+            textarea.remove();
+
+            this.editor.element.create.PrintLabel({ x, y, text: value });
+          }
+        } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
+          element.remove();
+        } else if (elementType === CustomElement.LANE) {
+          const input = this.editor.element.input.getFromEditorElement(element.id);
+
+          if (input) {
+            const { value } = input;
+
+            const {
+              x,
+              y,
+            } = element.position();
+
+            input.remove();
+
+            this.editor.element.create.RectangleLabel({ x, y: y - 32, text: value });
+
+            element.attr('body/textAnchor', 'left');
+            element.attr('textAnchor', 'left');
+          }
+        }
+      }
+
+      this.editor.element.moveAllElementsDown(200);
+    }
+  }
+
   exportPDF() {
     try {
       this.data.exportingPDF = true;
+
+      this.setToPrint();
 
       const stageStage = document.getElementsByTagName('body')[0];
 
