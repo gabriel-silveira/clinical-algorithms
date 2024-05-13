@@ -254,9 +254,11 @@ class Graph {
       this.editor.element.moveAllElementsDown(200);
 
       await this.editor.element.create.PDFHeader();
-    }
 
-    this.cropToContent();
+      this.cropToContent();
+
+      await this.editor.element.create.PDFFooter();
+    }
   }
 
   private cropToContent() {
@@ -310,6 +312,8 @@ class Graph {
 
       if (stageStage) {
         const options = {
+          filename: `${this.editor.graph.data.algorithm.title}.pdf`,
+          image: { type: "jpeg", quality: 0.98 },
           jsPDF: {
             orientation: this.data.printSize.width > this.data.printSize.height ? 'landscape' : 'portrait',
             unit: 'px',
@@ -319,7 +323,7 @@ class Graph {
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        // window.html2pdf(stageStage, options);
+        window.html2pdf(stageStage, options);
       }
     } catch (error) {
       console.error(error);

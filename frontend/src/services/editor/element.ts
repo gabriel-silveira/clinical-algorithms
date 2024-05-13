@@ -25,6 +25,7 @@ import {
 import { COLOR_PRIMARY } from 'src/services/colors';
 import { formatDatetime } from 'src/services/date';
 import Users from 'src/services/users';
+import { toDataUrl } from 'src/services/images';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -576,6 +577,56 @@ class Element {
         PDFHeader.attr('author/text', `Autor: ${users.getUserName(userId)} - Última actualización: ${formatDatetime(updatedAt)}`);
 
         PDFHeader.addTo(this.editor.data.graph);
+      },
+      PDFFooter: async () => {
+        const urlBase64 = await toDataUrl('/imgs/powered_by_bireme.png');
+
+        const PDFFooterConstructor = joint.dia.Element.define(CustomElement.PDF_FOOTER, {
+          attrs: {
+            body: {
+              width: 'calc(w)',
+              height: 'calc(h)',
+              fill: 'white',
+              strokeWidth: 0,
+            },
+            description: {
+              refX: 30,
+              refY: 90,
+              style: 'font-size: 10pt; text-align: left;',
+            },
+            logo: {
+              'xlink:href': urlBase64,
+              refX: this.editor.graph.data.printSize.width - 260,
+              refY: 105,
+              style: 'border-radius: 10px',
+            },
+          },
+        }, {
+          markup: [{
+            tagName: 'rect',
+            selector: 'body',
+          }, {
+            tagName: 'text',
+            selector: 'description',
+          }, {
+            tagName: 'image',
+            selector: 'logo',
+          }],
+        });
+
+        const PDFFooter = new PDFFooterConstructor();
+
+        PDFFooter.resize(this.editor.data.options.width, 200);
+        PDFFooter.position(0, this.editor.graph.data.printSize.height - 200);
+
+        PDFFooter.attr(
+          'description/text',
+          `La herramienta de producción de algoritmos clínicos basados en evidencias ha sido desarrollada por la OPS para facilitar la traducción\n
+de recomendaciones basadas en evidencias en acciones de salud. El contenido incluido en los algoritmos es responsabilidad técnica de los\n
+autores individuales, y la producción de algoritmos con esta herramienta no implica respaldo o acuerdo por parte de la OPS con su contenido.`,
+        );
+
+        PDFFooter.addTo(this.editor.data.graph);
       },
     };
   }
