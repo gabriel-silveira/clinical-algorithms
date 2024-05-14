@@ -84,7 +84,6 @@
         <div
           v-if="fixedMetadata.description"
           class="q-pt-md"
-          style="word-break: break-all"
         >
           <div><b>Original transcription</b></div>
 
@@ -129,7 +128,6 @@
           <div
             v-if="fixedMetadata.additional_comments"
             class="q-pb-lg"
-            style="word-break: break-all"
           >
             <div class="q-pb-sm"><b>Additional comments</b></div>
 
@@ -139,7 +137,6 @@
           <div
             v-if="fixedMetadata.recommendation_source"
             class="q-pb-lg"
-            style="word-break: break-all"
           >
             <div class="q-pb-sm"><b>Recommendation source</b></div>
 
@@ -171,7 +168,6 @@
               :href="link.url"
               target="_blank"
               class="text-primary"
-              style="word-break: break-all"
             >
               {{ link.url }}
             </a></div>

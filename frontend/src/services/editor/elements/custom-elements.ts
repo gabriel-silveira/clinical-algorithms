@@ -15,6 +15,8 @@ export enum CustomElement {
   LINK = 'LinkElement',
   // CARD = 'ElementCardExample',
   LANE = 'LaneElement',
+  PDF_HEADER = 'PDFHeaderElement',
+  PDF_FOOTER = 'PDFFooterElement',
 }
 
 export const elementName: {
@@ -29,6 +31,8 @@ export const elementName: {
   [CustomElement.END]: 'End',
   [CustomElement.LINK]: 'Link',
   [CustomElement.LANE]: 'Time',
+  [CustomElement.PDF_HEADER]: 'PDFHeader',
+  [CustomElement.PDF_FOOTER]: 'PDFFooter',
 };
 
 export const ROUND_PORT = {

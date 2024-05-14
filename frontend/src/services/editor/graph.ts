@@ -1,7 +1,10 @@
-import Editor from 'src/services/editor/index';
-import { api } from 'boot/axios';
 import { reactive } from 'vue';
-import { GRAPH_MODE_PRINT } from 'src/services/editor/types';
+import { api } from 'boot/axios';
+import html2pdf from 'html2pdf.js';
+
+import Editor from 'src/services/editor/index';
+
+import { CustomElement } from 'src/services/editor/elements/custom-elements';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -15,6 +18,7 @@ export interface IEditorData {
   },
   algorithm: {
     id: number,
+    user_id: number,
     title: string,
     description: string,
     version: string,
@@ -24,7 +28,11 @@ export interface IEditorData {
   saving: boolean,
   saved: boolean | null,
   savingTimeout: ReturnType<typeof setTimeout> | null,
-  exportingPDF: boolean,
+  printSize: {
+    width: number,
+    height: number,
+  },
+  logoOnHeader: boolean,
 }
 
 class Graph {
@@ -39,6 +47,7 @@ class Graph {
     },
     algorithm: {
       id: 0,
+      user_id: 0,
       title: '',
       description: '',
       version: '',
@@ -48,7 +57,11 @@ class Graph {
     saving: false,
     saved: null,
     savingTimeout: null,
-    exportingPDF: false,
+    printSize: {
+      width: 0,
+      height: 0,
+    },
+    logoOnHeader: false,
   });
 
   constructor(editor: Editor) {
@@ -89,11 +102,13 @@ class Graph {
 
           const allElements = this.editor.data.graph.getElements();
 
-          this.editor.element.createElementsTools(allElements);
-
           this.editor.element.input.setValues(allElements);
           this.editor.element.textarea.setValues(allElements);
-          this.editor.element.textarea.createEventHandlers();
+
+          if (!this.editor.data.readOnly) {
+            this.editor.element.createElementsTools(allElements);
+            this.editor.element.textarea.createEventHandlers();
+          }
 
           // reset scroll because of createEventHandlers method
           // that focus on input fields
@@ -114,10 +129,6 @@ class Graph {
               this.editor.element.select(String(this.editor.route.query.node));
 
               this.editor.element.centerViewOnSelected();
-            }
-
-            if (this.data.mode === GRAPH_MODE_PRINT) {
-              this.editor.element.setToPrint();
             }
           }
         }
@@ -197,30 +208,132 @@ class Graph {
     }
   }
 
-  exportPDF() {
-    try {
-      this.data.exportingPDF = true;
+  public putLogoOnPdfHeader(value: boolean) {
+    this.data.logoOnHeader = value;
+  }
 
+  /**
+   * Swap some elements in order to be exported as PDF correctly
+   */
+  public async setToPrint() {
+    const allElements = this.editor.element.getAll();
+
+    if (allElements.length) {
+      for (const element of allElements) {
+        const elementType = element.prop('type');
+
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
+          const textarea = this.editor.element.textarea.getFromEditorElement(element.id);
+
+          if (textarea) {
+            const { value } = textarea;
+
+            const {
+              x,
+              y,
+            } = element.position();
+
+            textarea.remove();
+
+            this.editor.element.create.PrintLabel({ x, y, text: value });
+          }
+        } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
+          element.remove();
+        } else if (elementType === CustomElement.LANE) {
+          const input = this.editor.element.input.getFromEditorElement(element.id);
+
+          if (input) {
+            const { value } = input;
+
+            const {
+              x,
+              y,
+            } = element.position();
+
+            input.remove();
+
+            this.editor.element.create.RectangleLabel({ x, y: y - 32, text: value });
+
+            element.attr('body/textAnchor', 'left');
+            element.attr('textAnchor', 'left');
+          }
+        }
+      }
+
+      this.editor.element.moveAllElementsDown(200);
+
+      this.cropToContent();
+
+      await this.editor.element.create.PDFHeader();
+
+      await this.editor.element.create.PDFFooter();
+    }
+  }
+
+  private cropToContent() {
+    this.setContentSize();
+
+    this.editor.data.paper?.setDimensions(this.data.printSize.width, this.data.printSize.height);
+  }
+
+  private setContentSize() {
+    let outerX = 0;
+    let lowerY = 0;
+
+    const allCells = this.editor.data.graph.getCells();
+
+    for (const cell of allCells) {
+      const {
+        width,
+        height,
+        x,
+        y,
+      } = cell.getBBox();
+
+      const elementType = cell.prop('type');
+
+      if (![
+        CustomElement.PDF_HEADER,
+        CustomElement.RECOMMENDATION,
+        CustomElement.LINK,
+        'link',
+        'standard.Rectangle',
+        'standard.TextBlock',
+      ].includes(elementType)) {
+        // lanes are not considered to calculate width
+        if (elementType !== CustomElement.LANE) {
+          const refX = x + width;
+          outerX = refX > outerX ? refX : outerX;
+        }
+
+        const refY = y + height;
+        lowerY = refY > lowerY ? refY : lowerY;
+      }
+    }
+
+    this.data.printSize.width = outerX + 200;
+    this.data.printSize.height = lowerY + 200;
+  }
+
+  public exportPDF() {
+    try {
       const stageStage = document.getElementById('editor-stage');
 
       if (stageStage) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        window.html2pdf(stageStage, {
+        const options = {
+          filename: `${this.editor.graph.data.algorithm.title}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
           jsPDF: {
-            orientation: 'landscape',
+            orientation: this.data.printSize.width > this.data.printSize.height ? 'landscape' : 'portrait',
             unit: 'px',
-            format: [
-              this.editor.data.options.width,
-              this.editor.data.options.height,
-            ],
+            format: [this.data.printSize.width, this.data.printSize.height],
           },
-        });
+        };
+
+        html2pdf(stageStage, options);
       }
-    } finally {
-      setTimeout(() => {
-        this.data.exportingPDF = false;
-      }, 2000);
+    } catch (error) {
+      console.error(error);
     }
   }
 }

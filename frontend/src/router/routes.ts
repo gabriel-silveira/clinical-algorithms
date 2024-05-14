@@ -7,11 +7,6 @@ import AlgorithmsCategories from './routes/algorithms_categories';
 import Algorithms, { ALGORITHMS_PUBLIC_PRINT, ALGORITHMS_PUBLIC_PRINT_PATH } from './routes/algorithms';
 
 const routes: RouteRecordRaw[] = [
-  // {
-  //   path: '',
-  //   component: () => import('layouts/main-layout.vue'),
-  //   children: [],
-  // },
   {
     path: '',
     component: () => import('layouts/main-layout.vue'),
@@ -23,15 +18,21 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: `/${ALGORITHMS_PUBLIC_PRINT_PATH}`,
+    component: () => import('layouts/login-layout.vue'),
+    children: [
+      {
+        path: '',
+        name: ALGORITHMS_PUBLIC_PRINT,
+        component: () => import('pages/editor/print-page.vue'),
+      },
+    ],
+  },
+  {
     path: '/admin',
     component: () => import('layouts/login-layout.vue'),
     children: [
       ...Account,
-      {
-        path: ALGORITHMS_PUBLIC_PRINT_PATH,
-        name: ALGORITHMS_PUBLIC_PRINT,
-        component: () => import('pages/editor/print-page.vue'),
-      },
     ],
   },
 ];
