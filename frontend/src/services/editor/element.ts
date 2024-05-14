@@ -563,7 +563,7 @@ class Element {
 
         const PDFHeader = new PDFHeaderConstructor();
 
-        PDFHeader.resize(this.editor.data.options.width, 185);
+        PDFHeader.resize(this.editor.graph.data.printSize.width, 185);
 
         const {
           title,
@@ -616,7 +616,7 @@ class Element {
 
         const PDFFooter = new PDFFooterConstructor();
 
-        PDFFooter.resize(this.editor.data.options.width, 200);
+        PDFFooter.resize(this.editor.graph.data.printSize.width, 200);
         PDFFooter.position(0, this.editor.graph.data.printSize.height - 200);
 
         PDFFooter.attr(

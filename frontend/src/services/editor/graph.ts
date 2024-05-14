@@ -29,6 +29,7 @@ export interface IEditorData {
     width: number,
     height: number,
   },
+  logoOnHeader: boolean,
 }
 
 class Graph {
@@ -57,6 +58,7 @@ class Graph {
       width: 0,
       height: 0,
     },
+    logoOnHeader: false,
   });
 
   constructor(editor: Editor) {
@@ -203,6 +205,10 @@ class Graph {
     }
   }
 
+  public putLogoOnPdfHeader(value: boolean) {
+    this.data.logoOnHeader = value;
+  }
+
   /**
    * Swap some elements in order to be exported as PDF correctly
    */
@@ -253,9 +259,9 @@ class Graph {
 
       this.editor.element.moveAllElementsDown(200);
 
-      await this.editor.element.create.PDFHeader();
-
       this.cropToContent();
+
+      await this.editor.element.create.PDFHeader();
 
       await this.editor.element.create.PDFFooter();
     }

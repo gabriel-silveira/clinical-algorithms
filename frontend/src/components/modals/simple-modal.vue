@@ -7,7 +7,7 @@
       <q-card-section
         v-if="props.title"
         class="row items-center"
-        :class="{ 'text-negative': props.negative, 'q-px-xl q-pt-lg': props.showCloseButton }"
+        :class="{ 'text-negative': props.negative, 'q-pr-xl q-pt-lg': props.showCloseButton }"
       >
         <b class="q-px-md q-pt-sm">{{ props.title }}</b>
 

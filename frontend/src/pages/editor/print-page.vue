@@ -42,7 +42,9 @@ const editor = inject('editor') as Editor;
 const loading = ref(true);
 
 onMounted(async () => {
-  const { id } = route.query;
+  const { id, logo } = route.query;
+
+  const putLogoOnHeader = logo === 'true';
 
   if (id && typeof id === 'string') {
     editor.setIsMaintainer(false);
@@ -52,6 +54,8 @@ onMounted(async () => {
     await editor.init('editor-stage');
 
     await editor.graph.open(id);
+
+    await editor.graph.putLogoOnPdfHeader(putLogoOnHeader);
 
     await editor.graph.setToPrint();
 
