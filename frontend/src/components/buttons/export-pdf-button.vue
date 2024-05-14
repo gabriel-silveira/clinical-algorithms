@@ -5,7 +5,7 @@
     style="width:120px"
     color="primary"
     push
-    @click="exportPdf"
+    @click="tryDownloadPdf"
   />
 
   <simple-modal
@@ -39,18 +39,12 @@ const route = useRoute();
 
 const showPutOPSLogoDialog = ref(false);
 
-const exportPdf = async () => {
+const tryDownloadPdf = async () => {
   if (editor.metadata.hasPendency()) {
     editor.metadata.alertPendency('descargar el PDF');
-  } else if (editor.data.isMaintainer) {
+  } else {
     // ask if one wants to put the OPS logo on the header before downloading (for admins only)
     showPutOPSLogoDialog.value = true;
-  } else {
-    if (editor.graph.isNotSaved) {
-      await editor.graph.save();
-    }
-
-    window.open(`${ALGORITHMS_PUBLIC_PRINT_PATH}?id=${route.query.id}`);
   }
 };
 
