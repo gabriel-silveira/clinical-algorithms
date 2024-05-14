@@ -521,7 +521,9 @@ class Element {
 
         await users.get();
 
-        const PDFHeaderConstructor = joint.dia.Element.define(CustomElement.PDF_HEADER, {
+        const urlBase64 = await toDataUrl('/imgs/logo-ops.png');
+
+        const defaults = {
           attrs: {
             body: {
               width: 'calc(w)',
@@ -544,8 +546,15 @@ class Element {
               refX: 30,
               refY: 132,
             },
+            logo: {
+              'xlink:href': '',
+              refX: this.editor.graph.data.printSize.width - 320,
+              refY: 30,
+            },
           },
-        }, {
+        };
+
+        const markup = {
           markup: [{
             tagName: 'rect',
             selector: 'body',
@@ -558,8 +567,21 @@ class Element {
           }, {
             tagName: 'text',
             selector: 'author',
+          }, {
+            tagName: 'image',
+            selector: 'logo',
           }],
-        });
+        };
+
+        if (this.editor.graph.data.logoOnHeader) {
+          defaults.attrs.logo['xlink:href'] = urlBase64;
+        }
+
+        const PDFHeaderConstructor = joint.dia.Element.define(
+          CustomElement.PDF_HEADER,
+          defaults,
+          markup,
+        );
 
         const PDFHeader = new PDFHeaderConstructor();
 
@@ -598,7 +620,6 @@ class Element {
               'xlink:href': urlBase64,
               refX: this.editor.graph.data.printSize.width - 260,
               refY: 105,
-              style: 'border-radius: 10px',
             },
           },
         }, {
