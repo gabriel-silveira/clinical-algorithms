@@ -1,6 +1,7 @@
+import { reactive } from 'vue';
+import html2pdf from 'html2pdf.js';
 import Editor from 'src/services/editor/index';
 import { api } from 'boot/axios';
-import { reactive } from 'vue';
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
 
 const RESOURCE_ALGORITHM = 'algorithms';
@@ -313,7 +314,7 @@ class Graph {
       if (stageStage) {
         const options = {
           filename: `${this.editor.graph.data.algorithm.title}.pdf`,
-          image: { type: "jpeg", quality: 0.98 },
+          image: { type: 'jpeg', quality: 0.98 },
           jsPDF: {
             orientation: this.data.printSize.width > this.data.printSize.height ? 'landscape' : 'portrait',
             unit: 'px',
@@ -321,9 +322,7 @@ class Graph {
           },
         };
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        window.html2pdf(stageStage, options);
+        html2pdf(stageStage, options);
       }
     } catch (error) {
       console.error(error);
