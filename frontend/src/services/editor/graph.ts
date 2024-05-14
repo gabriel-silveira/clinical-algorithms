@@ -1,5 +1,4 @@
 import { reactive } from 'vue';
-import html2pdf from 'html2pdf.js';
 import Editor from 'src/services/editor/index';
 import { api } from 'boot/axios';
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
@@ -322,7 +321,7 @@ class Graph {
           },
         };
 
-        html2pdf(stageStage, options);
+        // html2pdf(stageStage, options);
       }
     } catch (error) {
       console.error(error);

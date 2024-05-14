@@ -34,7 +34,7 @@
 
       <q-card-actions align="right" class="q-pa-md">
         <q-btn
-          style="padding: 0 30px"
+          style="padding: 0 30px; min-width: 110px"
           :label="props.cancelLabel"
           color="primary"
           @click="emitEvent('cancel')"
@@ -42,7 +42,7 @@
         />
 
         <q-btn
-          style="padding: 0 30px"
+          style="padding: 0 30px; min-width: 110px"
           :loading="props.confirming"
           :label="props.confirmLabel"
           color="primary"
