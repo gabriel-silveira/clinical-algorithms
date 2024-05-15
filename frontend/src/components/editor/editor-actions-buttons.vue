@@ -46,15 +46,7 @@
       @click="viewPublicGraph"
     />
 
-   <q-btn
-     :loading="exportingPDF"
-     label="PDF"
-     class="float-right q-ml-lg"
-     style="width:120px"
-     color="primary"
-     push
-     @click="toPDF"
-   />
+    <export-pdf-button />
 
     <q-btn
       v-if="!readOnly"
@@ -81,20 +73,18 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  inject,
-} from 'vue';
+import { computed, inject } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
 
 import Editor from 'src/services/editor';
 
+import ExportPdfButton from 'components/buttons/export-pdf-button.vue';
+
 import {
   ALGORITHMS_INDEX,
   ALGORITHMS_PUBLIC_EDITOR,
   // ALGORITHMS_PUBLIC_EDITOR_PATH,
-  ALGORITHMS_PUBLIC_PRINT_PATH,
   ALGORITHMS_PUBLIC_SEARCH,
   ALGORITHMS_SEARCH,
 } from 'src/router/routes/algorithms';
@@ -108,7 +98,6 @@ const editor = inject('editor') as Editor;
 
 const saved = computed(() => editor.graph.data.saved);
 const savingGraph = computed(() => editor.graph.data.saving);
-const exportingPDF = computed(() => editor.graph.data.exportingPDF);
 const lastUpdate = computed(() => editor.graph.lastUpdate);
 const readOnly = computed(() => editor.data.readOnly);
 const notPublicView = computed(() => route.name !== ALGORITHMS_PUBLIC_EDITOR);
@@ -169,18 +158,6 @@ const viewPublicGraph = async () => {
     }
 
     await editor.switchToMode();
-  }
-};
-
-const toPDF = async () => {
-  if (editor.metadata.hasPendency()) {
-    editor.metadata.alertPendency('publicar');
-  } else {
-    if (editor.graph.isNotSaved) {
-      await editor.graph.save();
-    }
-
-    window.open(`${ALGORITHMS_PUBLIC_PRINT_PATH}?id=${route.query.id}`);
   }
 };
 </script>

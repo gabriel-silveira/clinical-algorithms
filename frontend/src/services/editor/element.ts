@@ -21,7 +21,11 @@ import {
   INFORMAL_RECOMMENDATION,
   GOOD_PRACTICES, RECOMMENDATION_TYPES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
+
 import { COLOR_PRIMARY } from 'src/services/colors';
+import { formatDatetime } from 'src/services/date';
+import Users from 'src/services/users';
+import { toDataUrl } from 'src/services/images';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -77,19 +81,22 @@ class Element {
   public isAction(element?: dia.Element) {
     if (element) return element.prop('type') === CustomElement.ACTION;
 
-    return this.getSelected()?.prop('type') === CustomElement.ACTION;
+    return this.getSelected()
+      ?.prop('type') === CustomElement.ACTION;
   }
 
   public isEvaluation(element?: dia.Element) {
     if (element) return element.prop('type') === CustomElement.EVALUATION;
 
-    return this.getSelected()?.prop('type') === CustomElement.EVALUATION;
+    return this.getSelected()
+      ?.prop('type') === CustomElement.EVALUATION;
   }
 
   public isLane(element?: dia.Element) {
     if (element) return element.prop('type') === CustomElement.LANE;
 
-    return this.getSelected()?.prop('type') === CustomElement.LANE;
+    return this.getSelected()
+      ?.prop('type') === CustomElement.LANE;
   }
 
   public setCreationPosition(x: number, y: number) {
@@ -100,13 +107,17 @@ class Element {
     const fixedX = x - Number(stringX[stringX.length - 1]);
     const fixedY = y - Number(stringY[stringY.length - 1]);
 
-    this.data.creationPosition = { x: fixedX, y: fixedY };
+    this.data.creationPosition = {
+      x: fixedX,
+      y: fixedY,
+    };
   }
 
   private removeSelected() {
     this.deleteRecommendationsTotals();
 
-    this.getSelected()?.remove();
+    this.getSelected()
+      ?.remove();
 
     this.deselectAll();
 
@@ -191,7 +202,10 @@ class Element {
   static getExpandRecommendationButtonPosition(element: dia.Element) {
     const type = element.prop('type');
 
-    const { width, height } = element.size();
+    const {
+      width,
+      height,
+    } = element.size();
 
     if (type === CustomElement.ACTION) {
       return {
@@ -268,16 +282,6 @@ class Element {
 
   get create() {
     return {
-      PrintLabel: (x: number, y: number, text: string) => {
-        const textBlock = new joint.shapes.standard.TextBlock();
-        textBlock.resize(160, 94);
-        textBlock.position(x + 20, y);
-        textBlock.attr('body/stroke', '0');
-        textBlock.attr('body/fill', 'transparent');
-        textBlock.attr('label/text', text);
-        textBlock.attr('label/style/color', 'black');
-        textBlock.addTo(this.editor.data.graph);
-      },
       Start: async () => {
         const element = new customElements.StartElement({
           position: {
@@ -285,7 +289,8 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToStart(),
-        }).resize(40, 40).addTo(this.editor.data.graph);
+        }).resize(40, 40)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -298,7 +303,8 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToAction(),
-        }).resize(200, 100).addTo(this.editor.data.graph);
+        }).resize(200, 100)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -310,8 +316,14 @@ class Element {
         originalElement: dia.Element,
         recommendationElement: dia.Element,
       ) => {
-        const { width, height } = originalElement.size();
-        const { x, y } = originalElement.position();
+        const {
+          width,
+          height,
+        } = originalElement.size();
+        const {
+          x,
+          y,
+        } = originalElement.position();
 
         const togglerElement = new customElements.RecommendationTogglerElement({
           position: {
@@ -383,7 +395,8 @@ class Element {
             y: this.data.creationPosition.y,
           },
           ports: Ports.generateToEvaluation(),
-        }).resize(200, 100).addTo(this.editor.data.graph);
+        }).resize(200, 100)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -397,7 +410,8 @@ class Element {
             x: this.data.creationPosition.x,
             y: this.data.creationPosition.y,
           },
-        }).resize(40, 40).addTo(this.editor.data.graph);
+        }).resize(40, 40)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element);
 
@@ -409,7 +423,8 @@ class Element {
             x: 0,
             y: this.data.creationPosition.y,
           },
-        }).resize(3000, 50).addTo(this.editor.data.graph);
+        }).resize(this.editor.data.options.width, 50)
+          .addTo(this.editor.data.graph);
 
         this.createTools(element, {
           removeButtons: {
@@ -438,7 +453,10 @@ class Element {
           [GOOD_PRACTICES]: 'BP',
         };
 
-        const { x, y } = element.position();
+        const {
+          x,
+          y,
+        } = element.position();
 
         const { width } = element.size();
 
@@ -449,7 +467,8 @@ class Element {
             x: x + width + 9,
             y: y + refY,
           },
-        }).resize(28, 17).addTo(this.editor.data.graph);
+        }).resize(28, 17)
+          .addTo(this.editor.data.graph);
 
         createElement.prop('props/parentElement', element.id);
 
@@ -459,6 +478,176 @@ class Element {
           // @ts-ignore
           `${totalRecommendations}${recommendationAbbreviation[type]}`,
         );
+      },
+      PrintLabel: (options: {
+        x: number,
+        y: number,
+        text: string,
+      }) => {
+        const textBlock = new joint.shapes.standard.TextBlock();
+        textBlock.resize(170, 94);
+        textBlock.position(options.x + 15, options.y);
+        textBlock.attr('body/class', 'myTextBlock');
+        textBlock.attr('body/stroke', '');
+        textBlock.attr('body/strokeWidth', '0');
+        textBlock.attr('body/fill', 'transparent');
+        textBlock.attr('label/text', options.text);
+
+        textBlock.addTo(this.editor.data.graph);
+      },
+      RectangleLabel: (options: {
+        x: number,
+        y: number,
+        text: string,
+      }) => {
+        const textBlock = new joint.shapes.standard.Rectangle();
+
+        textBlock.resize(1000, 94);
+        textBlock.position(options.x + 16, options.y);
+        textBlock.attr('body/class', 'myTextBlock');
+        textBlock.attr('body/stroke', '');
+        textBlock.attr('body/strokeWidth', '0');
+        textBlock.attr('body/fill', 'transparent');
+        textBlock.attr('label/text', options.text);
+        textBlock.attr('label/text-anchor', 'left');
+        textBlock.attr('label/ref-x', -480);
+
+        textBlock.attr('label/style', 'font-size: 24px; border: 1px solid #F00');
+
+        textBlock.addTo(this.editor.data.graph);
+      },
+      PDFHeader: async () => {
+        const users = new Users();
+
+        await users.get();
+
+        const urlBase64 = await toDataUrl('/imgs/logo-ops.png');
+
+        const defaults = {
+          attrs: {
+            body: {
+              width: 'calc(w)',
+              height: 'calc(h)',
+              fill: '#F4F4F6',
+              strokeWidth: 0,
+            },
+            title: {
+              style: 'font-size: 32px; font-weight: bold',
+              refX: 30,
+              refY: 35,
+            },
+            description: {
+              style: 'font-size: 18px',
+              refX: 30,
+              refY: 90,
+            },
+            author: {
+              style: 'font-size: 16px',
+              refX: 30,
+              refY: 132,
+            },
+            logo: {
+              'xlink:href': '',
+              refX: this.editor.graph.data.printSize.width - 320,
+              refY: 30,
+            },
+          },
+        };
+
+        const markup = {
+          markup: [{
+            tagName: 'rect',
+            selector: 'body',
+          }, {
+            tagName: 'text',
+            selector: 'title',
+          }, {
+            tagName: 'text',
+            selector: 'description',
+          }, {
+            tagName: 'text',
+            selector: 'author',
+          }, {
+            tagName: 'image',
+            selector: 'logo',
+          }],
+        };
+
+        if (this.editor.graph.data.logoOnHeader) {
+          defaults.attrs.logo['xlink:href'] = urlBase64;
+        }
+
+        const PDFHeaderConstructor = joint.dia.Element.define(
+          CustomElement.PDF_HEADER,
+          defaults,
+          markup,
+        );
+
+        const PDFHeader = new PDFHeaderConstructor();
+
+        PDFHeader.resize(this.editor.graph.data.printSize.width, 185);
+
+        const {
+          title,
+          description,
+          user_id: userId,
+          updated_at: updatedAt,
+        } = this.editor.graph.data.algorithm;
+
+        PDFHeader.attr('title/text', title);
+        PDFHeader.attr('description/text', description);
+        PDFHeader.attr('author/text', `Autor: ${users.getUserName(userId)} - Última actualización: ${formatDatetime(updatedAt)}`);
+
+        PDFHeader.addTo(this.editor.data.graph);
+      },
+      PDFFooter: async () => {
+        const urlBase64 = await toDataUrl('/imgs/powered_by_bireme.png');
+
+        const PDFFooterConstructor = joint.dia.Element.define(CustomElement.PDF_FOOTER, {
+          attrs: {
+            body: {
+              width: 'calc(w)',
+              height: 'calc(h)',
+              fill: 'white',
+              strokeWidth: 0,
+            },
+            description: {
+              refX: 30,
+              refY: 90,
+              style: 'font-size: 10pt; text-align: left;',
+            },
+            logo: {
+              'xlink:href': urlBase64,
+              refX: this.editor.graph.data.printSize.width - 260,
+              refY: 105,
+            },
+          },
+        }, {
+          markup: [{
+            tagName: 'rect',
+            selector: 'body',
+          }, {
+            tagName: 'text',
+            selector: 'description',
+          }, {
+            tagName: 'image',
+            selector: 'logo',
+          }],
+        });
+
+        const PDFFooter = new PDFFooterConstructor();
+
+        PDFFooter.resize(this.editor.graph.data.printSize.width, 200);
+        PDFFooter.position(0, this.editor.graph.data.printSize.height - 200);
+
+        PDFFooter.attr(
+          'description/text',
+          `La herramienta de producción de algoritmos clínicos basados en evidencias ha sido desarrollada por la OPS para facilitar la traducción\n
+de recomendaciones basadas en evidencias en acciones de salud. El contenido incluido en los algoritmos es responsabilidad técnica de los\n
+autores individuales, y la producción de algoritmos con esta herramienta no implica respaldo o acuerdo por parte de la OPS con su contenido.`,
+        );
+
+        PDFFooter.addTo(this.editor.data.graph);
       },
     };
   }
@@ -470,7 +659,8 @@ class Element {
     elements.forEach((element) => {
       // hide element tools
       if (this.editor.data.paper && !this.editor.data.readOnly) {
-        element.findView(this.editor.data.paper).hideTools();
+        element.findView(this.editor.data.paper)
+          .hideTools();
       } else if (this.editor.data.readOnly) {
         this.createReadonlyTools(element, false);
       }
@@ -483,7 +673,8 @@ class Element {
     propName: string,
     value: boolean | string | number | object | undefined | null,
   ) {
-    this.getSelected()?.prop(`props/${propName}`, value);
+    this.getSelected()
+      ?.prop(`props/${propName}`, value);
 
     // avoid "setNotSavedChanges" without changing anything
     // if (commitChanges) {
@@ -492,13 +683,15 @@ class Element {
   }
 
   public async setAttr(attrName: string, value: string) {
-    this.getSelected()?.attr(attrName, value);
+    this.getSelected()
+      ?.attr(attrName, value);
 
     // await this.joint.setNotSavedChanges(true);
   }
 
   public getById(id: dia.Cell.ID): dia.Element | undefined {
-    return this.editor.data.graph.getElements().find((element) => element.id === id);
+    return this.editor.data.graph.getElements()
+      .find((element) => element.id === id);
   }
 
   private createReadonlyTools(element: dia.Element, showBoundary: boolean) {
@@ -575,11 +768,13 @@ class Element {
   public getLabel(element?: dia.Element) {
     if (element) return element.prop('props/label') || '';
 
-    return this.getSelected()?.prop('props/label') || '';
+    return this.getSelected()
+      ?.prop('props/label') || '';
   }
 
   public getTitle() {
-    return this.getSelected()?.prop('title') || '';
+    return this.getSelected()
+      ?.prop('title') || '';
   }
 
   // PROBABLY DEPRECATED
@@ -590,7 +785,8 @@ class Element {
   // }
 
   public getName() {
-    const elementType = this.getSelected()?.prop('type');
+    const elementType = this.getSelected()
+      ?.prop('type');
 
     if (elementType) return elementName[elementType];
 
@@ -722,11 +918,17 @@ class Element {
     if (allElements.length) {
       for (const element of allElements) {
         if (element.prop('type') === CustomElement.ACTION) {
-          const { x, y } = element.position();
+          const {
+            x,
+            y,
+          } = element.position();
 
           void this.create.Recommendation(x, y + 106, element);
         } else if (element.prop('type') === CustomElement.EVALUATION) {
-          const { x, y } = element.position();
+          const {
+            x,
+            y,
+          } = element.position();
 
           void this.create.Recommendation(x + 1, y + 111, element);
         }
@@ -849,7 +1051,10 @@ class Element {
     const selectedElement = this.getSelected();
 
     if (selectedElement) {
-      const { y, x } = selectedElement.position();
+      const {
+        y,
+        x,
+      } = selectedElement.position();
 
       const stageWrapper = document.getElementById('editor-stage-wrapper');
 
@@ -860,7 +1065,10 @@ class Element {
         const newY = y - diffToYCenter;
         const newX = x - diffToXCenter;
 
-        Editor.setScroll({ y: newY, x: newX });
+        Editor.setScroll({
+          y: newY,
+          x: newX,
+        });
       }
     }
   }
@@ -893,25 +1101,31 @@ class Element {
     }
   }
 
-  public setToPrint() {
-    const allElements = this.getAll();
+  public moveAllElementsDown(moveY: number) {
+    const allNewElements = this.getAll();
 
-    if (allElements.length) {
-      for (const element of allElements) {
-        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(element.prop('type'))) {
-          const textarea = this.textarea.getFromEditorElement(element.id);
+    for (const element of allNewElements) {
+      const { x, y } = element.position();
 
-          if (textarea) {
-            const { value } = textarea;
+      element.position(x, y + moveY);
+    }
 
-            const { x, y } = element.position();
+    const allCells = this.editor.data.graph.getCells();
 
-            textarea.remove();
+    for (const cell of allCells) {
+      const elementType = cell.prop('type');
 
-            this.create.PrintLabel(x, y, value);
+      if (elementType === 'link') {
+        const vertices = cell.prop('vertices');
+
+        if (vertices) {
+          const newVertices: { x: number, y: number }[] = [];
+
+          for (const vertex of vertices) {
+            newVertices.push({ x: vertex.x, y: vertex.y + moveY });
           }
-        } else if (element.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
-          element.remove();
+
+          cell.prop('vertices', newVertices);
         }
       }
     }
