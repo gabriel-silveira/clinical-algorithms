@@ -14,7 +14,7 @@
           />
 
           <div
-            class="text-body1 text-bold"
+            class="text-body1 text-bold text-primary"
             style="text-transform: uppercase"
           >
             {{ fixedMetadata.index }}. {{
@@ -26,58 +26,70 @@
           </div>
         </div>
 
-        <div
-          v-if="fixedMetadata.intervention_type || fixedMetadata.certainty_of_the_evidence"
-          class="row q-pt-md"
-        >
+        <div class="full-width text-center">
           <div
-            v-if="fixedMetadata.intervention_type"
-            class="col-6"
+            v-if="fixedMetadata.intervention_type || fixedMetadata.certainty_of_the_evidence"
+            class="row q-pt-md"
           >
-            <div class="float-left">
-              <b>Type</b><br/>{{ fixedMetadata.intervention_type }}
-            </div>
+            <div
+              v-if="fixedMetadata.intervention_type"
+              class="col-6 bg-grey-8 text-white q-pa-md rounded-borders"
+              style="border-right: 5px solid white"
+            >
+              <div class="row">
+                <div class="col-6">
+                  <div style="line-height:200%">
+                    <strong style="font-size:18px">Type</strong>
+                    <br/>{{ fixedMetadata.intervention_type }}
+                  </div>
+                </div>
+                <div class="col-6">
 
-            <q-img
-              v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.DIAGNOSIS"
-              :src="DiagnosisIcon"
-              style="margin-top:-4px"
-              width="48px"
-              class="q-ml-sm float-left"
-            />
+                  <q-img
+                    v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.DIAGNOSIS"
+                    :src="DiagnosisIcon"
+                    style="margin-top:-4px"
+                    width="48px"
+                    class="q-ml-sm float-left"
+                  />
 
-            <q-img
-              v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.TREATMENT"
-              :src="TreatmentIcon"
-              style="margin-top:-2px"
-              width="48px"
-              class="q-ml-sm float-left"
-            />
+                  <q-img
+                    v-if="fixedMetadata.intervention_type === INTERVENTION_TYPES.TREATMENT"
+                    :src="TreatmentIcon"
+                    style="margin-top:-2px"
+                    width="64px"
+                    class="q-ml-sm float-left"
+                  />
 
-            <q-img
-              v-if="
+                  <q-img
+                    v-if="
                 fixedMetadata.intervention_type === INTERVENTION_TYPES.POPULATION_CLASSIFICATION
               "
-              :src="PopulationClassificationIcon"
-              style="margin-top:-7px"
-              width="60px"
-              class="q-ml-sm float-left"
-            />
-          </div>
+                    :src="PopulationClassificationIcon"
+                    style="margin-top:-7px"
+                    width="60px"
+                    class="q-ml-sm float-left"
+                  />
+                </div>
+              </div>
+            </div>
 
-          <div
-            v-if="isFormal && fixedMetadata.certainty_of_the_evidence"
-            class="col-6"
-          >
-            <b>Certainty of evidence</b><br/>{{ fixedMetadata.certainty_of_the_evidence }}
+            <div
+              v-if="isFormal && fixedMetadata.certainty_of_the_evidence"
+              class="col-6 text-white q-pa-md rounded-borders"
+              style="background-color: #ee9a00; line-height: 200%; border-left: 5px solid white"
+            >
+              <strong style="font-size:18px">Certainty of evidence</strong>
+              <br/>{{ fixedMetadata.certainty_of_the_evidence }}
 
-            <q-img
-              v-for="index in certaintyRange"
-              :src="CertaintyIcon"
-              :key="`certainty${index}`"
-              width="24px"
-              class="q-ml-sm"
-            />
+              <q-img
+                v-for="index in certaintyRange"
+                :src="CertaintyIcon"
+                :key="`certainty${index}`"
+                width="27px"
+                class="q-ml-sm"
+              />
+            </div>
           </div>
         </div>
 
@@ -85,7 +97,7 @@
           v-if="fixedMetadata.description"
           class="q-pt-md"
         >
-          <div><b>Original transcription</b></div>
+          <div class="text-primary text-body1"><b>Original transcription</b></div>
 
           <div>{{ fixedMetadata.description }}</div>
         </div>
@@ -120,7 +132,9 @@
             v-if="fixedMetadata.implementation_considerations"
             class="q-pb-lg"
           >
-            <div class="q-pb-sm"><b>Implementation considerations</b></div>
+            <div class="q-pb-sm text-primary" style="font-size:15px">
+              <b>Implementation considerations</b>
+            </div>
 
             <div>{{ fixedMetadata.implementation_considerations }}</div>
           </div>
@@ -129,7 +143,9 @@
             v-if="fixedMetadata.additional_comments"
             class="q-pb-lg"
           >
-            <div class="q-pb-sm"><b>Additional comments</b></div>
+            <div class="q-pb-sm text-primary" style="font-size:15px">
+              <b>Additional comments</b>
+            </div>
 
             <div>{{ fixedMetadata.additional_comments }}</div>
           </div>
@@ -138,7 +154,9 @@
             v-if="fixedMetadata.recommendation_source"
             class="q-pb-lg"
           >
-            <div class="q-pb-sm"><b>Recommendation source</b></div>
+            <div class="q-pb-sm text-primary" style="font-size:15px">
+              <b>Recommendation source</b>
+            </div>
 
             <div>{{ fixedMetadata.recommendation_source }}</div>
           </div>
@@ -201,9 +219,9 @@ import RecommendationArrows from 'components/items/recommendations/recommendatio
 import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
 
 import GradeIcon from 'src/assets/imgs/grade_logo.png';
-import CertaintyIcon from 'src/assets/imgs/certainty.png';
+import CertaintyIcon from 'src/assets/imgs/certainty_2.png';
 import DiagnosisIcon from 'src/assets/imgs/diagnosis.png';
-import TreatmentIcon from 'src/assets/imgs/treatment.png';
+import TreatmentIcon from 'src/assets/imgs/treatment_2.png';
 import PopulationClassificationIcon from 'src/assets/imgs/population_classification.png';
 import { INTERVENTION_TYPES } from 'src/services/editor/constants/metadata/intervention';
 

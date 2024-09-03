@@ -7,7 +7,7 @@
     <div
       v-if="showMetadataPanel"
       id="editor-metadata-panel"
-      class="bg-white shadow-light-up"
+      class="shadow-light-up"
       :class="{ 'editor-read-only': !editable }"
     >
       <div
@@ -15,7 +15,7 @@
         :class="{ 'editor-read-only': !editable }"
       >
         <div
-          class="text-body1 text-bold text-primary q-px-md q-pt-md q-pb-sm"
+          class="text-body1 text-bold q-px-md q-pt-md q-pb-sm text-blue-10"
           style="font-size:18px"
         >
           {{ data.name }}{{ elementLabel }}
@@ -191,7 +191,6 @@ onBeforeUnmount(() => {
   left: 0
   width: 100%
   height: 141px
-  border-bottom: 1px solid #DDD
 
 #editor-metadata-panel-header.editor-read-only
   height: 78px
