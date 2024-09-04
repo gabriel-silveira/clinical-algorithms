@@ -843,12 +843,17 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
             if (textarea) {
               textarea.value = element.prop('props/label') || '';
-            }
-          }
 
-          setTimeout(() => {
-            deselectAllTexts();
-          }, 1);
+              // force resizing textarea...
+              if (this.editor.data.readOnly) {
+                autoResizeTextarea(textarea);
+              }
+            }
+
+            setTimeout(() => {
+              deselectAllTexts();
+            }, 50);
+          }
         });
       },
       getEditorElement: (input: HTMLElement) => {
