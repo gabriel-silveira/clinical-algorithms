@@ -21,7 +21,7 @@ export function autoResizeTextarea(textarea: HTMLTextAreaElement) {
     element: HTMLElement,
     // eslint-disable-next-line no-undef
     event: keyof HTMLElementEventMap,
-    handler: any,
+    handler: () => void,
   ) => {
     if (element) {
       element.addEventListener(event, handler, false);
