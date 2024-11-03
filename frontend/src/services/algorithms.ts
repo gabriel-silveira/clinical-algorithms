@@ -100,6 +100,26 @@ class Algorithms {
     }
   }
 
+  public async getUserAlgorithms(userId: number) {
+    try {
+      this.data.loading = true;
+
+      const { data: flowcharts }: { data: IAlgorithm[] } = await api.get(`${resource}/user/${userId}`);
+
+      if (flowcharts) {
+        this.data.algorithms = [...flowcharts];
+      }
+
+      return Promise.resolve(true);
+    } catch (error) {
+      return Promise.reject(error);
+    } finally {
+      setTimeout(() => {
+        this.data.loading = false;
+      }, 1000);
+    }
+  }
+
   public async getAlgorithmCategories(algorithmId?: number) {
     try {
       const { data: categories }: {

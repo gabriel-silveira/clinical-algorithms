@@ -50,7 +50,10 @@
       </div>
     </div>
 
-    <div class="q-px-md">
+    <div
+      v-if="showTable"
+      class="q-px-md"
+    >
       <q-card class="shadow-light">
         <q-card-section>
           <algorithms-table
@@ -98,6 +101,7 @@ provide('algorithmsCategories', algorithmsCategories);
 const settings = inject('settings') as Settings;
 
 const isMaintainer = ref(false);
+const showTable = ref(false);
 
 const searchAlgorithm = (keyword: string) => {
   algorithms.data.searchKeyword = keyword;
@@ -136,6 +140,8 @@ const tryClearingSearch = () => {
 
 onBeforeMount(async () => {
   isMaintainer.value = await settings.isMaintainer();
+
+  showTable.value = true;
 
   settings.page.setTitle('Mantenimiento de algoritmos');
 

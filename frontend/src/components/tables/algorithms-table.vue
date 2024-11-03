@@ -161,13 +161,10 @@ const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartDat
 onBeforeMount(() => {
   const userId = LocalStorage.getItem('user');
 
-  console.log('Maintainer:', props.isMaintainer);
-  console.log('userId:', userId);
-
   if (props.isMaintainer && userId) {
-    //
+    algorithms.getUserAlgorithms(userId);
+  } else {
+    algorithms.getAll();
   }
-
-  algorithms.getAll();
 });
 </script>

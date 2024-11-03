@@ -133,6 +133,7 @@ import {
 } from 'vue';
 
 import {
+  LocalStorage,
   QForm,
   QInput,
   useQuasar,
@@ -215,6 +216,8 @@ const saveAndClose = async () => {
     // update algorithms list
     if (algorithms.data.searchKeyword) {
       await algorithms.search();
+    } else if (props.isMaintainer) {
+      await algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
     } else {
       await algorithms.getAll();
     }
