@@ -62,18 +62,21 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { LocalStorage } from 'quasar';
+
 import Settings from 'src/services/settings';
 import Algorithms, { IAlgorithm } from 'src/services/algorithms';
-import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import Users from 'src/services/users';
+
+import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import { formatDatetime } from 'src/services/date';
 
-// const componentProps = defineProps({
-//   isMaintainer: {
-//     type: Boolean,
-//     default: false,
-//   },
-// });
+const props = defineProps({
+  isMaintainer: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const settings = inject('settings') as Settings;
 
@@ -156,6 +159,15 @@ const editFlowchart = (
 const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartData(flowchart);
 
 onBeforeMount(() => {
+  const userId = LocalStorage.getItem('user');
+
+  console.log('Maintainer:', props.isMaintainer);
+  console.log('userId:', userId);
+
+  if (props.isMaintainer && userId) {
+    //
+  }
+
   algorithms.getAll();
 });
 </script>
