@@ -17,6 +17,16 @@ def index():
         db_error(e)
 
 
+def user_algorithms(user_id: int):
+    try:
+        return select(
+            "SELECT * FROM algorithms WHERE user_id = %s ORDER BY id DESC",
+            [user_id]
+        )
+    except Error as e:
+        db_error(e)
+
+
 def algorithm_categories(algorithm_id: int):
     try:
         return select("""SELECT c.*

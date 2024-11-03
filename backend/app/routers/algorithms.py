@@ -52,6 +52,11 @@ def show(algorithm_id: int):
     return algorithms.show(algorithm_id)
 
 
+@public_router.get("/user/{user_id}")
+def user_algorithms(user_id: int):
+    return algorithms.user_algorithms(user_id)
+
+
 @public_router.get("/graph/{algorithm_id}")
 def show_graph(algorithm_id: int):
     return graphs.show(algorithm_id)
