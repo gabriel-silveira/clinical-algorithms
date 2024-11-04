@@ -108,10 +108,8 @@ const showTable = ref(false);
 const searchAlgorithm = (keyword: string) => {
   algorithms.data.searchKeyword = keyword;
 
-  if (isMaintainer.value) {
-    algorithms.data.searchUser = {
-      id: LocalStorage.getItem('user'),
-    };
+  if (isMaintainer.value && !isMaster.value) {
+    algorithms.data.searchUser = users.data.users.find((user) => user.id === LocalStorage.getItem('user'));
   }
 
   algorithms.search();
