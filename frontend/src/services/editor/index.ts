@@ -36,6 +36,7 @@ class Editor {
   router: Router;
 
   data: IJointData = reactive({
+    public: false,
     isMaintainer: false,
     readOnly: false,
     showSaveDialog: false,

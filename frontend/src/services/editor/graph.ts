@@ -192,6 +192,7 @@ class Graph {
         id: this.data.graph.id,
         graph: JSON.stringify(this.editor.data.graph.toJSON()),
         algorithm_id: this.data.graph.algorithm_id,
+        public: this.editor.data.public,
       });
 
       this.data.graph.updated_at = data.updated_at;

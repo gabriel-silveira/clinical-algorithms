@@ -10,6 +10,14 @@
       <zooming-bar
         class="absolute-top-right"
       />
+
+      <div id="public-option">
+        <q-checkbox
+          v-model="editor.data.public"
+          label="Liberado para el enlace público"
+          dense
+        />
+      </div>
     </div>
 
     <div id="editor-content" class="bg-white overflow-auto">

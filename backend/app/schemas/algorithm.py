@@ -7,6 +7,7 @@ class AlgorithmSchema(BaseModel):
     user_id: int | None = None
     title: str
     description: str
+    public: bool
     categories: List[int] | None = None
     version: str
     updated_at: str
