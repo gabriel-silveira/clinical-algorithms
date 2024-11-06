@@ -140,13 +140,13 @@ class Algorithms {
     this.data.algorithm.categories = [...this.data.algorithm_categories];
   }
 
-  public async thorough_search(keyword: string) {
+  public async thorough_search(keyword: string, searchAllAlgorithms = false) {
     try {
       this.data.loading = true;
 
       const { data: results }: {
         data: IAlgorithmThoroughSearchResult[],
-      } = await api.get(`${resource}/thorough-search?keyword=${keyword}`);
+      } = await api.get(`${resource}/thorough-search?keyword=${keyword}&search_all_algorithms=${searchAllAlgorithms}`);
 
       return Promise.resolve(results);
     } catch (error) {

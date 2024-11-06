@@ -115,7 +115,7 @@ const searchFlowchart = async (keyword: string) => {
     data.searching = true;
     data.keyword = keyword;
 
-    const results = await algorithms.thorough_search(keyword);
+    const results = await algorithms.thorough_search(keyword, listAllAlgorithms.value);
 
     data.results = { ...results };
   } finally {
@@ -151,7 +151,7 @@ onBeforeMount(async () => {
 
   data.mountSearchInput = true;
 
-  // show all algorithms (public and non public)
+  // show all algorithms (public and non-public)
   listAllAlgorithms.value = route.name === ALGORITHMS_SEARCH;
 
   showTable.value = true;

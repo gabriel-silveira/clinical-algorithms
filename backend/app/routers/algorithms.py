@@ -25,9 +25,9 @@ def index(list_all_algorithms: bool):
 
 
 @public_router.get("/thorough-search")
-def thorough_search(keyword: str | None = None):
+def thorough_search(keyword: str | None = None, search_all_algorithms: bool = False):
     if keyword:
-        return algorithms.thorough_search(keyword)
+        return algorithms.thorough_search(keyword, search_all_algorithms)
     return None
 
 
