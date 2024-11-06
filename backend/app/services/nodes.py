@@ -28,16 +28,25 @@ def map_nodes(graph_string: str, algorithm_id: int):
         db_error(e)
 
 
-def search(keyword: str):
+def search(keyword: str, search_all_algorithms = False):
     try:
-        return select(
-            "SELECT * FROM nodes WHERE label REGEXP %s",
-            keyword
-        )
-        # return select(
-        #     "SELECT * FROM nodes WHERE label REGEXP %s",
-        #     ([[:<:]]|^)"[[:<:]]"+keyword+"[[:>:]]"([[:>:]]|$)
-        # )
+        if search_all_algorithms:
+            return select(
+                "SELECT * FROM nodes WHERE label REGEXP %s",
+                keyword
+            )
+        else:
+            return select(
+                """SELECT a.title, a.public, n.* FROM nodes n
+                LEFT JOIN algorithms a ON a.id = n.algorithm_id
+                WHERE label REGEXP %s AND a.public = 1""",
+                keyword
+            )
+    # return select(
+    #     "SELECT * FROM nodes WHERE label REGEXP %s",
+    #     ([[:<:]]|^)"[[:<:]]"+keyword+"[[:>:]]"([[:>:]]|$)
+    # )
+
     except Error as e:
         db_error(e)
 
