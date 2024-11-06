@@ -12,7 +12,6 @@ algorithm_fields = ['id', 'title', 'description', 'version', 'updated_at']
 
 def index(list_all_algorithms = False):
     try:
-        print(list_all_algorithms)
         if list_all_algorithms:
             return select("SELECT * FROM algorithms ORDER BY id DESC")
         else:
