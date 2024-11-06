@@ -76,6 +76,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  listAllAlgorithms: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const settings = inject('settings') as Settings;
@@ -159,7 +163,9 @@ const editFlowchart = (
 const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartData(flowchart);
 
 onBeforeMount(() => {
-  if (props.isMaintainer) {
+  if (props.listAllAlgorithms) {
+    algorithms.getAll(true);
+  } else if (props.isMaintainer) {
     algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
   } else {
     algorithms.getAll();

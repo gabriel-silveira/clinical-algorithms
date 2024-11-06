@@ -80,11 +80,11 @@ class Algorithms {
     return this.data.algorithms;
   }
 
-  public async getAll() {
+  public async getAll(listAllAlgorithms = false) {
     try {
       this.data.loading = true;
 
-      const { data: flowcharts }: { data: IAlgorithm[] } = await api.get(resource);
+      const { data: flowcharts }: { data: IAlgorithm[] } = await api.get(`${resource}?list_all_algorithms=${listAllAlgorithms}`);
 
       if (flowcharts) {
         this.data.algorithms = [...flowcharts];
