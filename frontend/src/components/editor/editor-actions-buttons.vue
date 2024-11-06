@@ -38,9 +38,9 @@
 
     <q-btn
       v-if="!readOnly"
-      label="Publicación"
+      label="Visualizar publicación"
       class="float-right q-ml-lg"
-      style="width:120px"
+      style="width:230px"
       color="primary"
       push
       @click="viewPublicGraph"
@@ -167,7 +167,7 @@ const viewPublicGraph = async () => {
   position: absolute
   bottom: 21px
   left: 0
-  width: calc(100% - 400px)
+  width: calc(100% - 700px)
   -webkit-touch-callout: none
   -webkit-user-select: none
   -html-user-select: none
