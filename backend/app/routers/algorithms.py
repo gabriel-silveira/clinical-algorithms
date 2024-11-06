@@ -20,8 +20,8 @@ public_router = APIRouter(
 
 
 @public_router.get("")
-def index():
-    return algorithms.index()
+def index(list_all_algorithms: bool):
+    return algorithms.index(list_all_algorithms)
 
 
 @public_router.get("/thorough-search")

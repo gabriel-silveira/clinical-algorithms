@@ -10,9 +10,13 @@ from typing import List
 algorithm_fields = ['id', 'title', 'description', 'version', 'updated_at']
 
 
-def index():
+def index(list_all_algorithms = False):
     try:
-        return select("SELECT * FROM algorithms ORDER BY id DESC")
+        print(list_all_algorithms)
+        if list_all_algorithms:
+            return select("SELECT * FROM algorithms ORDER BY id DESC")
+        else:
+            return select("SELECT * FROM algorithms WHERE public = 1 ORDER BY id DESC")
     except Error as e:
         db_error(e)
 
