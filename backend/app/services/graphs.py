@@ -17,7 +17,7 @@ def update_graph(algorithm_graph: AlgorithmGraphSchema):
         nodes.map_nodes(algorithm_graph.graph, algorithm_graph.algorithm_id)
 
         # update algorithm updated_at
-        update("algorithms", ["updated_at"], [now], "id", algorithm_graph.algorithm_id)
+        update("algorithms", ["public", "updated_at"], [algorithm_graph.public, now], "id", algorithm_graph.algorithm_id)
 
         return show(algorithm_graph.algorithm_id)
     except Error as e:

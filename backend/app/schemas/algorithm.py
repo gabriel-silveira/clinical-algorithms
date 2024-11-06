@@ -17,6 +17,7 @@ class AlgorithmGraphSchema(BaseModel):
     id: int
     algorithm_id: int | None = None
     graph: str
+    public: bool
     updated_at: str | None = None
 
 
