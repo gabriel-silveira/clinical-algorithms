@@ -49,6 +49,27 @@ const isActive = (routeName: string) => routeName === route.name;
 const sections = ref<IMainMenuSection[]>([]);
 
 onBeforeMount(async () => {
-  sections.value = await settings.isMaster() ? allSections : restrictedSections;
+  const { master, maintainer } = await settings.getUserRoles();
+
+  if (master) {
+    sections.value = [...allSections];
+  } else if (maintainer) {
+    sections.value = [...restrictedSections];
+  } else {
+    for (const restrictedSection of restrictedSections) {
+      const sectionAux = {
+        name: restrictedSection.name,
+        items: [],
+      };
+
+      for (const sectionItem of restrictedSection.items) {
+        if (!sectionItem.maintainer) {
+          sectionAux.items.push(sectionItem);
+        }
+      }
+
+      sections.value.push(sectionAux);
+    }
+  }
 });
 </script>

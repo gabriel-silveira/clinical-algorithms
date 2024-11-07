@@ -26,7 +26,9 @@ def update_graph(algorithm_graph: AlgorithmGraphSchema):
 
 def show(algorithm_id: int):
     try:
-        graphs = select("SELECT * FROM graphs WHERE algorithm_id = %s", algorithm_id)
+        graphs = select("""SELECT g.*, a.user_id FROM graphs g
+        LEFT JOIN algorithms a ON g.algorithm_id = a.id
+        WHERE algorithm_id = %s""", algorithm_id)
 
         if len(graphs):
             return graphs[0]

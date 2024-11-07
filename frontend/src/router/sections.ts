@@ -46,10 +46,12 @@ export const restrictedSections = [
       {
         name: ALGORITHMS_INDEX,
         label: 'Mantenimiento',
+        maintainer: true,
       },
       {
         name: ALGORITHMS_SEARCH,
         label: 'Búsqueda y publicación',
+        maintainer: false,
       },
     ],
   },
