@@ -33,7 +33,7 @@ export const allSections = [
       },
       {
         name: ALGORITHMS_SEARCH,
-        label: 'Búsqueda y publicación',
+        label: 'Búsqueda',
       },
     ],
   },
@@ -50,7 +50,7 @@ export const restrictedSections = [
       },
       {
         name: ALGORITHMS_SEARCH,
-        label: 'Búsqueda y publicación',
+        label: 'Búsqueda',
         maintainer: false,
       },
     ],

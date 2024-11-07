@@ -19,7 +19,7 @@
           v-model="editor.data.public"
           label="Liberado para el enlace público"
           dense
-        />{{ editor.graph.data.mode }}
+        />
       </div>
     </div>
 
