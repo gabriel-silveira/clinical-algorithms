@@ -14,6 +14,7 @@ export interface IEditorData {
   graph: {
     id: number,
     algorithm_id: number,
+    user_id: number,
     updated_at: string,
   },
   algorithm: {
@@ -43,6 +44,7 @@ class Graph {
     graph: {
       id: 0,
       algorithm_id: 0,
+      user_id: 0,
       updated_at: '',
     },
     algorithm: {
@@ -86,11 +88,13 @@ class Graph {
           id: number,
           algorithm_id: number,
           graph: string,
+          user_id: number,
           updated_at: string,
       } } = await api.get(`${RESOURCE}/${graphId}`);
 
       this.data.graph.id = data.id;
       this.data.graph.algorithm_id = data.algorithm_id;
+      this.data.graph.user_id = data.user_id;
       this.data.graph.updated_at = data.updated_at;
 
       if (data.graph) {
@@ -145,6 +149,8 @@ class Graph {
       const { data } = await api.get(`${RESOURCE_ALGORITHM}/${this.data.graph.algorithm_id}`);
 
       this.data.algorithm = { ...data };
+
+      this.editor.data.public = !!data.public;
 
       return Promise.resolve(true);
     } catch (error) {

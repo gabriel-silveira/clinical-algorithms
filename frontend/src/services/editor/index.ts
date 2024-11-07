@@ -67,6 +67,9 @@ class Editor {
     this.graph.data.savingTimeout = null;
     this.graph.notSaved(true);
 
+    this.graph.data.mode = 'public';
+    this.data.readOnly = true;
+
     this.element.data.selectedId = '';
 
     this.data.showSaveDialog = false;
@@ -242,14 +245,20 @@ class Editor {
   }
 
   public setReadOnly(mode: string) {
-    this.graph.data.mode = mode;
-
     const loggedUserId = LocalStorage.getItem('user');
 
-    if (!loggedUserId) {
+    if (loggedUserId !== this.graph.data.graph.user_id) {
+      this.graph.data.mode = 'public';
       this.data.readOnly = true;
     } else {
-      this.data.readOnly = !this.data.isMaintainer || ['public', 'print'].includes(mode);
+      this.graph.data.mode = mode;
+
+      // if not logged OR it's not the graph creator...
+      if (!loggedUserId) {
+        this.data.readOnly = true;
+      } else {
+        this.data.readOnly = !this.data.isMaintainer || ['public', 'print'].includes(mode);
+      }
     }
   }
 

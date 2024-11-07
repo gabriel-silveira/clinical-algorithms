@@ -233,6 +233,7 @@ class Algorithms {
         categories: this.data.algorithm.categories?.length
           ? this.data.algorithm.categories.map((category) => category.id) : [],
         user_id: LocalStorage.getItem('user'),
+        public: 0,
       });
 
       await this.toggleEditDialog();

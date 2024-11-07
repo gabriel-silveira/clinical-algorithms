@@ -12,7 +12,7 @@
     :hide-labels="true"
     @delete="showDeleteDialog"
     @edit="setEditing"
-    @save="submitFlowchartForm"
+    @save="submitAlgorithmForm"
     @close="closeDialog"
   >
     <q-form
@@ -240,7 +240,7 @@ const setEditing = (value: boolean) => {
   }, 250);
 };
 
-const submitFlowchartForm = async () => {
+const submitAlgorithmForm = async () => {
   refFlowchartForm.value?.submit();
 };
 </script>

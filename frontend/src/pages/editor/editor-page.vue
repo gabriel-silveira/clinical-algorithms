@@ -11,12 +11,15 @@
         class="absolute-top-right"
       />
 
-      <div id="public-option">
+      <div
+        v-if="editor.graph.data.mode === 'edit'"
+        id="public-option"
+      >
         <q-checkbox
           v-model="editor.data.public"
           label="Liberado para el enlace público"
           dense
-        />
+        />{{ editor.graph.data.mode }}
       </div>
     </div>
 
@@ -144,13 +147,13 @@ onBeforeMount(async () => {
     && typeof id === 'string'
     && typeof mode === 'string'
   ) {
+    await editor.graph.open(id);
+
     editor.setIsMaintainer(await settings.isMaintainer());
 
     editor.setReadOnly(mode);
 
     await editor.init('editor-stage');
-
-    await editor.graph.open(id);
 
     settings.page.setTitle(editor.data.readOnly ? 'Publicación de algoritmo' : 'Editar algoritmo');
   }
