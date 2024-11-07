@@ -7,7 +7,7 @@ from app.services.data import encrypt_password
 
 def index():
     try:
-        return select("SELECT id, name, email, phone FROM users")
+        return select("SELECT id, name, email, maintainer, master, phone FROM users")
     except Error as e:
         db_error(e)
 

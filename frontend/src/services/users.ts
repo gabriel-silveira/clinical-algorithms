@@ -80,6 +80,7 @@ class Users {
   }
 
   public editUser(user: IUser) {
+    console.log({ ...user });
     this.data.user = { ...user };
 
     // hide original password hash
