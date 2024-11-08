@@ -49,7 +49,8 @@ onMounted(async () => {
   if (id && typeof id === 'string') {
     editor.setIsMaintainer(false);
 
-    editor.setReadOnly(GRAPH_MODE_PRINT);
+    editor.graph.setMode(GRAPH_MODE_PRINT);
+    editor.setReadOnly(true);
 
     await editor.init('editor-stage');
 

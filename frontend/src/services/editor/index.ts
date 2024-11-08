@@ -10,7 +10,7 @@ import Graph from 'src/services/editor/graph';
 import Metadata from 'src/services/editor/metadata';
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { ALGORITHMS_EDITOR } from 'src/router/routes/algorithms';
-import { LocalStorage, QVueGlobals } from 'quasar';
+import { QVueGlobals } from 'quasar';
 
 const graph = new joint.dia.Graph({}, { cellNamespace: customElements });
 
@@ -244,22 +244,8 @@ class Editor {
     this.data.showSaveDialog = !this.data.showSaveDialog;
   }
 
-  public setReadOnly(mode: string) {
-    const loggedUserId = LocalStorage.getItem('user');
-
-    if (loggedUserId !== this.graph.data.graph.user_id) {
-      this.graph.data.mode = 'public';
-      this.data.readOnly = true;
-    } else {
-      this.graph.data.mode = mode;
-
-      // if not logged OR it's not the graph creator...
-      if (!loggedUserId) {
-        this.data.readOnly = true;
-      } else {
-        this.data.readOnly = !this.data.isMaintainer || ['public', 'print'].includes(mode);
-      }
-    }
+  public setReadOnly(readOnly: boolean) {
+    this.data.readOnly = readOnly;
   }
 
   public async switchToMode() {

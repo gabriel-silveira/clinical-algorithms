@@ -5,6 +5,7 @@ import html2pdf from 'html2pdf.js';
 import Editor from 'src/services/editor/index';
 
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
+import { GRAPH_MODE_PUBLIC } from "src/services/editor/types";
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -68,6 +69,10 @@ class Graph {
 
   constructor(editor: Editor) {
     this.editor = editor;
+  }
+
+  public setMode(mode: string) {
+    this.data.mode = mode || GRAPH_MODE_PUBLIC;
   }
 
   get isNotSaved() {
@@ -144,7 +149,7 @@ class Graph {
     }
   }
 
-  private async setAlgorithm() {
+  public async setAlgorithm() {
     try {
       const { data } = await api.get(`${RESOURCE_ALGORITHM}/${this.data.graph.algorithm_id}`);
 

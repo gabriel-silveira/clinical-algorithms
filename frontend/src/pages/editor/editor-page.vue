@@ -5,6 +5,9 @@
     class="bg-grey-4 overflow-hidden"
   >
     <div id="editor-header">
+      <div style="position:absolute">
+        mode: {{ editor.graph.data.mode }} - read only: {{ editor.data.readOnly }}
+      </div>
       <editor-stage-header />
 
       <zooming-bar
@@ -71,10 +74,11 @@ import {
   onMounted,
   inject,
 } from 'vue';
-
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
+import { LocalStorage } from 'quasar';
 
 import Settings from 'src/services/settings';
+import Algorithms from 'src/services/algorithms';
 import EditorStage from 'components/editor/editor-stage.vue';
 import Editor from 'src/services/editor';
 import EditorStageHeader from 'components/editor/editor-stage-header.vue';
@@ -84,9 +88,10 @@ import EditorActionsButtons from 'components/editor/editor-actions-buttons.vue';
 import SimpleModal from 'components/modals/simple-modal.vue';
 
 import {
-  ALGORITHMS_MAINTENANCE_INDEX,
+  ALGORITHMS_MAINTENANCE_INDEX, ALGORITHMS_PUBLIC_EDITOR,
   ALGORITHMS_SEARCH,
 } from 'src/router/routes/algorithms';
+import { GRAPH_MODE_EDIT, GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
 
 import ZoomingBar from 'components/bar/zooming-bar.vue';
 
@@ -94,7 +99,6 @@ const route = useRoute();
 const router = useRouter();
 
 const editor = inject('editor') as Editor;
-
 const settings = inject('settings') as Settings;
 
 const width = computed(
@@ -147,11 +151,37 @@ onBeforeMount(async () => {
     && typeof id === 'string'
     && typeof mode === 'string'
   ) {
+    const { maintainer, master } = await settings.getUserRoles();
+
+    editor.setIsMaintainer(!!maintainer);
+
+    const loggedUserId = LocalStorage.getItem('user');
+
+    const algorithm = await new Algorithms().getAlgorithm(id);
+
+    // public editor will be always in read only mode
+    if (route.name === ALGORITHMS_PUBLIC_EDITOR) {
+      editor.graph.setMode(GRAPH_MODE_PUBLIC);
+      editor.setReadOnly(true);
+    } else if (master) {
+      // master users will see always in edit mode
+      editor.graph.setMode(GRAPH_MODE_EDIT);
+      editor.setReadOnly(false);
+    } else if (
+      // user is not logged (public access)
+      !loggedUserId
+      // the logged user is not the owner...
+      || loggedUserId !== algorithm.user_id
+    ) {
+      editor.graph.setMode(GRAPH_MODE_PUBLIC);
+      editor.setReadOnly(true);
+    } else {
+      // not a maintainer OR "public access" or "print viewing"
+      editor.graph.setMode(mode);
+      editor.setReadOnly(!editor.data.isMaintainer || ['public', 'print'].includes(mode));
+    }
+
     await editor.graph.open(id);
-
-    editor.setIsMaintainer(await settings.isMaintainer());
-
-    editor.setReadOnly(mode);
 
     await editor.init('editor-stage');
 

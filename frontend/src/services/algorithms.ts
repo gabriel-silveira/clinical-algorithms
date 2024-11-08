@@ -80,6 +80,22 @@ class Algorithms {
     return this.data.algorithms;
   }
 
+  public async getAlgorithm(id: number) {
+    try {
+      this.data.loading = true;
+
+      const { data: algorithm }: { data: IAlgorithm } = await api.get(`${resource}/${id}`);
+
+      return Promise.resolve(algorithm);
+    } catch (error) {
+      return Promise.reject(error);
+    } finally {
+      setTimeout(() => {
+        this.data.loading = false;
+      }, 1000);
+    }
+  }
+
   public async getAll(listAllAlgorithms = false) {
     try {
       this.data.loading = true;
