@@ -210,8 +210,8 @@ class Algorithms {
     void this.toggleEditDialog();
   }
 
-  public async viewFlowchartData(flowchart: IAlgorithm) {
-    this.data.algorithm = { ...flowchart };
+  public async viewAlgorithmData(algorithm: IAlgorithm) {
+    this.data.algorithm = { ...algorithm };
 
     // convert to brazilian date (DD/MM/YYYY)
     // this.data.algorithm.updated_at = date.toBR(flowchart.updated_at);

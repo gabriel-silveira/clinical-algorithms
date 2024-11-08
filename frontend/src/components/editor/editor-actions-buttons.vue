@@ -27,6 +27,7 @@
     </div>
 
     <q-btn
+      v-if="!route.query.preview"
       label="Volver a la lista de algoritmos"
       icon="arrow_back"
       class="float-right q-ml-md"
@@ -157,7 +158,8 @@ const viewPublicGraph = async () => {
       await editor.graph.save();
     }
 
-    await editor.switchToMode();
+    // await editor.switchToMode();
+    Editor.preview(route.query.id);
   }
 };
 </script>

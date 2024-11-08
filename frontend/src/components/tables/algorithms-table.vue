@@ -24,7 +24,7 @@
       <q-tr
         :props="props"
         class="cursor-pointer"
-        @click="editFlowchart(props.row.id, publicView ? 'public' : 'edit', publicViewInAdmin)"
+        @click="editAlgorithm(props.row, publicView ? 'public' : 'edit', publicViewInAdmin)"
       >
         <q-td :props="props" key="title">
           <div class="q-py-sm">
@@ -70,6 +70,7 @@ import Users from 'src/services/users';
 
 import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import { formatDatetime } from 'src/services/date';
+import Editor from "src/services/editor";
 
 const props = defineProps({
   isMaintainer: {
@@ -129,16 +130,20 @@ const columns = [
   },
 ];
 
-const editFlowchart = (
-  flowchartId: number,
+const editAlgorithm = (
+  algorithm: IAlgorithm,
   mode: 'edit' | 'public' = 'edit',
   fromAdmin = false,
 ) => {
+  if (!props.isMaster && !props.isMaintainer) {
+    return Editor.preview(algorithm.id);
+  }
+
   if (mode === 'public' && fromAdmin) {
     return router.push({
       name: ALGORITHMS_PUBLIC_EDITOR,
       query: {
-        id: flowchartId,
+        id: algorithm.id,
         mode,
         from_admin: Number(fromAdmin),
       },
@@ -149,7 +154,7 @@ const editFlowchart = (
     return router.push({
       name: ALGORITHMS_PUBLIC_EDITOR,
       query: {
-        id: flowchartId,
+        id: algorithm.id,
         mode,
       },
     });
@@ -158,13 +163,13 @@ const editFlowchart = (
   return router.push({
     name: ALGORITHMS_EDITOR,
     query: {
-      id: flowchartId,
+      id: algorithm.id,
       mode,
     },
   });
 };
 
-const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartData(flowchart);
+const viewFlowchartData = (algorithmId: IAlgorithm) => algorithms.viewAlgorithmData(algorithmId);
 
 onBeforeMount(() => {
   if (props.isMaster || props.listAllAlgorithms) {

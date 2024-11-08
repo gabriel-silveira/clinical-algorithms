@@ -48,9 +48,7 @@
       v-if="!data.keyword && showTable"
       class="q-px-md"
     >
-      <algorithms-table
-        :list-all-algorithms="listAllAlgorithms"
-      />
+      <algorithms-table />
     </div>
   </q-page>
 </template>
@@ -73,7 +71,7 @@ import LoadingSpinner from 'components/spinners/loading-spinner.vue';
 import Algorithms, { IAlgorithmThoroughSearchResult } from 'src/services/algorithms';
 import AlgorithmsSearchResult from 'components/items/algorithms-search-result-item.vue';
 import AlgorithmsTable from 'components/tables/algorithms-table.vue';
-import { ALGORITHMS_PUBLIC_SEARCH, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
+import { ALGORITHMS_PUBLIC_SEARCH } from 'src/router/routes/algorithms';
 import Users from 'src/services/users';
 
 const route = useRoute();
@@ -107,7 +105,7 @@ const hasResults = computed(() => {
   return Object.keys(data.results).length > 0;
 });
 
-const listAllAlgorithms = ref(false);
+const onlyPublic = ref(false);
 const showTable = ref(false);
 
 const searchFlowchart = async (keyword: string) => {
@@ -115,7 +113,7 @@ const searchFlowchart = async (keyword: string) => {
     data.searching = true;
     data.keyword = keyword;
 
-    const results = await algorithms.thorough_search(keyword, listAllAlgorithms.value);
+    const results = await algorithms.thorough_search(keyword, onlyPublic.value);
 
     data.results = { ...results };
   } finally {
@@ -150,9 +148,6 @@ onBeforeMount(async () => {
   }
 
   data.mountSearchInput = true;
-
-  // show all algorithms (public and non-public)
-  listAllAlgorithms.value = route.name === ALGORITHMS_SEARCH;
 
   showTable.value = true;
 });
