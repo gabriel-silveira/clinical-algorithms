@@ -82,7 +82,7 @@ import Editor from 'src/services/editor';
 import ExportPdfButton from 'components/buttons/export-pdf-button.vue';
 
 import {
-  ALGORITHMS_INDEX,
+  ALGORITHMS_MAINTENANCE_INDEX,
   ALGORITHMS_PUBLIC_EDITOR,
   // ALGORITHMS_PUBLIC_EDITOR_PATH,
   ALGORITHMS_PUBLIC_SEARCH,
@@ -124,7 +124,7 @@ const exitEditor = () => {
     });
   }
 
-  return router.push({ name: ALGORITHMS_INDEX });
+  return router.push({ name: ALGORITHMS_MAINTENANCE_INDEX });
 };
 
 const goAlgorithmsPage = () => {

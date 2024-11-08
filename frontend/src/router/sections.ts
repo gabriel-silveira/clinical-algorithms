@@ -1,5 +1,5 @@
 import { USERS_INDEX } from 'src/router/routes/users';
-import { ALGORITHMS_INDEX, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
+import { ALGORITHMS_MAINTENANCE_INDEX, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import { ALGORITHMS_CATEGORIES_INDEX } from 'src/router/routes/algorithms_categories';
 
 export interface IMainMenuSection {
@@ -28,7 +28,7 @@ export const allSections = [
     name: 'Algoritmos',
     items: [
       {
-        name: ALGORITHMS_INDEX,
+        name: ALGORITHMS_MAINTENANCE_INDEX,
         label: 'Mantenimiento',
       },
       {
@@ -44,7 +44,7 @@ export const restrictedSections = [
     name: 'Algoritmos',
     items: [
       {
-        name: ALGORITHMS_INDEX,
+        name: ALGORITHMS_MAINTENANCE_INDEX,
         label: 'Mantenimiento',
         maintainer: true,
       },

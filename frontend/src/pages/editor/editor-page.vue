@@ -84,7 +84,7 @@ import EditorActionsButtons from 'components/editor/editor-actions-buttons.vue';
 import SimpleModal from 'components/modals/simple-modal.vue';
 
 import {
-  ALGORITHMS_INDEX,
+  ALGORITHMS_MAINTENANCE_INDEX,
   ALGORITHMS_SEARCH,
 } from 'src/router/routes/algorithms';
 
@@ -118,7 +118,7 @@ const exitEditor = () => {
     });
   }
 
-  return router.push({ name: ALGORITHMS_INDEX });
+  return router.push({ name: ALGORITHMS_MAINTENANCE_INDEX });
 };
 
 const toggleSaveDialog = () => {

@@ -58,6 +58,7 @@
         <q-card-section>
           <algorithms-table
             :is-maintainer="isMaintainer"
+            :is-master="isMaster"
           />
         </q-card-section>
       </q-card>

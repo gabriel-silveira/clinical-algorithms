@@ -76,6 +76,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isMaster: {
+    type: Boolean,
+    default: false,
+  },
   listAllAlgorithms: {
     type: Boolean,
     default: false,
@@ -163,7 +167,7 @@ const editFlowchart = (
 const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartData(flowchart);
 
 onBeforeMount(() => {
-  if (props.listAllAlgorithms) {
+  if (props.isMaster || props.listAllAlgorithms) {
     algorithms.getAll(true);
   } else if (props.isMaintainer) {
     algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
