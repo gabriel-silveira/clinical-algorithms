@@ -41,6 +41,7 @@ import { IAlgorithmThoroughSearchResultItem, INode } from 'src/services/algorith
 import { PropType } from 'vue';
 import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_PUBLIC_SEARCH } from 'src/router/routes/algorithms';
 import { useRoute, useRouter } from 'vue-router';
+import Editor from 'src/services/editor';
 
 const route = useRoute();
 const router = useRouter();
@@ -61,7 +62,9 @@ const goEditor = (algorithmId: number, node: INode | null) => {
     ? ALGORITHMS_PUBLIC_EDITOR : ALGORITHMS_EDITOR;
 
   if (node) {
-    router.push({
+    Editor.preview(node.algorithm_id, `&node=${node.node_id}&search=${props.keyword}`);
+
+    /* router.push({
       name,
       query: {
         id: node.algorithm_id,
@@ -69,7 +72,7 @@ const goEditor = (algorithmId: number, node: INode | null) => {
         node: node.node_id,
         search: props.keyword,
       },
-    });
+    }); */
   } else if (algorithmId) {
     router.push({
       name,

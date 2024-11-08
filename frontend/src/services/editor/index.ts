@@ -294,8 +294,8 @@ class Editor {
     }
   };
 
-  static preview(id: number) {
-    window.open(`editor?id=${id}&preview=1&mode=public`);
+  static preview(id: number, extra = '') {
+    window.open(`editor?id=${id}&preview=1&mode=public${extra}`);
   }
 }
 

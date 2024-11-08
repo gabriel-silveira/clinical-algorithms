@@ -70,7 +70,7 @@ import Users from 'src/services/users';
 
 import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import { formatDatetime } from 'src/services/date';
-import Editor from "src/services/editor";
+import Editor from 'src/services/editor';
 
 const props = defineProps({
   isMaintainer: {

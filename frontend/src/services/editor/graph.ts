@@ -5,7 +5,7 @@ import html2pdf from 'html2pdf.js';
 import Editor from 'src/services/editor/index';
 
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
-import { GRAPH_MODE_PUBLIC } from "src/services/editor/types";
+import { GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -135,9 +135,11 @@ class Graph {
             // this.editor.element.showAllTools();
 
             if (this.editor.route.query.node) {
-              this.editor.element.select(String(this.editor.route.query.node));
+              setTimeout(() => {
+                this.editor.element.select(String(this.editor.route.query.node));
 
-              this.editor.element.centerViewOnSelected();
+                this.editor.element.centerViewOnSelected();
+              }, 1000);
             }
           }
         }
