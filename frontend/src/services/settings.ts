@@ -38,13 +38,11 @@ class Settings {
     this.userId = userId;
   }
 
-  get isPublicView() {
+  static isPublicView(routeName: string) {
     return [
       ALGORITHMS_PUBLIC_SEARCH,
       ALGORITHMS_PUBLIC_EDITOR,
-    ].includes(
-      String(this.route.name),
-    );
+    ].includes(routeName);
   }
 
   private async getUserRoles() {

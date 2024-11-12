@@ -127,7 +127,7 @@ const clearSearch = () => {
   data.results = null;
   data.keyword = '';
 
-  if (settings.isPublicView) {
+  if (Settings.isPublicView(route.name)) {
     router.replace({
       name: ALGORITHMS_PUBLIC_SEARCH,
     });
@@ -141,7 +141,7 @@ onBeforeMount(async () => {
     data.initialKeyword = String(route.query.keyword);
   }
 
-  if (settings.isPublicView) {
+  if (Settings.isPublicView(route.name)) {
     settings.page.setTitle('Búsqueda de algoritmos');
   } else {
     settings.page.setTitle('Publicación de algoritmos (visualización para usuarios finales)');

@@ -74,20 +74,27 @@
 import {
   computed,
   onBeforeMount,
+  onMounted,
   inject,
   ref,
 } from 'vue';
 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { LocalStorage } from 'quasar';
 
 import Settings from 'src/services/settings';
 import MainMenu from 'components/menus/main-menu.vue';
-import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_PUBLIC_SEARCH } from 'src/router/routes/algorithms';
 import SimpleModal from 'components/modals/simple-modal.vue';
+import {
+  ALGORITHMS_EDITOR,
+  ALGORITHMS_PUBLIC_EDITOR,
+  ALGORITHMS_PUBLIC_SEARCH,
+} from 'src/router/routes/algorithms';
+import { ACCOUNT_LOGIN } from 'src/router/routes/account';
 
 const route = useRoute();
+const router = useRouter();
 
 const settings = inject('settings') as Settings;
 
@@ -102,7 +109,7 @@ const toggleLeftDrawer = () => {
   settings.page.mainMenu = !settings.page.mainMenu;
 };
 
-const isPublicView = computed(() => settings.isPublicView);
+const isPublicView = computed(() => Settings.isPublicView(route.name));
 
 const showMenuButton = computed(
   () => ![
@@ -126,6 +133,16 @@ const toggleLogoutDialog = () => {
 
 onBeforeMount(async () => {
   isMaster.value = await settings.isMaster();
+});
+
+onMounted(async () => {
+  const token = LocalStorage.getItem('token');
+
+  if (!token && !Settings.isPublicView(route.name)) {
+    void router.push({
+      name: ACCOUNT_LOGIN,
+    });
+  }
 });
 </script>
 

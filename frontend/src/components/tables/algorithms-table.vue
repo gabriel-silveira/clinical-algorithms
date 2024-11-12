@@ -87,8 +87,6 @@ const props = defineProps({
   },
 });
 
-const settings = inject('settings') as Settings;
-
 const users = inject('users') as Users;
 
 const algorithms = inject('algorithms') as Algorithms;
@@ -96,7 +94,7 @@ const algorithms = inject('algorithms') as Algorithms;
 const route = useRoute();
 const router = useRouter();
 
-const publicView = computed(() => settings.isPublicView);
+const publicView = computed(() => Settings.isPublicView(route.name));
 
 const publicViewInAdmin = computed(() => route.name === ALGORITHMS_SEARCH);
 
