@@ -59,7 +59,7 @@ const clearSearch = () => users.clearSearch();
 const createUser = () => users.startCreatingUser();
 
 onBeforeMount(async () => {
-  if (!await settings.isMaster()) {
+  if (!await Settings.isMaster()) {
     await router.push({
       name: HOME,
     });

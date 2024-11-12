@@ -132,7 +132,7 @@ const toggleLogoutDialog = () => {
 };
 
 onBeforeMount(async () => {
-  isMaster.value = await settings.isMaster();
+  isMaster.value = await Settings.isMaster();
 });
 
 onMounted(async () => {

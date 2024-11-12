@@ -146,7 +146,7 @@ const tryClearingSearch = () => {
 };
 
 onBeforeMount(async () => {
-  const { maintainer, master } = await settings.getUserRoles();
+  const { maintainer, master } = await Settings.getUserRoles();
 
   isMaintainer.value = !!maintainer;
   isMaster.value = !!master;

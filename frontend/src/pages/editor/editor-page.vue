@@ -151,7 +151,7 @@ onBeforeMount(async () => {
     && typeof id === 'string'
     && typeof mode === 'string'
   ) {
-    const { maintainer, master } = await settings.getUserRoles();
+    const { maintainer, master } = await Settings.getUserRoles();
 
     editor.setIsMaintainer(!!maintainer);
 

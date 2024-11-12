@@ -8,7 +8,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import Settings from 'src/services/settings';
 import AlgorithmsCategories from 'src/services/algorithms-categories';
-import { LocalStorage, useQuasar } from 'quasar';
+import { useQuasar } from 'quasar';
 import Editor from 'src/services/editor';
 
 const route = useRoute();
@@ -22,6 +22,4 @@ provide('settings', settings);
 provide('editor', new Editor(quasar, route, router));
 
 provide(new AlgorithmsCategories(), 'algorithmsCategories');
-
-settings.setUser(LocalStorage.getItem('user') || 0);
 </script>

@@ -39,7 +39,7 @@ const startCreatingCategory = () => {
 };
 
 onBeforeMount(async () => {
-  if (!await settings.isMaster()) {
+  if (!await Settings.isMaster()) {
     await router.push({
       name: HOME,
     });
