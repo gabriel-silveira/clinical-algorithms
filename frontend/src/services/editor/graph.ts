@@ -119,8 +119,10 @@ class Graph {
           }, 500);
 
           if (!this.editor.data.readOnly) {
-            this.editor.element.createElementsTools(allElements);
-            this.editor.element.textarea.createEventHandlers();
+            setTimeout(() => {
+              this.editor.element.createElementsTools(allElements);
+              this.editor.element.textarea.createEventHandlers();
+            }, 200);
           }
 
           // reset scroll because of createEventHandlers method

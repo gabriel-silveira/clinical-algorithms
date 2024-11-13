@@ -240,6 +240,7 @@ class Element {
     });
 
     if (this.editor.data.paper instanceof dia.Paper) {
+      console.log('ADD TOOLS!');
       const elementView = element.findView(this.editor.data.paper);
 
       elementView.addTools(toolsView);
