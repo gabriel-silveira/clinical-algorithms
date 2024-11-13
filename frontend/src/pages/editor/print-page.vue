@@ -52,9 +52,9 @@ onMounted(async () => {
     editor.graph.setMode(GRAPH_MODE_PRINT);
     editor.setReadOnly(true);
 
-    await editor.init('editor-stage');
-
     await editor.graph.open(id);
+
+    await editor.init('editor-stage');
 
     await editor.graph.putLogoOnPdfHeader(putLogoOnHeader);
 
@@ -64,7 +64,7 @@ onMounted(async () => {
       loading.value = false;
 
       editor.graph.exportPDF();
-    }, 1000);
+    }, 2000);
   }
 });
 </script>

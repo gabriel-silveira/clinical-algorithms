@@ -873,6 +873,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
       createEventHandlers: () => {
         const inputs = document.getElementsByClassName(TEXTAREA_CLASSNAME);
 
+        console.log(inputs);
         if (inputs.length) {
           // eslint-disable-next-line no-restricted-syntax
           for (const input of inputs) {

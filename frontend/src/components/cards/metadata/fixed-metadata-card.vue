@@ -35,7 +35,7 @@
             class="col-6"
           >
             <div class="float-left">
-              <b>Type</b><br/>{{ fixedMetadata.intervention_type }}
+              <b>Intervention type</b><br/>{{ fixedMetadata.intervention_type }}
             </div>
 
             <q-img
