@@ -111,12 +111,18 @@ class Graph {
 
           const allElements = this.editor.data.graph.getElements();
 
-          this.editor.element.input.setValues(allElements);
-          this.editor.element.textarea.setValues(allElements);
+          setTimeout(() => {
+            const allElementsAgain = this.editor.data.graph.getElements();
+
+            this.editor.element.input.setValues(allElementsAgain);
+            this.editor.element.textarea.setValues(allElementsAgain);
+          }, 500);
 
           if (!this.editor.data.readOnly) {
-            this.editor.element.createElementsTools(allElements);
-            this.editor.element.textarea.createEventHandlers();
+            setTimeout(() => {
+              this.editor.element.createElementsTools(allElements);
+              this.editor.element.textarea.createEventHandlers();
+            }, 200);
           }
 
           // reset scroll because of createEventHandlers method
@@ -128,7 +134,9 @@ class Graph {
 
           // READ ONLY MODE
           if (this.editor.data.readOnly) {
-            this.editor.element.textarea.disableAll();
+            setTimeout(() => {
+              this.editor.element.textarea.disableAll();
+            }, 600);
 
             this.editor.element.createRecommendations();
 
@@ -237,10 +245,12 @@ class Graph {
         const elementType = element.prop('type');
 
         if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
+          const label = element.prop('props/label');
           const textarea = this.editor.element.textarea.getFromEditorElement(element.id);
 
           if (textarea) {
-            const { value } = textarea;
+            // deprecated: using props/label instead
+            // const { value } = textarea;
 
             const {
               x,
@@ -249,7 +259,7 @@ class Graph {
 
             textarea.remove();
 
-            this.editor.element.create.PrintLabel({ x, y, text: value });
+            this.editor.element.create.PrintLabel({ x, y, text: label });
           }
         } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
           element.remove();
