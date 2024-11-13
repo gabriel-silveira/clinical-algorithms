@@ -45,7 +45,7 @@
     </div>
 
     <div
-      v-if="!data.keyword"
+      v-if="!data.keyword && showTable"
       class="q-px-md"
     >
       <algorithms-table />
@@ -59,7 +59,7 @@ import {
   onBeforeMount,
   reactive,
   provide,
-  inject,
+  inject, ref,
 } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
@@ -105,12 +105,15 @@ const hasResults = computed(() => {
   return Object.keys(data.results).length > 0;
 });
 
+const onlyPublic = ref(false);
+const showTable = ref(false);
+
 const searchFlowchart = async (keyword: string) => {
   try {
     data.searching = true;
     data.keyword = keyword;
 
-    const results = await algorithms.thorough_search(keyword);
+    const results = await algorithms.thorough_search(keyword, onlyPublic.value);
 
     data.results = { ...results };
   } finally {
@@ -124,7 +127,7 @@ const clearSearch = () => {
   data.results = null;
   data.keyword = '';
 
-  if (settings.isPublicView) {
+  if (Settings.isPublicView(route.name)) {
     router.replace({
       name: ALGORITHMS_PUBLIC_SEARCH,
     });
@@ -138,13 +141,15 @@ onBeforeMount(async () => {
     data.initialKeyword = String(route.query.keyword);
   }
 
-  if (settings.isPublicView) {
+  if (Settings.isPublicView(route.name)) {
     settings.page.setTitle('Búsqueda de algoritmos');
   } else {
     settings.page.setTitle('Publicación de algoritmos (visualización para usuarios finales)');
   }
 
   data.mountSearchInput = true;
+
+  showTable.value = true;
 });
 </script>
 

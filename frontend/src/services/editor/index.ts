@@ -9,8 +9,8 @@ import Ports from 'src/services/editor/ports';
 import Graph from 'src/services/editor/graph';
 import Metadata from 'src/services/editor/metadata';
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
-import { ALGORITHMS_EDITOR } from 'src/router/routes/algorithms';
-import { LocalStorage, QVueGlobals } from 'quasar';
+import { ALGORITHMS_PUBLIC_EDITOR } from 'src/router/routes/algorithms';
+import { QVueGlobals } from 'quasar';
 
 const graph = new joint.dia.Graph({}, { cellNamespace: customElements });
 
@@ -36,6 +36,7 @@ class Editor {
   router: Router;
 
   data: IJointData = reactive({
+    public: false,
     isMaintainer: false,
     readOnly: false,
     showSaveDialog: false,
@@ -65,6 +66,9 @@ class Editor {
   public reset() {
     this.graph.data.savingTimeout = null;
     this.graph.notSaved(true);
+
+    this.graph.data.mode = 'public';
+    this.data.readOnly = true;
 
     this.element.data.selectedId = '';
 
@@ -240,24 +244,17 @@ class Editor {
     this.data.showSaveDialog = !this.data.showSaveDialog;
   }
 
-  public setReadOnly(mode: string) {
-    this.graph.data.mode = mode;
-
-    const loggedUserId = LocalStorage.getItem('user');
-
-    if (!loggedUserId) {
-      this.data.readOnly = true;
-    } else {
-      this.data.readOnly = !this.data.isMaintainer || ['public', 'print'].includes(mode);
-    }
+  public setReadOnly(readOnly: boolean) {
+    this.data.readOnly = readOnly;
   }
 
   public async switchToMode() {
     await this.router.replace({
-      name: ALGORITHMS_EDITOR,
+      name: ALGORITHMS_PUBLIC_EDITOR,
       query: {
         id: this.route.query.id,
         mode: this.route.query.mode === 'edit' ? 'public' : 'edit',
+        previewOrigin: 'admin',
         node: this.route.query.node || undefined,
         search: this.route.query.search || undefined,
       },
@@ -296,6 +293,10 @@ class Editor {
       eventObject.preventDefault();
     }
   };
+
+  static preview(id: number, extra = '') {
+    window.open(`editor?id=${id}&preview=1&mode=public${extra}`);
+  }
 }
 
 export default Editor;

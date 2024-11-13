@@ -20,14 +20,14 @@ public_router = APIRouter(
 
 
 @public_router.get("")
-def index():
-    return algorithms.index()
+def index(list_all_algorithms: bool):
+    return algorithms.index(list_all_algorithms)
 
 
 @public_router.get("/thorough-search")
-def thorough_search(keyword: str | None = None):
+def thorough_search(keyword: str | None = None, search_all_algorithms: bool = False):
     if keyword:
-        return algorithms.thorough_search(keyword)
+        return algorithms.thorough_search(keyword, search_all_algorithms)
     return None
 
 
@@ -50,6 +50,11 @@ def show_algorithms_categories():
 @public_router.get("/{algorithm_id}")
 def show(algorithm_id: int):
     return algorithms.show(algorithm_id)
+
+
+@public_router.get("/user/{user_id}")
+def user_algorithms(user_id: int):
+    return algorithms.user_algorithms(user_id)
 
 
 @public_router.get("/graph/{algorithm_id}")

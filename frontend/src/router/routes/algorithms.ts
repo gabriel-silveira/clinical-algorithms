@@ -1,6 +1,6 @@
-export const ALGORITHMS_INDEX = 'algorithms';
-export const ALGORITHMS_EDITOR = 'editor';
+export const ALGORITHMS_MAINTENANCE_INDEX = 'algorithms';
 export const ALGORITHMS_SEARCH = 'search';
+export const ALGORITHMS_EDITOR = 'editor';
 
 export const ALGORITHMS_PUBLIC_EDITOR_PATH = '/editor';
 export const ALGORITHMS_PUBLIC_EDITOR = 'public-editor';
@@ -22,9 +22,9 @@ const routes = [
     component: () => import('pages/editor/editor-page.vue'),
   },
   {
-    path: `/admin/${ALGORITHMS_INDEX}`,
-    name: ALGORITHMS_INDEX,
-    component: () => import('pages/algorithm/algorithms-page.vue'),
+    path: `/admin/${ALGORITHMS_MAINTENANCE_INDEX}`,
+    name: ALGORITHMS_MAINTENANCE_INDEX,
+    component: () => import('pages/algorithm/algorithms-maintenance-page.vue'),
   },
   {
     path: `/admin/${ALGORITHMS_EDITOR}`,

@@ -25,7 +25,7 @@
         </div>
 
         <div
-          v-if="users.data.users.length"
+          v-if="isMaster && users.data.users.length"
           class="float-left q-mr-lg" style="width:auto;min-width:150px"
         >
           <q-select
@@ -50,11 +50,15 @@
       </div>
     </div>
 
-    <div class="q-px-md">
+    <div
+      v-if="showTable"
+      class="q-px-md"
+    >
       <q-card class="shadow-light">
         <q-card-section>
           <algorithms-table
             :is-maintainer="isMaintainer"
+            :is-master="isMaster"
           />
         </q-card-section>
       </q-card>
@@ -85,6 +89,7 @@ import Algorithms from 'src/services/algorithms';
 import EditAlgorithmModal from 'components/modals/algorithms/edit-algorithm-modal.vue';
 import AlgorithmsCategories from 'src/services/algorithms-categories';
 import Users from 'src/services/users';
+import { LocalStorage } from 'quasar';
 
 const users = new Users();
 provide('users', users);
@@ -97,10 +102,16 @@ provide('algorithmsCategories', algorithmsCategories);
 
 const settings = inject('settings') as Settings;
 
+const isMaster = ref(false);
 const isMaintainer = ref(false);
+const showTable = ref(false);
 
 const searchAlgorithm = (keyword: string) => {
   algorithms.data.searchKeyword = keyword;
+
+  if (isMaintainer.value && !isMaster.value) {
+    algorithms.data.searchUser = users.data.users.find((user) => user.id === LocalStorage.getItem('user'));
+  }
 
   algorithms.search();
 };
@@ -135,7 +146,12 @@ const tryClearingSearch = () => {
 };
 
 onBeforeMount(async () => {
-  isMaintainer.value = await settings.isMaintainer();
+  const { maintainer, master } = await Settings.getUserRoles();
+
+  isMaintainer.value = !!maintainer;
+  isMaster.value = !!master;
+
+  showTable.value = true;
 
   settings.page.setTitle('Mantenimiento de algoritmos');
 

@@ -27,6 +27,7 @@
     </div>
 
     <q-btn
+      v-if="!route.query.preview"
       label="Volver a la lista de algoritmos"
       icon="arrow_back"
       class="float-right q-ml-md"
@@ -38,9 +39,9 @@
 
     <q-btn
       v-if="!readOnly"
-      label="Publicación"
+      label="Visualizar publicación"
       class="float-right q-ml-lg"
-      style="width:120px"
+      style="width:230px"
       color="primary"
       push
       @click="viewPublicGraph"
@@ -82,7 +83,7 @@ import Editor from 'src/services/editor';
 import ExportPdfButton from 'components/buttons/export-pdf-button.vue';
 
 import {
-  ALGORITHMS_INDEX,
+  ALGORITHMS_MAINTENANCE_INDEX,
   ALGORITHMS_PUBLIC_EDITOR,
   // ALGORITHMS_PUBLIC_EDITOR_PATH,
   ALGORITHMS_PUBLIC_SEARCH,
@@ -124,7 +125,7 @@ const exitEditor = () => {
     });
   }
 
-  return router.push({ name: ALGORITHMS_INDEX });
+  return router.push({ name: ALGORITHMS_MAINTENANCE_INDEX });
 };
 
 const goAlgorithmsPage = () => {
@@ -157,7 +158,8 @@ const viewPublicGraph = async () => {
       await editor.graph.save();
     }
 
-    await editor.switchToMode();
+    // await editor.switchToMode();
+    Editor.preview(route.query.id);
   }
 };
 </script>
@@ -167,7 +169,7 @@ const viewPublicGraph = async () => {
   position: absolute
   bottom: 21px
   left: 0
-  width: calc(100% - 400px)
+  width: calc(100% - 700px)
   -webkit-touch-callout: none
   -webkit-user-select: none
   -html-user-select: none

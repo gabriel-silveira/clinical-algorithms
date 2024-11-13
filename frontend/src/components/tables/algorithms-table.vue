@@ -24,7 +24,7 @@
       <q-tr
         :props="props"
         class="cursor-pointer"
-        @click="editFlowchart(props.row.id, publicView ? 'public' : 'edit', publicViewInAdmin)"
+        @click="editAlgorithm(props.row, publicView ? 'public' : 'edit', publicViewInAdmin)"
       >
         <q-td :props="props" key="title">
           <div class="q-py-sm">
@@ -62,20 +62,30 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { LocalStorage } from 'quasar';
+
 import Settings from 'src/services/settings';
 import Algorithms, { IAlgorithm } from 'src/services/algorithms';
-import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import Users from 'src/services/users';
+
+import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import { formatDatetime } from 'src/services/date';
+import Editor from 'src/services/editor';
 
-// const componentProps = defineProps({
-//   isMaintainer: {
-//     type: Boolean,
-//     default: false,
-//   },
-// });
-
-const settings = inject('settings') as Settings;
+const props = defineProps({
+  isMaintainer: {
+    type: Boolean,
+    default: false,
+  },
+  isMaster: {
+    type: Boolean,
+    default: false,
+  },
+  listAllAlgorithms: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const users = inject('users') as Users;
 
@@ -84,7 +94,7 @@ const algorithms = inject('algorithms') as Algorithms;
 const route = useRoute();
 const router = useRouter();
 
-const publicView = computed(() => settings.isPublicView);
+const publicView = computed(() => Settings.isPublicView(route.name));
 
 const publicViewInAdmin = computed(() => route.name === ALGORITHMS_SEARCH);
 
@@ -118,16 +128,20 @@ const columns = [
   },
 ];
 
-const editFlowchart = (
-  flowchartId: number,
+const editAlgorithm = (
+  algorithm: IAlgorithm,
   mode: 'edit' | 'public' = 'edit',
   fromAdmin = false,
 ) => {
+  if (!props.isMaster && !props.isMaintainer) {
+    return Editor.preview(algorithm.id);
+  }
+
   if (mode === 'public' && fromAdmin) {
     return router.push({
       name: ALGORITHMS_PUBLIC_EDITOR,
       query: {
-        id: flowchartId,
+        id: algorithm.id,
         mode,
         from_admin: Number(fromAdmin),
       },
@@ -138,7 +152,7 @@ const editFlowchart = (
     return router.push({
       name: ALGORITHMS_PUBLIC_EDITOR,
       query: {
-        id: flowchartId,
+        id: algorithm.id,
         mode,
       },
     });
@@ -147,15 +161,21 @@ const editFlowchart = (
   return router.push({
     name: ALGORITHMS_EDITOR,
     query: {
-      id: flowchartId,
+      id: algorithm.id,
       mode,
     },
   });
 };
 
-const viewFlowchartData = (flowchart: IAlgorithm) => algorithms.viewFlowchartData(flowchart);
+const viewFlowchartData = (algorithmId: IAlgorithm) => algorithms.viewAlgorithmData(algorithmId);
 
 onBeforeMount(() => {
-  algorithms.getAll();
+  if (props.isMaster || props.listAllAlgorithms) {
+    algorithms.getAll(true);
+  } else if (props.isMaintainer) {
+    algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
+  } else {
+    algorithms.getAll();
+  }
 });
 </script>

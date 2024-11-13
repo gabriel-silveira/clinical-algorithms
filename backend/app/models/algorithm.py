@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, DATE, TEXT, VARCHAR, BIGINT
+from sqlalchemy import Table, Column, DATE, TEXT, VARCHAR, BIGINT, BOOLEAN
 from app.db import meta
 
 
@@ -9,6 +9,7 @@ algorithm_model = Table(
     Column('title', VARCHAR(255), index=True),
     Column('description', TEXT, index=True),
     # Column('author', VARCHAR(255)),
+    Column('public', BOOLEAN, default=False),
     Column('version', VARCHAR(10)),
     Column('updated_at', DATE)
 )

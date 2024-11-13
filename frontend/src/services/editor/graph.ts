@@ -5,6 +5,7 @@ import html2pdf from 'html2pdf.js';
 import Editor from 'src/services/editor/index';
 
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
+import { GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -14,6 +15,7 @@ export interface IEditorData {
   graph: {
     id: number,
     algorithm_id: number,
+    user_id: number,
     updated_at: string,
   },
   algorithm: {
@@ -43,6 +45,7 @@ class Graph {
     graph: {
       id: 0,
       algorithm_id: 0,
+      user_id: 0,
       updated_at: '',
     },
     algorithm: {
@@ -68,6 +71,10 @@ class Graph {
     this.editor = editor;
   }
 
+  public setMode(mode: string) {
+    this.data.mode = mode || GRAPH_MODE_PUBLIC;
+  }
+
   get isNotSaved() {
     return this.data.saved === false;
   }
@@ -86,11 +93,13 @@ class Graph {
           id: number,
           algorithm_id: number,
           graph: string,
+          user_id: number,
           updated_at: string,
       } } = await api.get(`${RESOURCE}/${graphId}`);
 
       this.data.graph.id = data.id;
       this.data.graph.algorithm_id = data.algorithm_id;
+      this.data.graph.user_id = data.user_id;
       this.data.graph.updated_at = data.updated_at;
 
       if (data.graph) {
@@ -126,9 +135,11 @@ class Graph {
             // this.editor.element.showAllTools();
 
             if (this.editor.route.query.node) {
-              this.editor.element.select(String(this.editor.route.query.node));
+              setTimeout(() => {
+                this.editor.element.select(String(this.editor.route.query.node));
 
-              this.editor.element.centerViewOnSelected();
+                this.editor.element.centerViewOnSelected();
+              }, 1000);
             }
           }
         }
@@ -140,11 +151,13 @@ class Graph {
     }
   }
 
-  private async setAlgorithm() {
+  public async setAlgorithm() {
     try {
       const { data } = await api.get(`${RESOURCE_ALGORITHM}/${this.data.graph.algorithm_id}`);
 
       this.data.algorithm = { ...data };
+
+      this.editor.data.public = !!data.public;
 
       return Promise.resolve(true);
     } catch (error) {
@@ -192,6 +205,7 @@ class Graph {
         id: this.data.graph.id,
         graph: JSON.stringify(this.editor.data.graph.toJSON()),
         algorithm_id: this.data.graph.algorithm_id,
+        public: this.editor.data.public,
       });
 
       this.data.graph.updated_at = data.updated_at;

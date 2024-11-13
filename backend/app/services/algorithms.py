@@ -10,9 +10,22 @@ from typing import List
 algorithm_fields = ['id', 'title', 'description', 'version', 'updated_at']
 
 
-def index():
+def index(list_all_algorithms=False):
     try:
-        return select("SELECT * FROM algorithms ORDER BY id DESC")
+        if list_all_algorithms:
+            return select("SELECT * FROM algorithms ORDER BY id DESC")
+        else:
+            return select("SELECT * FROM algorithms WHERE public = 1 ORDER BY id DESC")
+    except Error as e:
+        db_error(e)
+
+
+def user_algorithms(user_id: int):
+    try:
+        return select(
+            "SELECT * FROM algorithms WHERE user_id = %s ORDER BY id DESC",
+            [user_id]
+        )
     except Error as e:
         db_error(e)
 
@@ -27,11 +40,14 @@ def algorithm_categories(algorithm_id: int):
         db_error(e)
 
 
-def search(keyword: str, category_id=0, user_id=0, thorough=False):
+def search(keyword: str, category_id=0, user_id=0, thorough=False, search_all_algorithms=False):
     try:
         if thorough:
-            # return select("SELECT * FROM algorithms WHERE title REGEXP %s", "[[:<:]]"+keyword+"[[:>:]]")
-            return select("SELECT * FROM algorithms WHERE title REGEXP %s", keyword)
+            if search_all_algorithms:
+                return select("SELECT * FROM algorithms WHERE title REGEXP %s", keyword)
+                # return select("SELECT * FROM algorithms WHERE title REGEXP %s", "[[:<:]]"+keyword+"[[:>:]]")
+            else:
+                return select("SELECT * FROM algorithms WHERE public = 1 AND title REGEXP %s", keyword)
         else:
             # search by category only
             if not keyword and category_id and not user_id:
@@ -50,7 +66,7 @@ def search(keyword: str, category_id=0, user_id=0, thorough=False):
                         WHERE a.title LIKE %s
                         AND ac.category_id = %s"""
 
-                return select(query, ["%"+keyword+"%", category_id])
+                return select(query, ["%" + keyword + "%", category_id])
 
             # search by category and user
             if not keyword and category_id and user_id:
@@ -66,7 +82,7 @@ def search(keyword: str, category_id=0, user_id=0, thorough=False):
             if keyword and not category_id and user_id:
                 query = """SELECT * FROM algorithms WHERE title LIKE %s AND user_id = %s"""
 
-                return select(query, ["%"+keyword+"%", user_id])
+                return select(query, ["%" + keyword + "%", user_id])
 
             # search by user only
             if not keyword and not category_id and user_id:
@@ -83,18 +99,18 @@ def search(keyword: str, category_id=0, user_id=0, thorough=False):
                         AND ac.category_id = %s
                         AND a.user_id = %s"""
 
-                return select(query, ["%"+keyword+"%", category_id, user_id])
+                return select(query, ["%" + keyword + "%", category_id, user_id])
 
-            return select("SELECT * FROM algorithms WHERE title LIKE %s", "%"+keyword+"%")
+            return select("SELECT * FROM algorithms WHERE title LIKE %s", "%" + keyword + "%")
     except Error as e:
         db_error(e)
 
 
-def thorough_search(keyword: str):
+def thorough_search(keyword: str, search_all_algorithms=False):
     try:
-        nodes_found = nodes.search(keyword)
+        nodes_found = nodes.search(keyword, search_all_algorithms)
 
-        algorithms_found = search(keyword, 0, 0, True)
+        algorithms_found = search(keyword, 0, 0, True, search_all_algorithms)
 
         results = {}
 
@@ -211,7 +227,7 @@ def update_algorithm(algorithm: AlgorithmSchema):
             algorithm.version,
             datetime.now(),
         ]
-        
+
         updated_algorithm_id = update("algorithms", fields, values, "id", algorithm.id)
 
         update_algorithm_categories(algorithm.id, algorithm.categories)

@@ -42,7 +42,7 @@
         class="q-pa-md"
       >
         <div v-if="loadingBlocks">
-          <loading-spinner />
+          <loading-spinner/>
         </div>
 
         <div v-else-if="!editable">

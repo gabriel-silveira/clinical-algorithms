@@ -12,7 +12,7 @@
     :hide-labels="true"
     @delete="showDeleteDialog"
     @edit="setEditing"
-    @save="submitFlowchartForm"
+    @save="submitAlgorithmForm"
     @close="closeDialog"
   >
     <q-form
@@ -133,6 +133,7 @@ import {
 } from 'vue';
 
 import {
+  LocalStorage,
   QForm,
   QInput,
   useQuasar,
@@ -215,6 +216,8 @@ const saveAndClose = async () => {
     // update algorithms list
     if (algorithms.data.searchKeyword) {
       await algorithms.search();
+    } else if (props.isMaintainer) {
+      await algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
     } else {
       await algorithms.getAll();
     }
@@ -237,7 +240,7 @@ const setEditing = (value: boolean) => {
   }, 250);
 };
 
-const submitFlowchartForm = async () => {
+const submitAlgorithmForm = async () => {
   refFlowchartForm.value?.submit();
 };
 </script>

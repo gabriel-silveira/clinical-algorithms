@@ -29,9 +29,7 @@ import Settings from 'src/services/settings';
 import { HOME } from 'src/router/routes/home';
 
 import { useRoute, useRouter } from 'vue-router';
-import { inject, onBeforeMount, ref } from 'vue';
-
-const settings = inject('settings') as Settings;
+import { onBeforeMount, ref } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -49,6 +47,27 @@ const isActive = (routeName: string) => routeName === route.name;
 const sections = ref<IMainMenuSection[]>([]);
 
 onBeforeMount(async () => {
-  sections.value = await settings.isMaster() ? allSections : restrictedSections;
+  const { master, maintainer } = await Settings.getUserRoles();
+
+  if (master) {
+    sections.value = [...allSections];
+  } else if (maintainer) {
+    sections.value = [...restrictedSections];
+  } else {
+    for (const restrictedSection of restrictedSections) {
+      const sectionAux = {
+        name: restrictedSection.name,
+        items: [],
+      };
+
+      for (const sectionItem of restrictedSection.items) {
+        if (!sectionItem.maintainer) {
+          sectionAux.items.push(sectionItem);
+        }
+      }
+
+      sections.value.push(sectionAux);
+    }
+  }
 });
 </script>

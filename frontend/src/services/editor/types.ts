@@ -5,6 +5,7 @@ export const GRAPH_MODE_PRINT = 'print';
 export const GRAPH_MODE_EDIT = 'edit';
 
 export interface IJointData {
+  public: boolean,
   isMaintainer: boolean,
   readOnly: boolean,
   showSaveDialog: boolean,

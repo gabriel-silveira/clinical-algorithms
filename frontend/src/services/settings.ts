@@ -2,6 +2,7 @@ import { reactive } from 'vue';
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_PUBLIC_SEARCH } from 'src/router/routes/algorithms';
 import { api } from 'boot/axios';
+import { LocalStorage } from 'quasar';
 
 class Settings {
   private appName = 'PAHO';
@@ -34,29 +35,25 @@ class Settings {
     }
   }
 
-  public setUser(userId: number) {
-    this.userId = userId;
-  }
-
-  get isPublicView() {
+  static isPublicView(routeName: string) {
     return [
       ALGORITHMS_PUBLIC_SEARCH,
       ALGORITHMS_PUBLIC_EDITOR,
-    ].includes(
-      String(this.route.name),
-    );
+    ].includes(routeName);
   }
 
-  private async getUserRoles() {
+  static async getUserRoles() {
     try {
-      if (!this.userId) return Promise.resolve({ maintainer: false, master: false });
+      const userId = LocalStorage.getItem('user');
+
+      if (!userId) return Promise.resolve({ maintainer: false, master: false });
 
       const { data }: {
         data: {
           maintainer: number,
           master: number,
         }
-      } = await api.get(`users/roles/${this.userId}`);
+      } = await api.get(`users/roles/${userId}`);
 
       const { maintainer, master } = data;
 
@@ -66,19 +63,9 @@ class Settings {
     }
   }
 
-  public async isMaintainer() {
+  static async isMaster() {
     try {
-      const { maintainer } = await this.getUserRoles();
-
-      return Promise.resolve(!!maintainer);
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
-
-  public async isMaster() {
-    try {
-      const { master } = await this.getUserRoles();
+      const { master } = await Settings.getUserRoles();
 
       return Promise.resolve(!!master);
     } catch (error) {

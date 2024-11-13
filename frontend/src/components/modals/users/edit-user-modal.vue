@@ -39,7 +39,10 @@
             @update="setPhone"
           />
 
-          <div class="q-mb-lg" v-else>
+          <div
+            v-else
+            class="q-mb-lg"
+          >
             <div class="text-caption text-grey-7">Teléfono:</div>
             <div>{{ users.data.user.phone }}</div>
           </div>
@@ -54,7 +57,7 @@
             class="q-mb-md"
             :rules="[
               (val) => !!val || 'Introduzca el e-mail del usuario',
-              (val) => validateEmail(val) || 'Este email es invalido',
+              (val) => validateEmail(val) || 'Este email no es válido',
             ]"
           />
           <div class="q-mb-lg" v-else>

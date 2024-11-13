@@ -1,6 +1,5 @@
 from app.services.pymsql import insert, update, select, delete, db_error
 from app.schemas.user import UserSchema
-from .data_handler import to_iso_date
 from datetime import datetime
 from pymysql import Error
 from app.services.data import encrypt_password
@@ -8,7 +7,7 @@ from app.services.data import encrypt_password
 
 def index():
     try:
-        return select("SELECT id, name FROM users")
+        return select("SELECT id, name, email, maintainer, master, phone FROM users")
     except Error as e:
         db_error(e)
 

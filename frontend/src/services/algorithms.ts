@@ -80,11 +80,47 @@ class Algorithms {
     return this.data.algorithms;
   }
 
-  public async getAll() {
+  public async getAlgorithm(id: number) {
     try {
       this.data.loading = true;
 
-      const { data: flowcharts }: { data: IAlgorithm[] } = await api.get(resource);
+      const { data: algorithm }: { data: IAlgorithm } = await api.get(`${resource}/${id}`);
+
+      return Promise.resolve(algorithm);
+    } catch (error) {
+      return Promise.reject(error);
+    } finally {
+      setTimeout(() => {
+        this.data.loading = false;
+      }, 1000);
+    }
+  }
+
+  public async getAll(listAllAlgorithms = false) {
+    try {
+      this.data.loading = true;
+
+      const { data: flowcharts }: { data: IAlgorithm[] } = await api.get(`${resource}?list_all_algorithms=${listAllAlgorithms}`);
+
+      if (flowcharts) {
+        this.data.algorithms = [...flowcharts];
+      }
+
+      return Promise.resolve(true);
+    } catch (error) {
+      return Promise.reject(error);
+    } finally {
+      setTimeout(() => {
+        this.data.loading = false;
+      }, 1000);
+    }
+  }
+
+  public async getUserAlgorithms(userId: number) {
+    try {
+      this.data.loading = true;
+
+      const { data: flowcharts }: { data: IAlgorithm[] } = await api.get(`${resource}/user/${userId}`);
 
       if (flowcharts) {
         this.data.algorithms = [...flowcharts];
@@ -120,13 +156,13 @@ class Algorithms {
     this.data.algorithm.categories = [...this.data.algorithm_categories];
   }
 
-  public async thorough_search(keyword: string) {
+  public async thorough_search(keyword: string, searchAllAlgorithms = false) {
     try {
       this.data.loading = true;
 
       const { data: results }: {
         data: IAlgorithmThoroughSearchResult[],
-      } = await api.get(`${resource}/thorough-search?keyword=${keyword}`);
+      } = await api.get(`${resource}/thorough-search?keyword=${keyword}&search_all_algorithms=${searchAllAlgorithms}`);
 
       return Promise.resolve(results);
     } catch (error) {
@@ -174,8 +210,8 @@ class Algorithms {
     void this.toggleEditDialog();
   }
 
-  public async viewFlowchartData(flowchart: IAlgorithm) {
-    this.data.algorithm = { ...flowchart };
+  public async viewAlgorithmData(algorithm: IAlgorithm) {
+    this.data.algorithm = { ...algorithm };
 
     // convert to brazilian date (DD/MM/YYYY)
     // this.data.algorithm.updated_at = date.toBR(flowchart.updated_at);
@@ -213,6 +249,7 @@ class Algorithms {
         categories: this.data.algorithm.categories?.length
           ? this.data.algorithm.categories.map((category) => category.id) : [],
         user_id: LocalStorage.getItem('user'),
+        public: 0,
       });
 
       await this.toggleEditDialog();
