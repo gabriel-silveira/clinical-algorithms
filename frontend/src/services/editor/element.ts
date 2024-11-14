@@ -240,7 +240,6 @@ class Element {
     });
 
     if (this.editor.data.paper instanceof dia.Paper) {
-      console.log('ADD TOOLS!');
       const elementView = element.findView(this.editor.data.paper);
 
       elementView.addTools(toolsView);
@@ -874,7 +873,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
       createEventHandlers: () => {
         const inputs = document.getElementsByClassName(TEXTAREA_CLASSNAME);
 
-        console.log(inputs);
         if (inputs.length) {
           // eslint-disable-next-line no-restricted-syntax
           for (const input of inputs) {

@@ -212,5 +212,12 @@ export const orderRecommendations = (recommendations: IFixedMetadata[]) => {
     }
   }
 
+  let index = 1;
+  for (const orderedItem of orderedItems) {
+    orderedItem.index = index;
+
+    index += 1;
+  }
+
   return orderedItems;
 };

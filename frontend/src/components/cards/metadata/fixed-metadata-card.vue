@@ -244,9 +244,6 @@ onBeforeMount(() => {
 
       const orderedRecommendations = orderRecommendations(fixed);
 
-      console.log('FIXED');
-      console.log(fixed[props.index - 1]);
-
       fixedMetadata.value = { ...orderedRecommendations[props.index - 1] };
     }
   }
@@ -271,7 +268,6 @@ onBeforeMount(() => {
 });
 
 onBeforeUnmount(() => {
-  console.log('Unmounting');
   editor.metadata.clearMetadata();
 });
 </script>
