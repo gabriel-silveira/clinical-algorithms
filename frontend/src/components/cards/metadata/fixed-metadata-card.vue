@@ -19,9 +19,8 @@
           >
             {{ fixedMetadata.index }}. {{
               fixedMetadata.recommendation_type ?
-                RECOMMENDATION_TYPES.find(
-                  (type) => type.value === fixedMetadata.recommendation_type,
-                ).label : 'Recommendation type was not selected'
+                getRecommendationTypeLabel(fixedMetadata.recommendation_type)
+                : 'Recommendation type was not selected'
             }}
           </div>
         </div>
@@ -192,7 +191,7 @@ import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import Editor from 'src/services/editor';
 
 import {
-  FORMAL_RECOMMENDATION,
+  FORMAL_RECOMMENDATION, getRecommendationTypeLabel,
   RECOMMENDATION_TYPES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 

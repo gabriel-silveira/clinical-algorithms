@@ -16,3 +16,11 @@ export const RECOMMENDATION_TYPES = [
     label: 'Informal recommendation',
   },
 ];
+
+export const getRecommendationTypeLabel = (recommendationType: string) => {
+  const recommendationFound = RECOMMENDATION_TYPES.find(
+    (type) => type.value === recommendationType,
+  );
+
+  return recommendationFound?.label;
+};

@@ -83,9 +83,9 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
 
   items += '<div class="row full-width">';
 
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Comparator:</b><br/>';
-  items += recommendation.comparator;
-  items += '</div></div>';
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  items += `<div><b>Comparator:</b><br/>${recommendation.comparator}</div>`;
+  items += '</div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
   if (recommendation.recommendation_type) {
@@ -99,9 +99,9 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
   }
   items += '</div>';
 
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Intervention:</b><br/>';
-  items += recommendation.intervention;
-  items += '</div></div>';
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  items += `<div><b>Intervention:</b><br/>${recommendation.intervention}</div>`;
+  items += '</div>';
 
   items += '</div>';
 
@@ -111,7 +111,7 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
   ) {
     items += '</div>';
     items += '<div class="col-2 flex items-center justify-center">';
-    items += `<img src="${GradeIcon}" style="width:75%" />`;
+    items += `<img src="${GradeIcon}" style="width:72%" />`;
     items += '</div>';
     items += '</div>';
   }
