@@ -10,7 +10,16 @@ import {
 } from 'src/services/editor/constants/metadata/direction';
 
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
-import { FORMAL_RECOMMENDATION } from 'src/services/editor/constants/metadata/recommendation_type';
+import {
+  FORMAL_RECOMMENDATION,
+  GOOD_PRACTICES,
+  INFORMAL_RECOMMENDATION,
+} from 'src/services/editor/constants/metadata/recommendation_type';
+import {
+  DIAGNOSIS,
+  POPULATION_CLASSIFICATION,
+  TREATMENT,
+} from 'src/services/editor/constants/metadata/intervention';
 
 import GradeIcon from 'src/assets/imgs/grade_logo.png';
 
@@ -117,4 +126,91 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
   }
 
   return items;
+};
+
+export const orderRecommendations = (recommendations: IFixedMetadata[]) => {
+  const orderedItems: IFixedMetadata[] = [];
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === FORMAL_RECOMMENDATION
+      && recommendation.intervention_type === TREATMENT
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === FORMAL_RECOMMENDATION
+      && recommendation.intervention_type === DIAGNOSIS
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === FORMAL_RECOMMENDATION
+      && recommendation.intervention_type === POPULATION_CLASSIFICATION
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === INFORMAL_RECOMMENDATION
+      && recommendation.intervention_type === TREATMENT
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === INFORMAL_RECOMMENDATION
+      && recommendation.intervention_type === DIAGNOSIS
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === INFORMAL_RECOMMENDATION
+      && recommendation.intervention_type === POPULATION_CLASSIFICATION
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === GOOD_PRACTICES
+      && recommendation.intervention_type === TREATMENT
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === GOOD_PRACTICES
+      && recommendation.intervention_type === DIAGNOSIS
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === GOOD_PRACTICES
+      && recommendation.intervention_type === POPULATION_CLASSIFICATION
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  return orderedItems;
 };

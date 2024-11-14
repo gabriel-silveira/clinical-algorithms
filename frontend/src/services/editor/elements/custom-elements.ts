@@ -1,9 +1,11 @@
 import * as joint from 'jointjs';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
-import { recommendationArrowsLine } from 'src/services/recommendations';
+import { orderRecommendations, recommendationArrowsLine } from 'src/services/recommendations';
+import {
+  getRecommendationTypeLabel,
+} from 'src/services/editor/constants/metadata/recommendation_type';
 import icons from 'src/services/editor/elements/svg_icons';
 import { COLOR_ACCENT, COLOR_PRIMARY } from 'src/services/colors';
-import { getRecommendationTypeLabel } from 'src/services/editor/constants/metadata/recommendation_type';
 
 export enum CustomElement {
   START = 'StartElement',
@@ -207,8 +209,10 @@ const customElements = {
   [CustomElement.RECOMMENDATION]: (recommendations: IFixedMetadata[]) => {
     let items = '';
 
+    const orderedRecommendation = orderRecommendations(recommendations);
+
     // only the 3 first recommendations
-    for (const recommendation of recommendations) {
+    for (const recommendation of orderedRecommendation) {
       if (recommendation.intervention && recommendation.comparator) {
         items += `<div class="row" data-index="${recommendation.index}">`;
 
