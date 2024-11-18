@@ -206,7 +206,10 @@ const customElements = {
     },
   ),
 
-  [CustomElement.RECOMMENDATION]: (recommendations: IFixedMetadata[]) => {
+  [CustomElement.RECOMMENDATION]: (
+    recommendations: IFixedMetadata[],
+    recommendationDivId: string,
+  ) => {
     let items = '';
 
     const orderedRecommendation = orderRecommendations(recommendations);
@@ -242,6 +245,7 @@ const customElements = {
         <div
           xmlns="http://www.w3.org/1999/xhtml"
           class="recommendation-element"
+          id="${recommendationDivId}"
         >
           <div class="text-caption">
             ${items}
