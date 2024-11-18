@@ -59,7 +59,8 @@ import {
   onBeforeMount,
   reactive,
   provide,
-  inject, ref,
+  inject,
+  ref,
 } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
@@ -71,8 +72,9 @@ import LoadingSpinner from 'components/spinners/loading-spinner.vue';
 import Algorithms, { IAlgorithmThoroughSearchResult } from 'src/services/algorithms';
 import AlgorithmsSearchResult from 'components/items/algorithms-search-result-item.vue';
 import AlgorithmsTable from 'components/tables/algorithms-table.vue';
-import { ALGORITHMS_PUBLIC_SEARCH } from 'src/router/routes/algorithms';
 import Users from 'src/services/users';
+
+import { ALGORITHMS_PUBLIC_SEARCH } from 'src/router/routes/algorithms';
 
 const route = useRoute();
 const router = useRouter();
