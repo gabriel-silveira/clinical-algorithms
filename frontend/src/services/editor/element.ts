@@ -17,9 +17,10 @@ import { autoResizeTextarea } from 'src/services/editor/textarea';
 import icons from 'src/services/editor/elements/svg_icons';
 
 import {
-  FORMAL_RECOMMENDATION,
   INFORMAL_RECOMMENDATION,
-  GOOD_PRACTICES, RECOMMENDATION_TYPES,
+  FORMAL_RECOMMENDATION,
+  RECOMMENDATION_TYPES,
+  GOOD_PRACTICES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 
 import { COLOR_PRIMARY } from 'src/services/colors';
@@ -240,7 +241,6 @@ class Element {
     });
 
     if (this.editor.data.paper instanceof dia.Paper) {
-      console.log('ADD TOOLS!');
       const elementView = element.findView(this.editor.data.paper);
 
       elementView.addTools(toolsView);
@@ -338,15 +338,25 @@ class Element {
       Recommendation: async (x: number, y: number, originalElement: dia.Element) => {
         const metadata = this.editor.metadata.getFromElement(originalElement);
 
+        function randomString(length: number, chars: string) {
+          let result = '';
+          for (let i = length; i > 0; i -= 1) {
+            result += chars[Math.floor(Math.random() * chars.length)];
+          }
+          return result;
+        }
+
         if (metadata && metadata.fixed) {
-          const RecommendationElement = customElements.RecommendationElement(metadata.fixed);
+          const divId = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+          const RecommendationElement = customElements.RecommendationElement(metadata.fixed, divId);
 
           const recommendationElement = new RecommendationElement({
             position: {
               x,
               y,
             },
-          }).resize(600, 175);
+          }).resize(600, 160 * metadata.fixed.length);
 
           this.create.RecommendationTogglerButton(originalElement, recommendationElement);
 
@@ -732,10 +742,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
       const elementView = element.findView(this.editor.data.paper);
 
       if (elementView) {
-        if (this.editor.data.readOnly) {
-          this.createReadonlyTools(element, true);
-        }
-
         elementView.showTools();
 
         this.data.selectedId = elementId;
@@ -743,17 +749,31 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
         console.log('Selected element props:');
         console.log({ ...element });
 
-        const selectedElement = this.getSelected();
+        if (element) {
+          const elementType = element.prop('type');
 
-        if (selectedElement && selectedElement.prop('type') === CustomElement.LANE) {
-          const { y } = selectedElement.position();
+          if (elementType === CustomElement.LANE) {
+            const { y } = element.position();
 
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          selectedElement.position(0, y);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            element.position(0, y);
 
-          if (document.activeElement?.tagName !== 'INPUT') {
-            deselectAllTexts();
+            if (document.activeElement?.tagName !== 'INPUT') {
+              deselectAllTexts();
+            }
+          }
+
+          if (
+            this.editor.data.readOnly
+            && ![
+              CustomElement.RECOMMENDATION,
+              CustomElement.RECOMMENDATION_TOTAL,
+              CustomElement.START,
+              CustomElement.END,
+            ].includes(elementType)
+          ) {
+            this.createReadonlyTools(element, true);
           }
         }
       }
@@ -874,7 +894,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
       createEventHandlers: () => {
         const inputs = document.getElementsByClassName(TEXTAREA_CLASSNAME);
 
-        console.log(inputs);
         if (inputs.length) {
           // eslint-disable-next-line no-restricted-syntax
           for (const input of inputs) {

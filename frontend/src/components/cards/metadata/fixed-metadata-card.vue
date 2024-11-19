@@ -17,11 +17,10 @@
             class="text-body1 text-bold"
             style="text-transform: uppercase"
           >
-            {{ fixedMetadata.index }}. {{
+            {{ props.hideIndex ? '' : `${fixedMetadata.index}. ` }}{{
               fixedMetadata.recommendation_type ?
-                RECOMMENDATION_TYPES.find(
-                  (type) => type.value === fixedMetadata.recommendation_type,
-                ).label : 'Recommendation type was not selected'
+                getRecommendationTypeLabel(fixedMetadata.recommendation_type)
+                : 'Recommendation type was not selected'
             }}
           </div>
         </div>
@@ -194,18 +193,20 @@ import Editor from 'src/services/editor';
 import {
   FORMAL_RECOMMENDATION,
   RECOMMENDATION_TYPES,
+  getRecommendationTypeLabel,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 
 import RecommendationArrows from 'components/items/recommendations/recommendation-arrows.vue';
-
-import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
 
 import GradeIcon from 'src/assets/imgs/grade_logo.png';
 import CertaintyIcon from 'src/assets/imgs/certainty.png';
 import DiagnosisIcon from 'src/assets/imgs/diagnosis.png';
 import TreatmentIcon from 'src/assets/imgs/treatment.png';
 import PopulationClassificationIcon from 'src/assets/imgs/population_classification.png';
+
 import { INTERVENTION_TYPES } from 'src/services/editor/constants/metadata/intervention';
+import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
+import { orderRecommendations } from 'src/services/recommendations';
 
 const editor = inject('editor') as Editor;
 
@@ -213,6 +214,10 @@ const props = defineProps({
   index: {
     type: Number,
     required: true,
+  },
+  hideIndex: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -237,7 +242,9 @@ onBeforeMount(() => {
     if (metadata) {
       const { fixed } = metadata;
 
-      fixedMetadata.value = { ...fixed[props.index - 1] };
+      const orderedRecommendations = orderRecommendations(fixed);
+
+      fixedMetadata.value = { ...orderedRecommendations[props.index - 1] };
     }
   }
 

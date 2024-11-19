@@ -20,36 +20,54 @@
       <b>No se encontraron algoritmos.</b>
     </template>
 
-    <template v-slot:body="props">
+    <template v-slot:body="rows">
       <q-tr
-        :props="props"
+        :props="rows"
         class="cursor-pointer"
-        @click="editAlgorithm(props.row, publicView ? 'public' : 'edit', publicViewInAdmin)"
+        @click="editAlgorithm(rows.row, publicView ? 'public' : 'edit', publicViewInAdmin)"
       >
-        <q-td :props="props" key="title">
+        <q-td :props="rows" key="title">
           <div class="q-py-sm">
-            <b>{{ props.row.title }}</b>
+            <b>{{ rows.row.title }}</b>
           </div>
         </q-td>
 
-        <q-td key="user_id" :props="props">
-          {{ users.getUserName(props.row.user_id) }}
+        <q-td
+          :props="rows"
+          key="status"
+        >
+          <div
+            v-if="rows.row.public"
+            class="q-py-sm text-positive"
+          >
+            Público
+          </div>
+          <div
+            v-else
+            class="q-py-sm text-grey-5"
+          >
+            No público
+          </div>
         </q-td>
 
-        <q-td key="updated_at" :props="props">
-          {{ formatDatetime(props.row.updated_at) }}
+        <q-td key="user_id" :props="rows">
+          {{ users.getUserName(rows.row.user_id) }}
+        </q-td>
+
+        <q-td key="updated_at" :props="rows">
+          {{ formatDatetime(rows.row.updated_at) }}
         </q-td>
 
         <q-td
           key="action"
-          :props="props"
+          :props="rows"
         >
           <q-btn
             v-if="!publicView && !publicViewInAdmin"
             icon="chevron_right"
             color="primary"
             flat
-            @click.stop="viewFlowchartData(props.row)"
+            @click.stop="viewFlowchartData(rows.row)"
           >
             <q-tooltip>Ver datos básicos</q-tooltip>
           </q-btn>
@@ -127,6 +145,16 @@ const columns = [
     field: 'action',
   },
 ];
+
+if (props.isMaster || props.isMaintainer) {
+  columns.splice(1, 0, {
+    name: 'status',
+    align: 'left',
+    label: 'Status',
+    field: 'status',
+    style: 'width:10%',
+  });
+}
 
 const editAlgorithm = (
   algorithm: IAlgorithm,

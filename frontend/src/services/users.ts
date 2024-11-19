@@ -1,5 +1,6 @@
 import { reactive } from 'vue';
 import { api } from 'boot/axios';
+import { LocalStorage } from 'quasar';
 
 const emptyUser = {
   id: 0,
@@ -86,14 +87,18 @@ class Users {
     this.data.user.password = '';
 
     // convert 0 / 1 to false / true
-    this.data.user.maintainer = !!this.data.user.maintainer;
-    this.data.user.master = !!this.data.user.master;
+    this.data.user.maintainer = !!user.maintainer;
+    this.data.user.master = !!user.master;
 
     this.toggleEditDialog();
   }
 
   public async get() {
     try {
+      const token = LocalStorage.getItem('token');
+
+      if (!token) return Promise.resolve(false);
+
       const { data } = await api.get('users');
 
       this.data.users = [...data];

@@ -1,6 +1,9 @@
 import * as joint from 'jointjs';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
-import { recommendationArrowsLine } from 'src/services/recommendations';
+import { orderRecommendations, recommendationArrowsLine } from 'src/services/recommendations';
+import {
+  getRecommendationTypeLabel,
+} from 'src/services/editor/constants/metadata/recommendation_type';
 import icons from 'src/services/editor/elements/svg_icons';
 import { COLOR_ACCENT, COLOR_PRIMARY } from 'src/services/colors';
 
@@ -203,13 +206,23 @@ const customElements = {
     },
   ),
 
-  [CustomElement.RECOMMENDATION]: (recommendations: IFixedMetadata[]) => {
+  [CustomElement.RECOMMENDATION]: (
+    recommendations: IFixedMetadata[],
+    recommendationDivId: string,
+  ) => {
     let items = '';
 
+    const orderedRecommendation = orderRecommendations(recommendations);
+
     // only the 3 first recommendations
-    for (const recommendation of recommendations) {
+    for (const recommendation of orderedRecommendation) {
       if (recommendation.intervention && recommendation.comparator) {
-        items += `<div class="bg-white row" data-index="${recommendation.index}">`;
+        items += `<div class="row" data-index="${recommendation.index}">`;
+
+        items += '<div class="row full-width bg-grey-2"><div class="col-12 text-center recommendation-title">';
+        items += getRecommendationTypeLabel(recommendation.recommendation_type);
+        items += ` - Intervention type: ${recommendation.intervention_type}`;
+        items += '</div></div>';
 
         items += recommendationArrowsLine(recommendation, true);
 
@@ -232,6 +245,7 @@ const customElements = {
         <div
           xmlns="http://www.w3.org/1999/xhtml"
           class="recommendation-element"
+          id="${recommendationDivId}"
         >
           <div class="text-caption">
             ${items}

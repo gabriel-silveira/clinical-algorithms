@@ -50,6 +50,7 @@
           <fixed-metadata-card
             v-if="recommendation"
             :index="recommendation.data.index"
+            :hide-index="true"
           />
 
           <!-- ALL RECOMMENDATIONS PREVIEW -->

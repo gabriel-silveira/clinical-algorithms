@@ -10,7 +10,16 @@ import {
 } from 'src/services/editor/constants/metadata/direction';
 
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
-import { FORMAL_RECOMMENDATION } from 'src/services/editor/constants/metadata/recommendation_type';
+import {
+  FORMAL_RECOMMENDATION,
+  GOOD_PRACTICES,
+  INFORMAL_RECOMMENDATION,
+} from 'src/services/editor/constants/metadata/recommendation_type';
+import {
+  DIAGNOSIS,
+  POPULATION_CLASSIFICATION,
+  TREATMENT,
+} from 'src/services/editor/constants/metadata/intervention';
 
 import GradeIcon from 'src/assets/imgs/grade_logo.png';
 
@@ -83,9 +92,9 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
 
   items += '<div class="row full-width">';
 
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Comparator:</b><br/>';
-  items += recommendation.comparator;
-  items += '</div></div>';
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  items += `<div><b>Comparator:</b><br/>${recommendation.comparator}</div>`;
+  items += '</div>';
 
   items += '<div class="col-4 flex items-center justify-center">';
   if (recommendation.recommendation_type) {
@@ -99,9 +108,9 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
   }
   items += '</div>';
 
-  items += '<div class="col-4 flex items-center text-caption q-pa-sm"><div><b>Intervention:</b><br/>';
-  items += recommendation.intervention;
-  items += '</div></div>';
+  items += '<div class="col-4 flex items-center text-caption q-pa-sm">';
+  items += `<div><b>Intervention:</b><br/>${recommendation.intervention}</div>`;
+  items += '</div>';
 
   items += '</div>';
 
@@ -111,10 +120,104 @@ export const recommendationArrowsLine = (recommendation: IFixedMetadata, showGra
   ) {
     items += '</div>';
     items += '<div class="col-2 flex items-center justify-center">';
-    items += `<img src="${GradeIcon}" style="width:75%" />`;
+    items += `<img src="${GradeIcon}" style="width:72%" />`;
     items += '</div>';
     items += '</div>';
   }
 
   return items;
+};
+
+export const orderRecommendations = (recommendations: IFixedMetadata[]) => {
+  const orderedItems: IFixedMetadata[] = [];
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === FORMAL_RECOMMENDATION
+      && recommendation.intervention_type === TREATMENT
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === FORMAL_RECOMMENDATION
+      && recommendation.intervention_type === DIAGNOSIS
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === FORMAL_RECOMMENDATION
+      && recommendation.intervention_type === POPULATION_CLASSIFICATION
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === INFORMAL_RECOMMENDATION
+      && recommendation.intervention_type === TREATMENT
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === INFORMAL_RECOMMENDATION
+      && recommendation.intervention_type === DIAGNOSIS
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === INFORMAL_RECOMMENDATION
+      && recommendation.intervention_type === POPULATION_CLASSIFICATION
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === GOOD_PRACTICES
+      && recommendation.intervention_type === TREATMENT
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === GOOD_PRACTICES
+      && recommendation.intervention_type === DIAGNOSIS
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  for (const recommendation of recommendations) {
+    if (
+      recommendation.recommendation_type === GOOD_PRACTICES
+      && recommendation.intervention_type === POPULATION_CLASSIFICATION
+    ) {
+      orderedItems.push(recommendation);
+    }
+  }
+
+  let index = 1;
+  for (const orderedItem of orderedItems) {
+    orderedItem.index = index;
+
+    index += 1;
+  }
+
+  return orderedItems;
 };
