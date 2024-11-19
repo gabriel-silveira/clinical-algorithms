@@ -962,6 +962,21 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     }
   }
 
+  public createRecommendationsPrint() {
+    const allElements = this.getAll();
+
+    if (allElements.length) {
+      for (const element of allElements) {
+        const elementType = element.prop('type');
+
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
+          const metadata = this.editor.metadata.getFromElement(element);
+          console.log(metadata?.fixed);
+        }
+      }
+    }
+  }
+
   static removeLinkToolButtons(linkView: dia.LinkView) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

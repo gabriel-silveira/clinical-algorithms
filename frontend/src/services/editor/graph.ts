@@ -284,6 +284,8 @@ class Graph {
         }
       }
 
+      this.editor.element.createRecommendationsPrint();
+
       this.editor.element.moveAllElementsDown(200);
 
       this.cropToContent();
