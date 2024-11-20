@@ -302,11 +302,17 @@ class Graph {
     this.editor.data.paper?.setDimensions(this.data.printSize.width, this.data.printSize.height);
   }
 
-  private setContentSize() {
+  /**
+   * Get outermost element coordinate in the graph
+   * @private
+   */
+  public getOutermostCoordinate(coordinate: 'x' | 'y', printConsole = false) {
     let outerX = 0;
     let lowerY = 0;
 
     const allCells = this.editor.data.graph.getCells();
+
+    if (printConsole) console.log('Getting Outermost Coordinate...');
 
     for (const cell of allCells) {
       const {
@@ -326,6 +332,7 @@ class Graph {
         'standard.Rectangle',
         'standard.TextBlock',
       ].includes(elementType)) {
+        if (printConsole) console.log(elementType);
         // lanes are not considered to calculate width
         if (elementType !== CustomElement.LANE) {
           const refX = x + width;
@@ -337,8 +344,16 @@ class Graph {
       }
     }
 
-    this.data.printSize.width = outerX + 200;
-    this.data.printSize.height = lowerY + 200;
+    if (printConsole) console.log(coordinate === 'x' ? outerX : lowerY);
+    return coordinate === 'x' ? outerX : lowerY;
+  }
+
+  private setContentSize() {
+    // TODO: define recommendation description element size
+    const recommendationDescriptionElementSize = 400;
+
+    this.data.printSize.width = this.getOutermostCoordinate('x', true) + 200;
+    this.data.printSize.height = this.getOutermostCoordinate('y', true) + recommendationDescriptionElementSize;
   }
 
   public exportPDF() {

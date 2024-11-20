@@ -27,6 +27,7 @@ import { COLOR_PRIMARY } from 'src/services/colors';
 import { formatDatetime } from 'src/services/date';
 import Users from 'src/services/users';
 import { toDataUrl } from 'src/services/images';
+import RecommendationDescriptionConstructor from 'src/services/editor/elements/recommendation-element';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -963,6 +964,16 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   }
 
   public createRecommendationsPrint() {
+    const outermostY = this.editor.graph.getOutermostCoordinate('y') + 100;
+    console.log('outermostY', outermostY);
+
+    const RecommendationDescriptionElement = new RecommendationDescriptionConstructor();
+    RecommendationDescriptionElement.position(0, outermostY);
+    RecommendationDescriptionElement.attr('title/text', 'Título');
+    RecommendationDescriptionElement.attr('description/text', 'Descrição');
+    RecommendationDescriptionElement.attr('author/text', 'Autor: Nome do autor - Última actualización: 29/06/1981');
+    RecommendationDescriptionElement.addTo(this.editor.data.graph);
+
     const allElements = this.getAll();
 
     if (allElements.length) {
