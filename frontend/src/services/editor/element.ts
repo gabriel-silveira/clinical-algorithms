@@ -973,7 +973,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     const elementHeight = 200;
 
     let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;
-    console.log('outermostY', outermostY);
 
     const allElements = this.getAll();
 
@@ -988,14 +987,19 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
             const { fixed: recommendations } = metadata;
 
             if (recommendations.length) {
-              console.log(orderRecommendations(recommendations));
+              const orderedRecommendations = orderRecommendations(recommendations);
 
               let i = 1;
 
-              for (const recommendation of recommendations) {
+              for (const recommendation of orderedRecommendations) {
                 const RecommendationDescriptionElement = new RecommendationDescriptionConstructor();
 
                 RecommendationDescriptionElement.attr('recommendation_type/text', `${i}. ${getRecommendationTypeLabel(recommendation.recommendation_type)}`);
+
+                if (recommendation.recommendation_type !== FORMAL_RECOMMENDATION) {
+                  RecommendationDescriptionElement.attr('grade_logo/style', 'display: none');
+                }
+
                 RecommendationDescriptionElement.attr('intervention_type_text/text', recommendation.intervention_type);
                 RecommendationDescriptionElement.attr('intervention_type_image/xlinkHref', getRecommendationTypeIcon(recommendation.intervention_type));
                 RecommendationDescriptionElement.attr('original_transcription_text/text', recommendation.description);

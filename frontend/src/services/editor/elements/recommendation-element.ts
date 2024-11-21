@@ -14,6 +14,12 @@ const defaults = {
       refX: 30,
       refY: 35,
     },
+    grade_logo: {
+      xlinkHref: './imgs/grade_logo.png',
+      refX: 260,
+      refY: 32,
+      height: 24,
+    },
     intervention_type_label: {
       style: 'font-weight: bold',
       refX: 30,
@@ -85,6 +91,9 @@ const markup = {
   }, {
     tagName: 'text',
     selector: 'recommendation_type',
+  }, {
+    tagName: 'image',
+    selector: 'grade_logo',
   }, {
     tagName: 'text',
     selector: 'intervention_type_label',
