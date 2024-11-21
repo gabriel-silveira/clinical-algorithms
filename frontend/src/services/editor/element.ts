@@ -21,6 +21,8 @@ import {
   FORMAL_RECOMMENDATION,
   RECOMMENDATION_TYPES,
   GOOD_PRACTICES,
+  getRecommendationTypeLabel,
+  getRecommendationTypeIcon,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 
 import { COLOR_PRIMARY } from 'src/services/colors';
@@ -28,6 +30,8 @@ import { formatDatetime } from 'src/services/date';
 import Users from 'src/services/users';
 import { toDataUrl } from 'src/services/images';
 import RecommendationDescriptionConstructor from 'src/services/editor/elements/recommendation-element';
+import { orderRecommendations } from 'src/services/recommendations';
+import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -964,15 +968,12 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   }
 
   public createRecommendationsPrint() {
-    const outermostY = this.editor.graph.getOutermostCoordinate('y') + 100;
-    console.log('outermostY', outermostY);
+    // TODO: set the element dimensions
+    const elementWidth = 800;
+    const elementHeight = 200;
 
-    const RecommendationDescriptionElement = new RecommendationDescriptionConstructor();
-    RecommendationDescriptionElement.position(0, outermostY);
-    RecommendationDescriptionElement.attr('title/text', 'Título');
-    RecommendationDescriptionElement.attr('description/text', 'Descrição');
-    RecommendationDescriptionElement.attr('author/text', 'Autor: Nome do autor - Última actualización: 29/06/1981');
-    RecommendationDescriptionElement.addTo(this.editor.data.graph);
+    let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;
+    console.log('outermostY', outermostY);
 
     const allElements = this.getAll();
 
@@ -982,7 +983,64 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
         if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
           const metadata = this.editor.metadata.getFromElement(element);
-          console.log(metadata?.fixed);
+
+          if (metadata) {
+            const { fixed: recommendations } = metadata;
+
+            if (recommendations.length) {
+              console.log(orderRecommendations(recommendations));
+
+              let i = 1;
+
+              for (const recommendation of recommendations) {
+                const RecommendationDescriptionElement = new RecommendationDescriptionConstructor();
+
+                RecommendationDescriptionElement.attr('recommendation_type/text', `${i}. ${getRecommendationTypeLabel(recommendation.recommendation_type)}`);
+                RecommendationDescriptionElement.attr('intervention_type_text/text', recommendation.intervention_type);
+                RecommendationDescriptionElement.attr('intervention_type_image/xlinkHref', getRecommendationTypeIcon(recommendation.intervention_type));
+                RecommendationDescriptionElement.attr('original_transcription_text/text', recommendation.description);
+                RecommendationDescriptionElement.attr('original_transcription_text', { textWrap: { width: elementWidth * 0.8 } });
+
+                if (recommendation.certainty_of_the_evidence) {
+                  RecommendationDescriptionElement.attr('certainty_text/text', recommendation.certainty_of_the_evidence);
+                  if (recommendation.certainty_of_the_evidence === CERTAINTY.LOW) {
+                    RecommendationDescriptionElement.attr('certainty_icon_1/refX', 365);
+                    RecommendationDescriptionElement.attr('certainty_icon_2/refX', 390);
+                    RecommendationDescriptionElement.attr('certainty_icon_3/style', 'display: none');
+                    RecommendationDescriptionElement.attr('certainty_icon_4/style', 'display: none');
+                  } else if (recommendation.certainty_of_the_evidence === CERTAINTY.VERY_LOW) {
+                    RecommendationDescriptionElement.attr('certainty_icon_1/refX', 395);
+                    RecommendationDescriptionElement.attr('certainty_icon_2/style', 'display: none');
+                    RecommendationDescriptionElement.attr('certainty_icon_3/style', 'display: none');
+                    RecommendationDescriptionElement.attr('certainty_icon_4/style', 'display: none');
+                  } else if (recommendation.certainty_of_the_evidence === CERTAINTY.MODERATE) {
+                    RecommendationDescriptionElement.attr('certainty_icon_1/refX', 395);
+                    RecommendationDescriptionElement.attr('certainty_icon_2/refX', 420);
+                    RecommendationDescriptionElement.attr('certainty_icon_3/refX', 445);
+                    RecommendationDescriptionElement.attr('certainty_icon_4/style', 'display: none');
+                  } else if (recommendation.certainty_of_the_evidence === CERTAINTY.HIGH) {
+                    RecommendationDescriptionElement.attr('certainty_icon_1/refX', 365);
+                    RecommendationDescriptionElement.attr('certainty_icon_2/refX', 390);
+                    RecommendationDescriptionElement.attr('certainty_icon_3/refX', 415);
+                    RecommendationDescriptionElement.attr('certainty_icon_4/refX', 440);
+                  }
+                } else {
+                  RecommendationDescriptionElement.attr('certainty_label/text', '');
+                  RecommendationDescriptionElement.attr('certainty_icon_1/style', 'display: none');
+                  RecommendationDescriptionElement.attr('certainty_icon_2/style', 'display: none');
+                  RecommendationDescriptionElement.attr('certainty_icon_3/style', 'display: none');
+                  RecommendationDescriptionElement.attr('certainty_icon_4/style', 'display: none');
+                }
+
+                RecommendationDescriptionElement.position(0, outermostY);
+                RecommendationDescriptionElement.size(elementWidth, elementHeight);
+                RecommendationDescriptionElement.addTo(this.editor.data.graph);
+
+                i += 1;
+                outermostY += (elementHeight + 10);
+              }
+            }
+          }
         }
       }
     }
