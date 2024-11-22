@@ -7,27 +7,29 @@ const defaults = {
       width: 'calc(w)',
       height: 'calc(h)',
       fill: 'white',
-      strokeWidth: 0,
+      strokeWidth: 1,
+      stroke: '#AAAAAA',
+      rx: 5,
     },
     recommendation_type: {
       style: 'font-size: 18px; font-weight: 500',
-      refX: 30,
-      refY: 35,
+      refX: 15,
+      refY: 20,
     },
     grade_logo: {
       xlinkHref: './imgs/grade_logo.png',
       refX: 260,
-      refY: 32,
+      refY: 17,
       height: 24,
     },
     intervention_type_label: {
       style: 'font-weight: bold',
-      refX: 30,
+      refX: 15,
       refY: 70,
       text: 'Intervention type',
     },
     intervention_type_text: {
-      refX: 30,
+      refX: 15,
       refY: 93,
     },
     intervention_type_image: {
@@ -72,14 +74,38 @@ const defaults = {
     },
     original_transcription_label: {
       style: 'font-weight: bold',
-      refX: 30,
+      refX: 15,
       refY: 125,
       text: 'Original transcription',
     },
     original_transcription_text: {
       style: 'line-height: 200%;',
-      refX: 30,
+      refX: 15,
       refY: 148,
+    },
+    comparator_label: {
+      style: 'font-weight: bold',
+      refX: 15,
+      refY: 220,
+      text: 'Comparator',
+    },
+    comparator_text: {
+      style: 'line-height: 200%;',
+      refX: 15,
+      refY: 240,
+      text: 'Texto do comparador',
+    },
+    intervention_label: {
+      style: 'font-weight: bold',
+      refX: 600,
+      refY: 220,
+      text: 'Intervention',
+    },
+    intervention_text: {
+      style: 'line-height: 200%;',
+      refX: 600,
+      refY: 240,
+      text: 'Texto do comparador',
     },
   },
 };
@@ -130,6 +156,18 @@ const markup = {
   }, {
     tagName: 'text',
     selector: 'original_transcription_text',
+  }, {
+    tagName: 'text',
+    selector: 'comparator_label',
+  }, {
+    tagName: 'text',
+    selector: 'comparator_text',
+  }, {
+    tagName: 'text',
+    selector: 'intervention_label',
+  }, {
+    tagName: 'text',
+    selector: 'intervention_text',
   }],
 };
 

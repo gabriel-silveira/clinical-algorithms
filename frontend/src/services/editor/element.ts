@@ -969,8 +969,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
   public createRecommendationsPrint() {
     // TODO: set the element dimensions
-    const elementWidth = 800;
-    const elementHeight = 200;
+    const elementWidth = 1000;
+    const elementHeight = 300;
 
     let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;
 
@@ -1036,7 +1036,10 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationDescriptionElement.attr('certainty_icon_4/style', 'display: none');
                 }
 
-                RecommendationDescriptionElement.position(0, outermostY);
+                RecommendationDescriptionElement.attr('comparator_text/text', recommendation.comparator);
+                RecommendationDescriptionElement.attr('intervention_text/text', recommendation.intervention);
+
+                RecommendationDescriptionElement.position(15, outermostY);
                 RecommendationDescriptionElement.size(elementWidth, elementHeight);
                 RecommendationDescriptionElement.addTo(this.editor.data.graph);
 
