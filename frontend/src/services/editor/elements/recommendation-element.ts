@@ -107,6 +107,11 @@ const defaults = {
       refY: 240,
       text: 'Texto do comparador',
     },
+    recommendation_arrows_image: {
+      xlinkHref: 'imgs/recommendation_arrows/strong_in_favor_intervention.png',
+      refX: 300,
+      refY: 220,
+    },
   },
 };
 
@@ -168,6 +173,9 @@ const markup = {
   }, {
     tagName: 'text',
     selector: 'intervention_text',
+  }, {
+    tagName: 'image',
+    selector: 'recommendation_arrows_image',
   }],
 };
 

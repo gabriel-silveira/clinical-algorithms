@@ -7,8 +7,8 @@ import Ports from 'src/services/editor/ports';
 import customElements, {
   CustomElement,
   elementName,
-  RecommendationTotalConstructor,
   TEXTAREA_CLASSNAME,
+  RecommendationTotalConstructor,
 } from 'src/services/editor/elements/custom-elements';
 
 import { reactive } from 'vue';
@@ -27,10 +27,14 @@ import {
 
 import { COLOR_PRIMARY } from 'src/services/colors';
 import { formatDatetime } from 'src/services/date';
-import Users from 'src/services/users';
 import { toDataUrl } from 'src/services/images';
+import Users from 'src/services/users';
 import RecommendationDescriptionConstructor from 'src/services/editor/elements/recommendation-element';
-import { orderRecommendations } from 'src/services/recommendations';
+import {
+  goodPracticeArrowsImage,
+  orderRecommendations,
+  recommendationArrowsImage,
+} from 'src/services/recommendations';
 import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
 
 // export interface IElementToolsPadding {
@@ -1037,6 +1041,12 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 }
 
                 RecommendationDescriptionElement.attr('comparator_text/text', recommendation.comparator);
+                if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
+                  RecommendationDescriptionElement.attr('recommendation_arrows_image/xlinkHref', recommendationArrowsImage(recommendation));
+                } else if (recommendation.direction) {
+                  RecommendationDescriptionElement.attr('recommendation_arrows_image/xlinkHref', goodPracticeArrowsImage(recommendation));
+                  RecommendationDescriptionElement.attr('recommendation_arrows_image/refX', 350);
+                }
                 RecommendationDescriptionElement.attr('intervention_text/text', recommendation.intervention);
 
                 RecommendationDescriptionElement.position(15, outermostY);
