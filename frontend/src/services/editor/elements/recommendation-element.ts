@@ -86,31 +86,39 @@ const defaults = {
     comparator_label: {
       style: 'font-weight: bold',
       refX: 15,
-      refY: 220,
+      refY: 200,
       text: 'Comparator',
     },
     comparator_text: {
       style: 'line-height: 200%;',
       refX: 15,
-      refY: 240,
-      text: 'Texto do comparador',
+      refY: 220,
     },
     intervention_label: {
       style: 'font-weight: bold',
       refX: 600,
-      refY: 220,
+      refY: 200,
       text: 'Intervention',
     },
     intervention_text: {
       style: 'line-height: 200%;',
       refX: 600,
-      refY: 240,
-      text: 'Texto do comparador',
+      refY: 220,
     },
     recommendation_arrows_image: {
       xlinkHref: 'imgs/recommendation_arrows/strong_in_favor_intervention.png',
       refX: 300,
-      refY: 220,
+      refY: 200,
+    },
+    implementation_label: {
+      style: 'font-weight: bold',
+      refX: 15,
+      refY: 260,
+      text: 'Implementation consideration',
+    },
+    implementation_text: {
+      refX: 15,
+      refY: 285,
     },
   },
 };
@@ -176,6 +184,12 @@ const markup = {
   }, {
     tagName: 'image',
     selector: 'recommendation_arrows_image',
+  }, {
+    tagName: 'text',
+    selector: 'implementation_label',
+  }, {
+    tagName: 'text',
+    selector: 'implementation_text',
   }],
 };
 

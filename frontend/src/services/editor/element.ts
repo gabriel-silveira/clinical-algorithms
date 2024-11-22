@@ -28,6 +28,7 @@ import {
 import { COLOR_PRIMARY } from 'src/services/colors';
 import { formatDatetime } from 'src/services/date';
 import { toDataUrl } from 'src/services/images';
+import { randomString } from "src/services/general";
 import Users from 'src/services/users';
 import RecommendationDescriptionConstructor from 'src/services/editor/elements/recommendation-element';
 import {
@@ -347,16 +348,8 @@ class Element {
       Recommendation: async (x: number, y: number, originalElement: dia.Element) => {
         const metadata = this.editor.metadata.getFromElement(originalElement);
 
-        function randomString(length: number, chars: string) {
-          let result = '';
-          for (let i = length; i > 0; i -= 1) {
-            result += chars[Math.floor(Math.random() * chars.length)];
-          }
-          return result;
-        }
-
         if (metadata && metadata.fixed) {
-          const divId = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+          const divId = randomString(32);
 
           const RecommendationElement = customElements.RecommendationElement(metadata.fixed, divId);
 
@@ -973,8 +966,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
   public createRecommendationsPrint() {
     // TODO: set the element dimensions
-    const elementWidth = 1000;
-    const elementHeight = 300;
+    const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 50;
+    const elementHeight = 600;
 
     let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;
 
@@ -996,6 +989,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
               let i = 1;
 
               for (const recommendation of orderedRecommendations) {
+                let implementationTextClass = '';
+
                 const RecommendationDescriptionElement = new RecommendationDescriptionConstructor();
 
                 RecommendationDescriptionElement.attr('recommendation_type/text', `${i}. ${getRecommendationTypeLabel(recommendation.recommendation_type)}`);
@@ -1048,6 +1043,20 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationDescriptionElement.attr('recommendation_arrows_image/refX', 350);
                 }
                 RecommendationDescriptionElement.attr('intervention_text/text', recommendation.intervention);
+
+                if (recommendation.implementation_considerations) {
+                  implementationTextClass = `class-${randomString(16)}`;
+                  RecommendationDescriptionElement.attr('implementation_text/text', recommendation.implementation_considerations);
+                  RecommendationDescriptionElement.attr('implementation_text', { textWrap: { width: elementWidth * 0.8 } });
+                  RecommendationDescriptionElement.attr('implementation_text/class', implementationTextClass);
+                } else {
+                  RecommendationDescriptionElement.attr('implementation_label/style', 'display: none');
+                }
+
+                // TODO: get implementation text element to know the height
+                // and calculate the Y position of the next element
+                const implTextElement = document.getElementsByClassName(implementationTextClass);
+                console.log(implTextElement);
 
                 RecommendationDescriptionElement.position(15, outermostY);
                 RecommendationDescriptionElement.size(elementWidth, elementHeight);
