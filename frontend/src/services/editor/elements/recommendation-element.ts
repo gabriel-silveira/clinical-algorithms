@@ -120,6 +120,16 @@ const defaults = {
       refX: 15,
       refY: 285,
     },
+    additional_comments_label: {
+      style: 'font-weight: bold',
+      refX: 15,
+      refY: 285,
+      text: 'Additional comments',
+    },
+    additional_comments_text: {
+      refX: 15,
+      refY: 285,
+    },
     recommendation_source_label: {
       style: 'font-weight: bold',
       refX: 15,
@@ -200,6 +210,12 @@ const markup = {
   }, {
     tagName: 'text',
     selector: 'implementation_text',
+  }, {
+    tagName: 'text',
+    selector: 'additional_comments_label',
+  }, {
+    tagName: 'text',
+    selector: 'additional_comments_text',
   }, {
     tagName: 'text',
     selector: 'recommendation_source_label',
