@@ -8,3 +8,11 @@ export function randomString(
   }
   return result;
 }
+
+export const getElementBoundingRect = (implementationTextClass: string) => {
+  const implTextElement = document.getElementsByClassName(implementationTextClass);
+
+  // .height.toFixed(0)
+  return implTextElement.length
+    ? implTextElement[0].getBoundingClientRect() : null;
+};

@@ -120,6 +120,16 @@ const defaults = {
       refX: 15,
       refY: 285,
     },
+    recommendation_source_label: {
+      style: 'font-weight: bold',
+      refX: 15,
+      refY: 285,
+      text: 'Recommendation source',
+    },
+    recommendation_source_text: {
+      refX: 15,
+      refY: 285,
+    },
   },
 };
 
@@ -190,6 +200,12 @@ const markup = {
   }, {
     tagName: 'text',
     selector: 'implementation_text',
+  }, {
+    tagName: 'text',
+    selector: 'recommendation_source_label',
+  }, {
+    tagName: 'text',
+    selector: 'recommendation_source_text',
   }],
 };
 
