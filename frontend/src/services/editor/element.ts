@@ -1068,7 +1068,30 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
                 const ITBoundingRect = getElementBoundingRect(implementationTextClass);
 
-                if (ITBoundingRect && recommendation.additional_comments) {
+                if (
+                  recommendation.implementation_considerations
+                  && !recommendation.additional_comments
+                  && !recommendation.recommendation_source
+                ) {
+                  RecommendationElement.attr('additional_comments_label/style', 'display: none');
+                  RecommendationElement.attr('recommendation_source_label/style', 'display: none');
+                } else if ( // only recommendation source
+                  !recommendation.implementation_considerations
+                  && !recommendation.additional_comments
+                  && recommendation.recommendation_source
+                ) {
+                  RecommendationElement.attr('implementation_label/style', 'display: none');
+                  RecommendationElement.attr('additional_comments_label/style', 'display: none');
+
+                  RecommendationElement.attr('recommendation_source_label/refY', 260);
+
+                  RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
+                  RecommendationElement.attr('recommendation_source_text/refY', 280);
+                } else if (
+                  ITBoundingRect
+                  && recommendation.implementation_considerations
+                  && recommendation.additional_comments
+                ) {
                   const aclRefY = RecommendationElement.attr('additional_comments_label/refY');
                   RecommendationElement.attr('additional_comments_label/refY', aclRefY + ITBoundingRect.height + 20);
 
@@ -1091,9 +1114,32 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                         rslRefY + ITBoundingRect.height + ACBoundingRect.height + 80,
                       );
                     }
+                  } else {
+                    RecommendationElement.attr('recommendation_source_label/style', 'display: none');
                   }
-                } else {
+                } else if (
+                  ITBoundingRect
+                  && recommendation.implementation_considerations
+                  && recommendation.recommendation_source
+                ) {
                   RecommendationElement.attr('additional_comments_label/style', 'display: none');
+
+                  const rslRefY = RecommendationElement.attr('recommendation_source_label/refY');
+                  RecommendationElement.attr('recommendation_source_label/refY', rslRefY + ITBoundingRect.height + 20);
+
+                  RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
+                  RecommendationElement.attr(
+                    'recommendation_source_text/refY',
+                    rslRefY + ITBoundingRect.height + 42,
+                  );
+                } else if (
+                  !recommendation.implementation_considerations
+                  && !recommendation.additional_comments
+                  && !recommendation.recommendation_source
+                ) {
+                  RecommendationElement.attr('implementation_label/style', 'display: none');
+                  RecommendationElement.attr('additional_comments_label/style', 'display: none');
+                  RecommendationElement.attr('recommendation_source_label/style', 'display: none');
                 }
 
                 i += 1;
