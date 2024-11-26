@@ -968,7 +968,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   public createRecommendationsPrint() {
     // TODO: set the element dimensions
     const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 50;
-    const elementHeight = 1000;
+    let elementHeight = 1000;
 
     let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;
 
@@ -1021,6 +1021,9 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
               for (const recommendation of orderedRecommendations) {
                 let implementationTextClass = '';
                 let additionalCommentsTextClass = '';
+                let recommendationSourceTextClass = '';
+                let lastElementBeforeLinks: DOMRect | null = null;
+                let linkLinksClass = '';
 
                 const RecommendationElement = new RecommendationDescriptionConstructor();
 
@@ -1029,6 +1032,10 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 RecommendationElement.attr('implementation_text/class', implementationTextClass);
                 additionalCommentsTextClass = `class-${randomString(16)}`;
                 RecommendationElement.attr('additional_comments_text/class', additionalCommentsTextClass);
+                recommendationSourceTextClass = `class-${randomString(16)}`;
+                RecommendationElement.attr('recommendation_source_text/class', recommendationSourceTextClass);
+                linkLinksClass = `class-${randomString(16)}`;
+                RecommendationElement.attr('links_links/class', linkLinksClass);
 
                 // text wrapping
                 RecommendationElement.attr('implementation_text', { textWrap: { width: elementWidth * 0.8 } });
@@ -1105,6 +1112,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 ) {
                   RecommendationElement.attr('additional_comments_label/style', 'display: none');
                   RecommendationElement.attr('recommendation_source_label/style', 'display: none');
+
+                  lastElementBeforeLinks = ITBoundingRect;
                 } else if (
                   // only additional comments and recommendation source
                   ITBoundingRect
@@ -1124,6 +1133,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                     RecommendationElement,
                     additionalCommentsTextClass,
                   );
+
+                  lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
                 } else if ( // only recommendation source
                   !recommendation.implementation_considerations
                   && !recommendation.additional_comments
@@ -1136,6 +1147,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
                   RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
                   RecommendationElement.attr('recommendation_source_text/refY', 280);
+
+                  lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
                 } else if (
                   ITBoundingRect
                   && recommendation.implementation_considerations
@@ -1153,6 +1166,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                     additionalCommentsTextClass,
                     ITBoundingRect,
                   );
+
+                  lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
                 } else if (
                   ITBoundingRect
                   && recommendation.implementation_considerations
@@ -1168,6 +1183,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                     'recommendation_source_text/refY',
                     rslRefY + ITBoundingRect.height + 42,
                   );
+
+                  lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
                 } else if (
                   !recommendation.implementation_considerations
                   && !recommendation.additional_comments
@@ -1176,6 +1193,38 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationElement.attr('implementation_label/style', 'display: none');
                   RecommendationElement.attr('additional_comments_label/style', 'display: none');
                   RecommendationElement.attr('recommendation_source_label/style', 'display: none');
+                }
+
+                // LINKS
+                if (lastElementBeforeLinks && recommendation.links.length) {
+                  const llRefY = RecommendationElement.attr('links_label/refY');
+                  RecommendationElement.attr('links_label/refY', llRefY + lastElementBeforeLinks.height + 370);
+                  RecommendationElement.attr('links_links/refY', llRefY + lastElementBeforeLinks.height + 400);
+
+                  let linksContent = '';
+                  let linkIndex = 0;
+
+                  for (const link of recommendation.links) {
+                    if (linkIndex > 0) linksContent += '\n\n';
+                    linksContent += `${link.type}: ${link.url}`;
+                    linkIndex += 1;
+                  }
+
+                  RecommendationElement.attr('links_links/text', linksContent);
+
+                  const linksLinksRect = getElementBoundingRect(linkLinksClass);
+
+                  if (linksLinksRect) {
+                    const newElementHeight = Number((
+                      linksLinksRect.top - RecommendationElement.position().y
+                    ).toFixed(0)) + 70;
+
+                    RecommendationElement.size(elementWidth, newElementHeight);
+
+                    elementHeight = newElementHeight;
+                  }
+                } else {
+                  RecommendationElement.attr('links_label/style', 'display: none');
                 }
 
                 i += 1;

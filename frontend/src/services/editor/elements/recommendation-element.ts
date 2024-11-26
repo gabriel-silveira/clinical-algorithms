@@ -140,6 +140,16 @@ const defaults = {
       refX: 15,
       refY: 285,
     },
+    links_label: {
+      style: 'font-weight: bold',
+      refX: 15,
+      refY: 285,
+      text: 'Links',
+    },
+    links_links: {
+      refX: 15,
+      refY: 285,
+    },
   },
 };
 
@@ -222,6 +232,12 @@ const markup = {
   }, {
     tagName: 'text',
     selector: 'recommendation_source_text',
+  }, {
+    tagName: 'text',
+    selector: 'links_label',
+  }, {
+    tagName: 'text',
+    selector: 'links_links',
   }],
 };
 
