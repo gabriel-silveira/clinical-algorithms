@@ -37,6 +37,7 @@ import {
   recommendationArrowsImage,
 } from 'src/services/recommendations';
 import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
+import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 
 // export interface IElementToolsPadding {
 //   left: number | 20,
@@ -986,6 +987,35 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
             if (recommendations.length) {
               const orderedRecommendations = orderRecommendations(recommendations);
 
+              const createRecommendationSourceAfterAdditionalComments = (
+                recommendation: IFixedMetadata,
+                RecommendationElement: dia.Element,
+                additionalCommentsTextClass: string,
+                ITBoundingRect?: DOMRect,
+              ) => {
+                const ACBoundingRect = getElementBoundingRect(additionalCommentsTextClass);
+
+                if (ACBoundingRect && recommendation.recommendation_source) {
+                  if (ACBoundingRect) {
+                    const rslRefY = RecommendationElement.attr('recommendation_source_label/refY');
+                    RecommendationElement.attr(
+                      'recommendation_source_label/refY',
+                      rslRefY + (ITBoundingRect?.height || 0)
+                      + ACBoundingRect.height + (ITBoundingRect ? 60 : 20),
+                    );
+
+                    RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
+                    RecommendationElement.attr(
+                      'recommendation_source_text/refY',
+                      rslRefY + (ITBoundingRect?.height || 0)
+                      + ACBoundingRect.height + (ITBoundingRect ? 80 : 40),
+                    );
+                  }
+                } else {
+                  RecommendationElement.attr('recommendation_source_label/style', 'display: none');
+                }
+              };
+
               let i = 1;
 
               for (const recommendation of orderedRecommendations) {
@@ -1075,6 +1105,25 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 ) {
                   RecommendationElement.attr('additional_comments_label/style', 'display: none');
                   RecommendationElement.attr('recommendation_source_label/style', 'display: none');
+                } else if (
+                  // only additional comments and recommendation source
+                  ITBoundingRect
+                  && !recommendation.implementation_considerations
+                  && recommendation.additional_comments
+                  && recommendation.recommendation_source
+                ) {
+                  RecommendationElement.attr('implementation_label/style', 'display: none');
+
+                  RecommendationElement.attr('additional_comments_label/refY', 260);
+
+                  RecommendationElement.attr('additional_comments_text/text', recommendation.additional_comments);
+                  RecommendationElement.attr('additional_comments_text/refY', 285);
+
+                  createRecommendationSourceAfterAdditionalComments(
+                    recommendation,
+                    RecommendationElement,
+                    additionalCommentsTextClass,
+                  );
                 } else if ( // only recommendation source
                   !recommendation.implementation_considerations
                   && !recommendation.additional_comments
@@ -1098,25 +1147,12 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationElement.attr('additional_comments_text/text', recommendation.additional_comments);
                   RecommendationElement.attr('additional_comments_text/refY', aclRefY + ITBoundingRect.height + 40);
 
-                  const ACBoundingRect = getElementBoundingRect(additionalCommentsTextClass);
-
-                  if (ACBoundingRect && recommendation.recommendation_source) {
-                    if (ACBoundingRect) {
-                      const rslRefY = RecommendationElement.attr('recommendation_source_label/refY');
-                      RecommendationElement.attr(
-                        'recommendation_source_label/refY',
-                        rslRefY + ITBoundingRect.height + ACBoundingRect.height + 60,
-                      );
-
-                      RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
-                      RecommendationElement.attr(
-                        'recommendation_source_text/refY',
-                        rslRefY + ITBoundingRect.height + ACBoundingRect.height + 80,
-                      );
-                    }
-                  } else {
-                    RecommendationElement.attr('recommendation_source_label/style', 'display: none');
-                  }
+                  createRecommendationSourceAfterAdditionalComments(
+                    recommendation,
+                    RecommendationElement,
+                    additionalCommentsTextClass,
+                    ITBoundingRect,
+                  );
                 } else if (
                   ITBoundingRect
                   && recommendation.implementation_considerations
