@@ -1217,7 +1217,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   if (linksLinksRect) {
                     const newElementHeight = Number((
                       linksLinksRect.top - RecommendationElement.position().y
-                    ).toFixed(0)) + 70;
+                    ).toFixed(0)) + (linksLinksRect.height + 18);
 
                     RecommendationElement.size(elementWidth, newElementHeight);
 
@@ -1225,6 +1225,50 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   }
                 } else {
                   RecommendationElement.attr('links_label/style', 'display: none');
+
+                  // the last element is the recommendation source...
+                  if (recommendation.recommendation_source) {
+                    const RSBoundingRect = getElementBoundingRect(recommendationSourceTextClass);
+
+                    if (RSBoundingRect) {
+                      const newElementHeight = Number((
+                        RSBoundingRect.top - RecommendationElement.position().y
+                      ).toFixed(0)) + (RSBoundingRect.height + 18);
+
+                      RecommendationElement.size(elementWidth, newElementHeight);
+
+                      elementHeight = newElementHeight;
+                    }
+                  } else if (recommendation.additional_comments) {
+                    // the last element is the additional comments...
+                    const ACBoundingRect = getElementBoundingRect(additionalCommentsTextClass);
+
+                    if (ACBoundingRect) {
+                      const newElementHeight = Number((
+                        ACBoundingRect.top - RecommendationElement.position().y
+                      ).toFixed(0)) + (ACBoundingRect.height + 18);
+
+                      RecommendationElement.size(elementWidth, newElementHeight);
+
+                      elementHeight = newElementHeight;
+                    }
+                  } else if (recommendation.implementation_considerations) {
+                    // the last element is the implementation considerations...
+                    const ICBoundingRect = getElementBoundingRect(implementationTextClass);
+
+                    if (ICBoundingRect) {
+                      const newElementHeight = Number((
+                        ICBoundingRect.top - RecommendationElement.position().y
+                      ).toFixed(0)) + (ICBoundingRect.height + 18);
+
+                      RecommendationElement.size(elementWidth, newElementHeight);
+
+                      elementHeight = newElementHeight;
+                    }
+                  } else {
+                    RecommendationElement.size(elementWidth, 255);
+                    elementHeight = 255;
+                  }
                 }
 
                 i += 1;
