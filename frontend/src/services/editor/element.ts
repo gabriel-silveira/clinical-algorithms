@@ -966,8 +966,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   }
 
   public createRecommendationsPrint() {
-    // TODO: set the element dimensions
-    const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 50;
+    const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 130;
     let elementHeight = 1000;
 
     let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;

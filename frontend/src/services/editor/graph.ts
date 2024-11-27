@@ -324,14 +324,20 @@ class Graph {
 
       const elementType = cell.prop('type');
 
-      if (![
-        CustomElement.PDF_HEADER,
-        CustomElement.RECOMMENDATION,
-        CustomElement.LINK,
-        'link',
-        'standard.Rectangle',
-        'standard.TextBlock',
-      ].includes(elementType)) {
+      if (
+        ![
+          CustomElement.PDF_HEADER,
+          CustomElement.RECOMMENDATION,
+          CustomElement.LINK,
+          'link',
+          'standard.Rectangle',
+          'standard.TextBlock',
+        ].includes(elementType)
+        && !(
+          elementType === CustomElement.RECOMMENDATION_DESCRIPTION
+          && coordinate === 'x'
+        )
+      ) {
         if (printConsole) console.log(elementType);
         // lanes are not considered to calculate width
         if (elementType !== CustomElement.LANE) {
@@ -349,11 +355,8 @@ class Graph {
   }
 
   private setContentSize() {
-    // TODO: define recommendation description element size
-    const recommendationDescriptionElementSize = 400;
-
     this.data.printSize.width = this.getOutermostCoordinate('x', true) + 200;
-    this.data.printSize.height = this.getOutermostCoordinate('y', true) + recommendationDescriptionElementSize;
+    this.data.printSize.height = this.getOutermostCoordinate('y', true) + 200;
   }
 
   public exportPDF() {
