@@ -218,19 +218,27 @@ const customElements = {
 
     const orderedRecommendation = orderRecommendations(recommendations);
 
-    // only the 3 first recommendations
+    let lastRecommendation: IFixedMetadata | null = null;
+
     for (const recommendation of orderedRecommendation) {
       if (recommendation.intervention && recommendation.comparator) {
         items += `<div class="row" data-index="${recommendation.index}">`;
 
-        items += '<div class="row full-width bg-grey-2"><div class="col-12 text-center recommendation-title">';
-        items += getRecommendationTypeLabel(recommendation.recommendation_type);
-        items += ` - Intervention type: ${recommendation.intervention_type}`;
-        items += '</div></div>';
+        if (
+          lastRecommendation?.recommendation_type !== recommendation.recommendation_type
+          || lastRecommendation?.intervention_type !== recommendation.intervention_type
+        ) {
+          items += '<div class="row full-width bg-grey-2"><div class="col-12 text-center recommendation-title">';
+          items += getRecommendationTypeLabel(recommendation.recommendation_type);
+          items += ` - Intervention type: ${recommendation.intervention_type}`;
+          items += '</div></div>';
+        }
 
         items += recommendationArrowsLine(recommendation, true);
 
         items += '</div>';
+
+        lastRecommendation = { ...recommendation };
       }
     }
 
