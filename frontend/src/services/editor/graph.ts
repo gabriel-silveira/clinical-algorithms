@@ -7,7 +7,6 @@ import Editor from 'src/services/editor/index';
 
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
 import { GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
-import { COLOR_ACCENT, COLOR_PRIMARY } from 'src/services/colors';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -268,31 +267,34 @@ class Graph {
 
             this.editor.element.create.PrintLabel({ x, y, text: label });
 
-            const indexElement = new joint.shapes.standard.Rectangle();
-            if (elementType === CustomElement.ACTION) {
-              indexElement.attr('body/fill', COLOR_PRIMARY);
-              indexElement.position(x, y - 34);
-            } else if (elementType === CustomElement.EVALUATION) {
-              indexElement.attr('body/fill', COLOR_ACCENT);
-              indexElement.position(x + 32, y - 32);
+            const metadata = this.editor.metadata.getFromElement(element);
+
+            if (metadata && metadata.fixed.length) {
+              const indexElement = new joint.shapes.standard.Rectangle();
+
+              if (elementType === CustomElement.ACTION) {
+                indexElement.position(x, y - 30);
+              } else if (elementType === CustomElement.EVALUATION) {
+                indexElement.position(x + 32, y - 28);
+              }
+
+              indexElement.attr('body/stroke', 'black');
+              indexElement.attr('body/strokeWidth', 1);
+              indexElement.attr('body/rx', 2);
+              indexElement.attr('body/ry', 2);
+              indexElement.attr('label/text', elementIndex);
+              indexElement.attr('label/text-anchor', 'center');
+              indexElement.attr('label/style', 'font-size: 16px; border: 1px solid #F00');
+              indexElement.attr('label/ref-x', elementIndex > 9 ? -9 : -5);
+              indexElement.attr('label/ref-y', 1);
+
+              indexElement.resize(24, 24);
+              indexElement.addTo(this.editor.data.graph);
+
+              element.prop('props/elementIndex', elementIndex);
+
+              elementIndex += 1;
             }
-            indexElement.attr('body/strokeWidth', '0');
-            indexElement.attr('body/stroke', '');
-            indexElement.attr('body/rx', 2);
-            indexElement.attr('body/ry', 2);
-            indexElement.attr('label/text', elementIndex);
-            indexElement.attr('label/text-anchor', 'center');
-            indexElement.attr('label/style', 'font-size: 20px; border: 1px solid #F00');
-            indexElement.attr('label/ref-x', -5);
-            indexElement.attr('label/ref-y', 1);
-            /* textBlock.attr('body/class', 'myTextBlock');
-            textBlock.attr('body/stroke', '');
-            textBlock.attr('label/ref-x', -480); */
-
-            indexElement.resize(30, 30);
-            indexElement.addTo(this.editor.data.graph);
-
-            elementIndex += 1;
           }
         } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
           element.remove();

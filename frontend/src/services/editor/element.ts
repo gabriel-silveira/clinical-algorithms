@@ -30,7 +30,12 @@ import { formatDatetime } from 'src/services/date';
 import { toDataUrl } from 'src/services/images';
 import { getElementBoundingRect, randomString } from 'src/services/general';
 import Users from 'src/services/users';
-import RecommendationDescriptionConstructor from 'src/services/editor/elements/recommendation-element';
+
+import {
+  RecommendationDescriptionConstructor,
+  RecommendationDescriptionHeaderConstructor,
+} from 'src/services/editor/elements/recommendation-element';
+
 import {
   goodPracticeArrowsImage,
   orderRecommendations,
@@ -976,8 +981,27 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     if (allElements.length) {
       for (const element of allElements) {
         const elementType = element.prop('type');
+        const recommendationGroupIndex = element.prop('props/elementIndex');
 
-        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
+        if (
+          recommendationGroupIndex
+          && [CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)
+        ) {
+          const label = element.prop('props/label');
+
+          const headerClass = `class-${randomString(16)}`;
+
+          const recommendationHeaderElement = new RecommendationDescriptionHeaderConstructor();
+          recommendationHeaderElement.attr('label/text', `${recommendationGroupIndex}. ${label}`);
+          recommendationHeaderElement.attr('body/class', headerClass);
+          recommendationHeaderElement.position(
+            15,
+            recommendationGroupIndex > 1 ? outermostY + 40 : outermostY,
+          );
+          recommendationHeaderElement.addTo(this.editor.data.graph);
+
+          outermostY = this.editor.graph.getOutermostCoordinate('y');
+
           const metadata = this.editor.metadata.getFromElement(element);
 
           if (metadata) {
@@ -1015,7 +1039,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 }
               };
 
-              let i = 1;
+              let recommendationIndex = 1;
 
               for (const recommendation of orderedRecommendations) {
                 let implementationTextClass = '';
@@ -1041,7 +1065,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 RecommendationElement.attr('additional_comments_text', { textWrap: { width: elementWidth * 0.8 } });
                 RecommendationElement.attr('recommendation_source_text', { textWrap: { width: elementWidth * 0.8 } });
 
-                RecommendationElement.attr('recommendation_type/text', `${i}. ${getRecommendationTypeLabel(recommendation.recommendation_type)}`);
+                RecommendationElement.attr('recommendation_type/text', `${recommendationGroupIndex}.${recommendationIndex}. ${getRecommendationTypeLabel(recommendation.recommendation_type)}`);
 
                 if (recommendation.recommendation_type !== FORMAL_RECOMMENDATION) {
                   RecommendationElement.attr('grade_logo/style', 'display: none');
@@ -1098,8 +1122,14 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationElement.attr('implementation_label/style', 'display: none');
                 }
 
-                RecommendationElement.position(15, outermostY);
+                const HeaderBoundRect = getElementBoundingRect(headerClass);
+                RecommendationElement.position(
+                  15,
+                  outermostY + 42 + (recommendationIndex === 0 ? HeaderBoundRect?.height || 0 : 0),
+                );
+
                 RecommendationElement.size(elementWidth, elementHeight);
+
                 RecommendationElement.addTo(this.editor.data.graph);
 
                 const ITBoundingRect = getElementBoundingRect(implementationTextClass);
@@ -1270,7 +1300,9 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   }
                 }
 
-                i += 1;
+                recommendationHeaderElement.size(elementWidth, 40);
+
+                recommendationIndex += 1;
                 outermostY += (elementHeight + 10);
               }
             }

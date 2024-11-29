@@ -241,10 +241,42 @@ const markup = {
   }],
 };
 
-const RecommendationDescriptionConstructor = joint.dia.Element.define(
+export const RecommendationDescriptionConstructor = joint.dia.Element.define(
   CustomElement.RECOMMENDATION_DESCRIPTION,
   defaults,
   markup,
 );
 
-export default RecommendationDescriptionConstructor;
+const headerDefaults = {
+  attrs: {
+    body: {
+      width: 'calc(w)',
+      height: 'calc(h)',
+      fill: '#F0F0F0',
+      strokeWidth: 0,
+      stroke: '',
+      rx: 5,
+    },
+    label: {
+      style: 'font-size: 18px; font-weight: 500',
+      refX: 15,
+      refY: 13,
+    },
+  },
+};
+
+const headerMarkup = {
+  markup: [{
+    tagName: 'rect',
+    selector: 'body',
+  }, {
+    tagName: 'text',
+    selector: 'label',
+  }],
+};
+
+export const RecommendationDescriptionHeaderConstructor = joint.dia.Element.define(
+  CustomElement.RECOMMENDATION_DESCRIPTION,
+  headerDefaults,
+  headerMarkup,
+);
