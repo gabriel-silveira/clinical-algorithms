@@ -364,7 +364,7 @@ class Element {
               x,
               y,
             },
-          }).resize(600, 160 * metadata.fixed.length);
+          }).resize(600, 500 * metadata.fixed.length);
 
           this.create.RecommendationTogglerButton(originalElement, recommendationElement);
 
