@@ -1047,6 +1047,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 let recommendationSourceTextClass = '';
                 let lastElementBeforeLinks: DOMRect | null = null;
                 let linkLinksClass = '';
+                let comparatorTextClass = '';
+                let interventionTextClass = '';
 
                 const RecommendationElement = new RecommendationDescriptionConstructor();
 
@@ -1059,6 +1061,10 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 RecommendationElement.attr('recommendation_source_text/class', recommendationSourceTextClass);
                 linkLinksClass = `class-${randomString(16)}`;
                 RecommendationElement.attr('links_links/class', linkLinksClass);
+                comparatorTextClass = `class-${randomString(16)}`;
+                RecommendationElement.attr('comparator_text/class', comparatorTextClass);
+                interventionTextClass = `class-${randomString(16)}`;
+                RecommendationElement.attr('intervention_text/class', interventionTextClass);
 
                 // text wrapping
                 RecommendationElement.attr('implementation_text', { textWrap: { width: elementWidth * 0.8 } });
@@ -1108,13 +1114,18 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 }
 
                 RecommendationElement.attr('comparator_text/text', recommendation.comparator);
+                RecommendationElement.attr('comparator_text', { textWrap: { width: elementWidth * 0.37 } });
                 if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
                   RecommendationElement.attr('recommendation_arrows_image/xlinkHref', recommendationArrowsImage(recommendation));
                 } else if (recommendation.direction) {
                   RecommendationElement.attr('recommendation_arrows_image/xlinkHref', goodPracticeArrowsImage(recommendation));
-                  RecommendationElement.attr('recommendation_arrows_image/refX', 350);
                 }
+                RecommendationElement.attr('recommendation_arrows_image/refX', (elementWidth / 2) - 100);
+
                 RecommendationElement.attr('intervention_text/text', recommendation.intervention);
+                RecommendationElement.attr('intervention_text/refX', (elementWidth / 2) + 100);
+                RecommendationElement.attr('intervention_text', { textWrap: { width: elementWidth * 0.37 } });
+                RecommendationElement.attr('intervention_label/refX', (elementWidth / 2) + 100);
 
                 if (recommendation.implementation_considerations) {
                   RecommendationElement.attr('implementation_text/text', recommendation.implementation_considerations);
@@ -1131,6 +1142,25 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 RecommendationElement.size(elementWidth, elementHeight);
 
                 RecommendationElement.addTo(this.editor.data.graph);
+
+                const ComparatorBoundingRect = getElementBoundingRect(comparatorTextClass);
+                const InterventionBoundingRect = getElementBoundingRect(interventionTextClass);
+
+                if (ComparatorBoundingRect && InterventionBoundingRect) {
+                  const heightDiff = ComparatorBoundingRect.height > InterventionBoundingRect.height
+                    ? ComparatorBoundingRect.height : InterventionBoundingRect.height;
+
+                  const implementationLabelRefY = RecommendationElement.attr('implementation_label/refY');
+                  RecommendationElement.attr(
+                    'implementation_label/refY',
+                    implementationLabelRefY + heightDiff,
+                  );
+
+                  RecommendationElement.attr(
+                    'implementation_text/refY',
+                    implementationLabelRefY + heightDiff + 20,
+                  );
+                }
 
                 const ITBoundingRect = getElementBoundingRect(implementationTextClass);
 
@@ -1178,6 +1208,24 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationElement.attr('recommendation_source_text/refY', 280);
 
                   lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
+                } else if ( // only implementation considerations and recommendation source
+                  ITBoundingRect
+                  && recommendation.implementation_considerations
+                  && !recommendation.additional_comments
+                  && recommendation.recommendation_source
+                ) {
+                  RecommendationElement.attr('additional_comments_label/style', 'display: none');
+
+                  const rslRefY = RecommendationElement.attr('recommendation_source_label/refY');
+                  RecommendationElement.attr('recommendation_source_label/refY', rslRefY + ITBoundingRect.height + 20);
+
+                  RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
+                  RecommendationElement.attr(
+                    'recommendation_source_text/refY',
+                    rslRefY + ITBoundingRect.height + 42,
+                  );
+
+                  lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
                 } else if (
                   ITBoundingRect
                   && recommendation.implementation_considerations
@@ -1194,23 +1242,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                     RecommendationElement,
                     additionalCommentsTextClass,
                     ITBoundingRect,
-                  );
-
-                  lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
-                } else if (
-                  ITBoundingRect
-                  && recommendation.implementation_considerations
-                  && recommendation.recommendation_source
-                ) {
-                  RecommendationElement.attr('additional_comments_label/style', 'display: none');
-
-                  const rslRefY = RecommendationElement.attr('recommendation_source_label/refY');
-                  RecommendationElement.attr('recommendation_source_label/refY', rslRefY + ITBoundingRect.height + 20);
-
-                  RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
-                  RecommendationElement.attr(
-                    'recommendation_source_text/refY',
-                    rslRefY + ITBoundingRect.height + 42,
                   );
 
                   lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
