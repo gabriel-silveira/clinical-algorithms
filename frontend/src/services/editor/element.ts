@@ -188,13 +188,32 @@ class Element {
     });
   }
 
-  static hideAllRecommendationElements(modelId: string) {
+  private hideAllRecommendationElements(modelId: string) {
     const recommendationElements = document.getElementsByClassName('joint-type-recommendationelement');
+    const recommendationTogglerElements = document.getElementsByClassName('joint-type-recommendationtogglerelement');
+    // const recommendationTogglerElement = document.querySelector(`[model-id="${modelId}"]`);
+
+    console.log('recommendationTogglerElements');
+    console.log(recommendationTogglerElements);
 
     if (recommendationElements.length) {
       for (const recommendationElement of recommendationElements) {
-        if (modelId !== recommendationElement.getAttribute('model-id')) {
+        if (String(this.data.recommendationsTogglerRelationsMap[modelId]) !== recommendationElement.getAttribute('model-id')) {
           recommendationElement.setAttribute('display', 'none');
+        }
+      }
+    }
+
+    if (recommendationTogglerElements.length) {
+      for (const recommendationTogglerElement of recommendationTogglerElements) {
+        if (modelId !== recommendationTogglerElement.getAttribute('model-id')) {
+          const id = recommendationTogglerElement.getAttribute('model-id') as string;
+
+          const currentTogglerElement = this.getById(id);
+
+          if (currentTogglerElement) {
+            currentTogglerElement.attr('icon/d', icons.plus);
+          }
         }
       }
     }
@@ -207,12 +226,7 @@ class Element {
       const domElement = document.querySelector(`[model-id="${this.data.recommendationsTogglerRelationsMap[togglerButtonId]}"]`);
 
       if (domElement) {
-        Element.hideAllRecommendationElements(
-          String(this.data.recommendationsTogglerRelationsMap[togglerButtonId]),
-        );
-
-        console.log('domElement');
-        console.log(domElement);
+        this.hideAllRecommendationElements(togglerButtonId);
 
         if (domElement.getAttribute('display')) {
           domElement.removeAttribute('display');
