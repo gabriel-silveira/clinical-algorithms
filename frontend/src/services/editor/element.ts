@@ -188,6 +188,18 @@ class Element {
     });
   }
 
+  static hideAllRecommendationElements(modelId: string) {
+    const recommendationElements = document.getElementsByClassName('joint-type-recommendationelement');
+
+    if (recommendationElements.length) {
+      for (const recommendationElement of recommendationElements) {
+        if (modelId !== recommendationElement.getAttribute('model-id')) {
+          recommendationElement.setAttribute('display', 'none');
+        }
+      }
+    }
+  }
+
   public toggleRecommendation(togglerButtonId: string) {
     const togglerButton = this.getById(togglerButtonId);
 
@@ -195,6 +207,13 @@ class Element {
       const domElement = document.querySelector(`[model-id="${this.data.recommendationsTogglerRelationsMap[togglerButtonId]}"]`);
 
       if (domElement) {
+        Element.hideAllRecommendationElements(
+          String(this.data.recommendationsTogglerRelationsMap[togglerButtonId]),
+        );
+
+        console.log('domElement');
+        console.log(domElement);
+
         if (domElement.getAttribute('display')) {
           domElement.removeAttribute('display');
 
