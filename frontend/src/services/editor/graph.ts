@@ -1,4 +1,5 @@
 import { reactive } from 'vue';
+import * as joint from 'jointjs';
 import { api } from 'boot/axios';
 import html2pdf from 'html2pdf.js';
 
@@ -241,10 +242,15 @@ class Graph {
     const allElements = this.editor.element.getAll();
 
     if (allElements.length) {
+      let elementIndex = 1;
+
       for (const element of allElements) {
         const elementType = element.prop('type');
 
-        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
+        if ([
+          CustomElement.ACTION,
+          CustomElement.EVALUATION,
+        ].includes(elementType)) {
           const label = element.prop('props/label');
           const textarea = this.editor.element.textarea.getFromEditorElement(element.id);
 
@@ -260,6 +266,35 @@ class Graph {
             textarea.remove();
 
             this.editor.element.create.PrintLabel({ x, y, text: label });
+
+            const metadata = this.editor.metadata.getFromElement(element);
+
+            if (metadata && metadata.fixed.length) {
+              const indexElement = new joint.shapes.standard.Rectangle();
+
+              if (elementType === CustomElement.ACTION) {
+                indexElement.position(x, y - 30);
+              } else if (elementType === CustomElement.EVALUATION) {
+                indexElement.position(x + 32, y - 28);
+              }
+
+              indexElement.attr('body/stroke', 'black');
+              indexElement.attr('body/strokeWidth', 1);
+              indexElement.attr('body/rx', 2);
+              indexElement.attr('body/ry', 2);
+              indexElement.attr('label/text', elementIndex);
+              indexElement.attr('label/text-anchor', 'center');
+              indexElement.attr('label/style', 'font-size: 16px; border: 1px solid #F00');
+              indexElement.attr('label/ref-x', elementIndex > 9 ? -9 : -5);
+              indexElement.attr('label/ref-y', 1);
+
+              indexElement.resize(24, 24);
+              indexElement.addTo(this.editor.data.graph);
+
+              element.prop('props/elementIndex', elementIndex);
+
+              elementIndex += 1;
+            }
           }
         } else if (elementType === CustomElement.RECOMMENDATION_TOGGLER) {
           element.remove();
@@ -284,6 +319,8 @@ class Graph {
         }
       }
 
+      this.editor.element.createRecommendationsPrint();
+
       this.editor.element.moveAllElementsDown(200);
 
       this.cropToContent();
@@ -300,11 +337,17 @@ class Graph {
     this.editor.data.paper?.setDimensions(this.data.printSize.width, this.data.printSize.height);
   }
 
-  private setContentSize() {
+  /**
+   * Get outermost element coordinate in the graph
+   * @private
+   */
+  public getOutermostCoordinate(coordinate: 'x' | 'y', printConsole = false) {
     let outerX = 0;
     let lowerY = 0;
 
     const allCells = this.editor.data.graph.getCells();
+
+    if (printConsole) console.log('Getting Outermost Coordinate...');
 
     for (const cell of allCells) {
       const {
@@ -316,14 +359,21 @@ class Graph {
 
       const elementType = cell.prop('type');
 
-      if (![
-        CustomElement.PDF_HEADER,
-        CustomElement.RECOMMENDATION,
-        CustomElement.LINK,
-        'link',
-        'standard.Rectangle',
-        'standard.TextBlock',
-      ].includes(elementType)) {
+      if (
+        ![
+          CustomElement.PDF_HEADER,
+          CustomElement.RECOMMENDATION,
+          CustomElement.LINK,
+          'link',
+          'standard.Rectangle',
+          'standard.TextBlock',
+        ].includes(elementType)
+        && !(
+          elementType === CustomElement.RECOMMENDATION_DESCRIPTION
+          && coordinate === 'x'
+        )
+      ) {
+        if (printConsole) console.log(elementType);
         // lanes are not considered to calculate width
         if (elementType !== CustomElement.LANE) {
           const refX = x + width;
@@ -335,8 +385,13 @@ class Graph {
       }
     }
 
-    this.data.printSize.width = outerX + 200;
-    this.data.printSize.height = lowerY + 200;
+    if (printConsole) console.log(coordinate === 'x' ? outerX : lowerY);
+    return coordinate === 'x' ? outerX : lowerY;
+  }
+
+  private setContentSize() {
+    this.data.printSize.width = this.getOutermostCoordinate('x', true) + 200;
+    this.data.printSize.height = this.getOutermostCoordinate('y', true) + 200;
   }
 
   public exportPDF() {

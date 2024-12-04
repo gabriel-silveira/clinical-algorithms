@@ -14,6 +14,8 @@ export enum CustomElement {
   RECOMMENDATION = 'RecommendationElement',
   RECOMMENDATION_TOTAL = 'RecommendationTotalElement',
   RECOMMENDATION_TOGGLER = 'RecommendationTogglerElement',
+  RECOMMENDATION_DESCRIPTION = 'RecommendationDescriptionElement',
+  RECOMMENDATION_DESCRIPTION_HEADER = 'RecommendationDescriptionHeaderElement',
   END = 'EndElement',
   LINK = 'LinkElement',
   // CARD = 'ElementCardExample',
@@ -31,6 +33,8 @@ export const elementName: {
   [CustomElement.RECOMMENDATION]: 'Recommendation',
   [CustomElement.RECOMMENDATION_TOTAL]: 'RecommendationTotal',
   [CustomElement.RECOMMENDATION_TOGGLER]: 'RecommendationToggler',
+  [CustomElement.RECOMMENDATION_DESCRIPTION]: 'RecommendationDescription',
+  [CustomElement.RECOMMENDATION_DESCRIPTION_HEADER]: 'RecommendationDescriptionHeader',
   [CustomElement.END]: 'End',
   [CustomElement.LINK]: 'Link',
   [CustomElement.LANE]: 'Time',
@@ -214,19 +218,27 @@ const customElements = {
 
     const orderedRecommendation = orderRecommendations(recommendations);
 
-    // only the 3 first recommendations
+    let lastRecommendation: IFixedMetadata | null = null;
+
     for (const recommendation of orderedRecommendation) {
       if (recommendation.intervention && recommendation.comparator) {
         items += `<div class="row" data-index="${recommendation.index}">`;
 
-        items += '<div class="row full-width bg-grey-2"><div class="col-12 text-center recommendation-title">';
-        items += getRecommendationTypeLabel(recommendation.recommendation_type);
-        items += ` - Intervention type: ${recommendation.intervention_type}`;
-        items += '</div></div>';
+        if (
+          lastRecommendation?.recommendation_type !== recommendation.recommendation_type
+          || lastRecommendation?.intervention_type !== recommendation.intervention_type
+        ) {
+          items += '<div class="row full-width bg-grey-2"><div class="col-12 text-center recommendation-title">';
+          items += getRecommendationTypeLabel(recommendation.recommendation_type);
+          items += ` - Intervention type: ${recommendation.intervention_type}`;
+          items += '</div></div>';
+        }
 
         items += recommendationArrowsLine(recommendation, true);
 
         items += '</div>';
+
+        lastRecommendation = { ...recommendation };
       }
     }
 
