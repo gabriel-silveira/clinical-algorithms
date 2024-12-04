@@ -191,10 +191,6 @@ class Element {
   private hideAllRecommendationElements(modelId: string) {
     const recommendationElements = document.getElementsByClassName('joint-type-recommendationelement');
     const recommendationTogglerElements = document.getElementsByClassName('joint-type-recommendationtogglerelement');
-    // const recommendationTogglerElement = document.querySelector(`[model-id="${modelId}"]`);
-
-    console.log('recommendationTogglerElements');
-    console.log(recommendationTogglerElements);
 
     if (recommendationElements.length) {
       for (const recommendationElement of recommendationElements) {
@@ -223,16 +219,37 @@ class Element {
     const togglerButton = this.getById(togglerButtonId);
 
     if (togglerButton) {
-      const domElement = document.querySelector(`[model-id="${this.data.recommendationsTogglerRelationsMap[togglerButtonId]}"]`);
+      let recommendationElementId = this.data.recommendationsTogglerRelationsMap[togglerButtonId];
+
+      let domElement = document.querySelector(`[model-id="${recommendationElementId}"]`);
 
       if (domElement) {
         this.hideAllRecommendationElements(togglerButtonId);
 
-        if (domElement.getAttribute('display')) {
+        if (domElement.getAttribute('display')) { // SHOW
           domElement.removeAttribute('display');
 
           togglerButton.attr('icon/d', icons.minus);
-        } else {
+
+          const recommendationElement = this.getById(recommendationElementId);
+
+          if (recommendationElement) {
+            Element.resizeRecommendationElement(recommendationElement);
+
+            // ALERT: needs to remove the attribute "display" again after resizing object...
+            recommendationElementId = this.data.recommendationsTogglerRelationsMap[togglerButtonId];
+
+            domElement = document.querySelector(`[model-id="${recommendationElementId}"]`);
+
+            if (domElement) {
+              if (domElement.getAttribute('display')) { // SHOW
+                domElement.removeAttribute('display');
+
+                togglerButton.attr('icon/d', icons.minus);
+              }
+            }
+          }
+        } else { // HIDE
           domElement.setAttribute('display', 'none');
 
           togglerButton.attr('icon/d', icons.plus);
@@ -702,6 +719,24 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
         PDFFooter.addTo(this.editor.data.graph);
       },
     };
+  }
+
+  static resizeRecommendationElement(recommendationElement: dia.Element) {
+    const recommendationDomElement = document.querySelector(`[model-id="${recommendationElement.id}"]`);
+
+    if (recommendationDomElement) {
+      const recommendationElementContents = recommendationDomElement.getElementsByClassName('recommendation-element');
+
+      if (recommendationElementContents.length) {
+        const currentElement = document.getElementById(recommendationElementContents[0].id);
+
+        if (currentElement) {
+          const { height } = currentElement.getBoundingClientRect();
+
+          recommendationElement.resize(600, height);
+        }
+      }
+    }
   }
 
   public deselectAll() {
