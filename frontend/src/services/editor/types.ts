@@ -1,4 +1,4 @@
-import { dia } from '@joint/core';
+import { dia, mvc } from '@joint/core';
 
 export const GRAPH_MODE_PUBLIC = 'public';
 export const GRAPH_MODE_PRINT = 'print';
