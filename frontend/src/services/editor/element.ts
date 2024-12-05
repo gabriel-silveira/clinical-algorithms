@@ -188,7 +188,7 @@ class Element {
     });
   }
 
-  private hideAllRecommendationElements(modelId: string) {
+  private hideAllRecommendationElements(modelId: dia.Cell.ID) {
     const recommendationElements = document.getElementsByClassName('joint-type-recommendationelement');
     const recommendationTogglerElements = document.getElementsByClassName('joint-type-recommendationtogglerelement');
 
@@ -215,7 +215,7 @@ class Element {
     }
   }
 
-  public toggleRecommendation(togglerButtonId: string) {
+  public toggleRecommendation(togglerButtonId: dia.Cell.ID) {
     const togglerButton = this.getById(togglerButtonId);
 
     if (togglerButton) {

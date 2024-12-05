@@ -1,4 +1,3 @@
-import * as joint from '@joint/core';
 import { dia } from '@joint/core';
 
 import { GRAPH_MODE_PRINT, IJointData } from 'src/services/editor/types';
@@ -13,7 +12,7 @@ import { ALGORITHMS_PUBLIC_EDITOR } from 'src/router/routes/algorithms';
 import { QVueGlobals } from 'quasar';
 import { AvoidRouter } from 'src/services/editor/avoid-router';
 
-const graph = new joint.dia.Graph({}, { cellNamespace: customElements });
+const graph = new dia.Graph({}, { cellNamespace: customElements });
 
 export const deselectAllTexts = () => {
   window.getSelection()?.removeAllRanges();
@@ -105,7 +104,7 @@ class Editor {
 
           interactive: () => !this.data.readOnly,
 
-          defaultLink: new joint.dia.Link({
+          defaultLink: new dia.Link({
             attrs: {
               '.marker-target': {
                 d: 'M 10 0 L 0 5 L 10 10 z',
@@ -136,7 +135,7 @@ class Editor {
           options.gridSize = 10;
         }
 
-        this.data.paper = new joint.dia.Paper(options);
+        this.data.paper = new dia.Paper(options);
 
         this.data.paper.on('blank:pointerup', (/* elementView */) => {
           // if (this.metadata.pendency.has()) {
@@ -186,16 +185,14 @@ class Editor {
         });
 
         this.data.paper.on('element:pointerup', (elementView: dia.ElementView) => {
-          if (elementView.options.model.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
+          if (elementView.options.model?.prop('type') === CustomElement.RECOMMENDATION_TOGGLER) {
             this.element.toggleRecommendation(elementView.options.model.id);
           } else if (
             // not in print mode (PDF export)
             this.graph.data.mode !== GRAPH_MODE_PRINT
             // do not select [lane, recommendation_toggler] element if it's in read only mode
-            && !(
-              this.data.readOnly
-              && elementView.options.model.prop('type') === CustomElement.LANE
-            )
+            && !(elementView.options.model?.prop('type') === CustomElement.LANE)
+            && elementView.options.model?.id
           ) {
             this.element.select(elementView.options.model.id);
           }
@@ -236,7 +233,7 @@ class Editor {
         const router = new AvoidRouter(this.data.graph, {
           shapeBufferDistance: 20,
           idealNudgingDistance: 10,
-          portOverflow: Node.PORT_RADIUS,
+          portOverflow: 10, // Node.PORT_RADIUS,
         });
 
         router.addGraphListeners();
