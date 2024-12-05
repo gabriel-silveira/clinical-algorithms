@@ -11,6 +11,7 @@ import Metadata from 'src/services/editor/metadata';
 import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { ALGORITHMS_PUBLIC_EDITOR } from 'src/router/routes/algorithms';
 import { QVueGlobals } from 'quasar';
+import { AvoidRouter } from 'src/services/editor/avoid-router';
 
 const graph = new joint.dia.Graph({}, { cellNamespace: customElements });
 
@@ -79,6 +80,8 @@ class Editor {
   public async init(elementId: string) {
     return new Promise((resolve, reject) => {
       try {
+        AvoidRouter.load();
+
         this.paperDiv = document.getElementById(elementId) || undefined;
 
         const options = {
@@ -228,6 +231,16 @@ class Editor {
             Element.removeLinkToolButtons(linkView);
           }
         });
+
+        // Start the Avoid Router.
+        const router = new AvoidRouter(this.data.graph, {
+          shapeBufferDistance: 20,
+          idealNudgingDistance: 10,
+          portOverflow: Node.PORT_RADIUS,
+        });
+
+        router.addGraphListeners();
+        router.routeAll();
 
         resolve(true);
       } catch (error) {

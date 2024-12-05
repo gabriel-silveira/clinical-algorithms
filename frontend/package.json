@@ -21,6 +21,7 @@
     "dotenv": "^16.3.1",
     "html2pdf.js": "^0.10.1",
     "jointjs": "^3.7.7",
+    "libavoid-js": "^0.4.2",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",

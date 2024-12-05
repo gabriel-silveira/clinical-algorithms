@@ -88,7 +88,8 @@ import EditorActionsButtons from 'components/editor/editor-actions-buttons.vue';
 import SimpleModal from 'components/modals/simple-modal.vue';
 
 import {
-  ALGORITHMS_MAINTENANCE_INDEX, ALGORITHMS_PUBLIC_EDITOR,
+  ALGORITHMS_MAINTENANCE_INDEX,
+  ALGORITHMS_PUBLIC_EDITOR,
   ALGORITHMS_SEARCH,
 } from 'src/router/routes/algorithms';
 import { GRAPH_MODE_EDIT, GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
