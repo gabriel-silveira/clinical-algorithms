@@ -1,4 +1,4 @@
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { orderRecommendations, recommendationArrowsLine } from 'src/services/recommendations';
 import {

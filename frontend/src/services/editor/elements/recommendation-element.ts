@@ -1,4 +1,4 @@
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
 
 const defaults = {

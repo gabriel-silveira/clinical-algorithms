@@ -1,5 +1,5 @@
-import * as joint from 'jointjs';
-import { dia } from 'jointjs';
+import * as joint from '@joint/core';
+import { dia } from '@joint/core';
 
 import Editor, { deselectAllTexts } from 'src/services/editor/index';
 import Ports from 'src/services/editor/ports';

@@ -1,4 +1,4 @@
-import { dia } from 'jointjs';
+import { dia } from '@joint/core';
 import { reactive } from 'vue';
 
 import Editor from 'src/services/editor/index';

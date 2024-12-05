@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { api } from 'boot/axios';
 import html2pdf from 'html2pdf.js';
 

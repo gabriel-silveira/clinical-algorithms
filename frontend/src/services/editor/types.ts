@@ -1,4 +1,4 @@
-import { dia } from 'jointjs';
+import { dia } from '@joint/core';
 
 export const GRAPH_MODE_PUBLIC = 'public';
 export const GRAPH_MODE_PRINT = 'print';

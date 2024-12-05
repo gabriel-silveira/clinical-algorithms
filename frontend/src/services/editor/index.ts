@@ -1,5 +1,5 @@
-import * as joint from 'jointjs';
-import { dia } from 'jointjs';
+import * as joint from '@joint/core';
+import { dia } from '@joint/core';
 
 import { GRAPH_MODE_PRINT, IJointData } from 'src/services/editor/types';
 import { reactive } from 'vue';
