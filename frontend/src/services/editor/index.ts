@@ -103,8 +103,8 @@ class Editor {
           interactive: () => !this.data.readOnly,
 
           defaultLink: new joint.dia.Link({
-            router: { name: 'manhattan' },
-            connection: { name: 'orthogonal' },
+            router: { name: 'metro' },
+            connection: { name: 'rounded' },
             attrs: {
               '.marker-target': {
                 d: 'M 10 0 L 0 5 L 10 10 z',
