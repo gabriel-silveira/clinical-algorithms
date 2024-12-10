@@ -157,6 +157,7 @@ const markup = {
   markup: [{
     tagName: 'rect',
     selector: 'body',
+    className: 'recommendation-print-element',
   }, {
     tagName: 'text',
     selector: 'recommendation_type',

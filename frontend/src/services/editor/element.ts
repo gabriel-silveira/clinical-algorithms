@@ -7,8 +7,8 @@ import Ports from 'src/services/editor/ports';
 import customElements, {
   CustomElement,
   elementName,
-  TEXTAREA_CLASSNAME,
   RecommendationTotalConstructor,
+  TEXTAREA_CLASSNAME,
 } from 'src/services/editor/elements/custom-elements';
 
 import { reactive } from 'vue';
@@ -17,12 +17,12 @@ import { autoResizeTextarea } from 'src/services/editor/textarea';
 import icons from 'src/services/editor/elements/svg_icons';
 
 import {
-  INFORMAL_RECOMMENDATION,
   FORMAL_RECOMMENDATION,
-  RECOMMENDATION_TYPES,
-  GOOD_PRACTICES,
+  getRecommendationTypeIconBase64,
   getRecommendationTypeLabel,
-  getRecommendationTypeIcon,
+  GOOD_PRACTICES,
+  INFORMAL_RECOMMENDATION,
+  RECOMMENDATION_TYPES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 
 import { COLOR_PRIMARY } from 'src/services/colors';
@@ -86,6 +86,17 @@ class Element {
       recommendationsTogglerRelationsMap: {},
       wasMoving: false,
     });
+
+  public images: {
+      recommendationTypeIcons: {
+        [key: string]: {
+          index: number,
+          src: string[],
+        }[],
+      },
+    } = {
+      recommendationTypeIcons: {},
+    };
 
   constructor(editor: Editor) {
     this.editor = editor;
@@ -1038,6 +1049,86 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     }
   }
 
+  private setRecommendationTypeImages(allElements: dia.Element[]) {
+    for (const element of allElements) {
+      const elementType = element.prop('type');
+      const recommendationGroupIndex = element.prop('props/elementIndex');
+
+      if (
+        recommendationGroupIndex
+        && [CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)
+      ) {
+        const metadata = this.editor.metadata.getFromElement(element);
+
+        if (metadata) {
+          const { fixed: recommendations } = metadata;
+
+          if (recommendations.length) {
+            const orderedRecommendations = orderRecommendations(recommendations);
+
+            orderedRecommendations.forEach(async (recommendation, index) => {
+              if (!this.images.recommendationTypeIcons[recommendationGroupIndex]) {
+                this.images.recommendationTypeIcons[recommendationGroupIndex] = [];
+              }
+
+              this.images.recommendationTypeIcons[recommendationGroupIndex].push({
+                index,
+                src: await getRecommendationTypeIconBase64(recommendation.intervention_type),
+              });
+            });
+          }
+        }
+      }
+    }
+  }
+
+  public setRecommendationsPrintImages() {
+    const allElements = this.getAll();
+
+    if (allElements.length) {
+      this.setRecommendationTypeImages(allElements);
+
+      console.log({ ...this.images.recommendationTypeIcons });
+      console.log(JSON.stringify(this.images.recommendationTypeIcons));
+
+      for (const element of allElements) {
+        const elementType = element.prop('type');
+
+        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
+          const metadata = this.editor.metadata.getFromElement(element);
+
+          if (metadata) {
+            const { fixed: recommendations } = metadata;
+
+            if (recommendations.length) {
+              const orderedRecommendations = orderRecommendations(recommendations);
+
+              for (const recommendation of orderedRecommendations) {
+                const RecommendationElement = this.getById(recommendation.recommendationElementId);
+
+                if (RecommendationElement) {
+                  /* RecommendationElement.attr(
+                    'intervention_type_image/xlink:href',
+                    this.images.recommendationTypeIcons['2']['1'],
+                  ); */
+                }
+              }
+            }
+          }
+        }
+      }
+
+      /* console.log(recommendationGroupIndex, recommendationIndex - 1);
+      console.log(
+        recommendationTypeImages[recommendationGroupIndex][recommendationIndex - 1],
+      );
+      RecommendationElement.attr(
+        'intervention_type_image/xlinkHref',
+        recommendationTypeImages[recommendationGroupIndex][recommendationIndex - 1],
+      ); */
+    }
+  }
+
   public createRecommendationsPrint() {
     const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 130;
     let elementHeight = 1000;
@@ -1120,6 +1211,15 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
                 const RecommendationElement = new RecommendationDescriptionConstructor();
 
+                // set the reference to the recommendation element on metadata
+                recommendation.recommendationElementId = RecommendationElement.id;
+
+                void this.editor.metadata.setMetadata(
+                  recommendationIndex - 1,
+                  'recommendationElementId',
+                  recommendation,
+                );
+
                 // creates the accessory classes
                 implementationTextClass = `class-${randomString(16)}`;
                 RecommendationElement.attr('implementation_text/class', implementationTextClass);
@@ -1146,7 +1246,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 }
 
                 RecommendationElement.attr('intervention_type_text/text', recommendation.intervention_type);
-                RecommendationElement.attr('intervention_type_image/xlinkHref', getRecommendationTypeIcon(recommendation.intervention_type));
                 RecommendationElement.attr('original_transcription_text/text', recommendation.description);
                 RecommendationElement.attr('original_transcription_text', { textWrap: { width: elementWidth * 0.8 } });
 

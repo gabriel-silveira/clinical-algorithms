@@ -328,6 +328,8 @@ class Graph {
       await this.editor.element.create.PDFHeader();
 
       await this.editor.element.create.PDFFooter();
+
+      this.editor.element.setRecommendationsPrintImages();
     }
   }
 
