@@ -319,7 +319,7 @@ class Graph {
         }
       }
 
-      await this.editor.element.createRecommendationsPrint();
+      await this.editor.element.createRecommendationsForPDF();
 
       this.editor.element.moveAllElementsDown(200);
 
@@ -328,9 +328,6 @@ class Graph {
       await this.editor.element.create.PDFHeader();
 
       await this.editor.element.create.PDFFooter();
-
-      // possibly deprecated...
-      // this.editor.element.setRecommendationsPrintImages();
     }
   }
 

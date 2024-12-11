@@ -2,6 +2,7 @@ import { dia } from 'jointjs';
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
 import { getRecommendationTypeIconBase64 } from 'src/services/editor/constants/metadata/recommendation_type';
+import { toDataUrl } from 'src/services/images';
 
 const defaults = {
   attrs: {
@@ -250,6 +251,15 @@ export const RecommendationDescriptionConstructor = async (recommendation: IFixe
   newDefaults.attrs.intervention_type_image.xlinkHref = await getRecommendationTypeIconBase64(
     recommendation.intervention_type,
   );
+
+  newDefaults.attrs.grade_logo.xlinkHref = await toDataUrl('/imgs/grade_logo.png');
+
+  const certaintyIconBase64 = await toDataUrl('/imgs/certainty.png');
+
+  newDefaults.attrs.certainty_icon_1.xlinkHref = certaintyIconBase64;
+  newDefaults.attrs.certainty_icon_2.xlinkHref = certaintyIconBase64;
+  newDefaults.attrs.certainty_icon_3.xlinkHref = certaintyIconBase64;
+  newDefaults.attrs.certainty_icon_4.xlinkHref = certaintyIconBase64;
 
   return dia.Element.define(
     CustomElement.RECOMMENDATION_DESCRIPTION,

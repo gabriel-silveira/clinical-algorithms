@@ -1082,54 +1082,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     }
   }
 
-  public setRecommendationsPrintImages() {
-    const allElements = this.getAll();
-
-    if (allElements.length) {
-      this.setRecommendationTypeImages(allElements);
-
-      console.log({ ...this.images.recommendationTypeIcons });
-      console.log(JSON.stringify(this.images.recommendationTypeIcons));
-
-      for (const element of allElements) {
-        const elementType = element.prop('type');
-
-        if ([CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)) {
-          const metadata = this.editor.metadata.getFromElement(element);
-
-          if (metadata) {
-            const { fixed: recommendations } = metadata;
-
-            if (recommendations.length) {
-              const orderedRecommendations = orderRecommendations(recommendations);
-
-              for (const recommendation of orderedRecommendations) {
-                const RecommendationElement = this.getById(recommendation.recommendationElementId);
-
-                if (RecommendationElement) {
-                  /* RecommendationElement.attr(
-                    'intervention_type_image/xlink:href',
-                    this.images.recommendationTypeIcons['2']['1'],
-                  ); */
-                }
-              }
-            }
-          }
-        }
-      }
-
-      /* console.log(recommendationGroupIndex, recommendationIndex - 1);
-      console.log(
-        recommendationTypeImages[recommendationGroupIndex][recommendationIndex - 1],
-      );
-      RecommendationElement.attr(
-        'intervention_type_image/xlinkHref',
-        recommendationTypeImages[recommendationGroupIndex][recommendationIndex - 1],
-      ); */
-    }
-  }
-
-  public async createRecommendationsPrint() {
+  public async createRecommendationsForPDF() {
     const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 130;
     let elementHeight = 1000;
 
