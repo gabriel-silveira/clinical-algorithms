@@ -91,7 +91,7 @@ class Element {
       recommendationTypeIcons: {
         [key: string]: {
           index: number,
-          src: string[],
+          src: string,
         }[],
       },
     } = {
@@ -1129,7 +1129,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     }
   }
 
-  public createRecommendationsPrint() {
+  public async createRecommendationsPrint() {
     const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 130;
     let elementHeight = 1000;
 
@@ -1138,7 +1138,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     const allElements = this.getAll();
 
     if (allElements.length) {
-      for (const element of allElements) {
+      for await (const element of allElements) {
         const elementType = element.prop('type');
         const recommendationGroupIndex = element.prop('props/elementIndex');
 
@@ -1150,6 +1150,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
           const headerClass = `class-${randomString(16)}`;
 
+          // eslint-disable-next-line max-len
           const recommendationHeaderElement = new RecommendationDescriptionHeaderConstructor();
           recommendationHeaderElement.attr('label/text', `${recommendationGroupIndex}. ${label}`);
           recommendationHeaderElement.attr('body/class', headerClass);
@@ -1200,7 +1201,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
               let recommendationIndex = 1;
 
-              for (const recommendation of orderedRecommendations) {
+              for await (const recommendation of orderedRecommendations) {
                 let implementationTextClass = '';
                 let additionalCommentsTextClass = '';
                 let recommendationSourceTextClass = '';
@@ -1209,7 +1210,9 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 let comparatorTextClass = '';
                 let interventionTextClass = '';
 
-                const RecommendationElement = new RecommendationDescriptionConstructor();
+                const REConstructor = await RecommendationDescriptionConstructor(recommendation);
+
+                const RecommendationElement = new REConstructor();
 
                 // set the reference to the recommendation element on metadata
                 recommendation.recommendationElementId = RecommendationElement.id;

@@ -55,5 +55,5 @@ export const getRecommendationTypeIconBase64 = async (type: string) => {
 
   const base64 = await toDataUrl(url);
 
-  return base64 || '';
+  return base64 as string || '';
 };

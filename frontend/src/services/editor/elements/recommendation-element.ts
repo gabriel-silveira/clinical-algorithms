@@ -1,5 +1,7 @@
-import * as joint from 'jointjs';
+import { dia } from 'jointjs';
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
+import { IFixedMetadata } from 'src/services/editor/constants/metadata';
+import { getRecommendationTypeIconBase64 } from 'src/services/editor/constants/metadata/recommendation_type';
 
 const defaults = {
   attrs: {
@@ -33,7 +35,7 @@ const defaults = {
       refY: 93,
     },
     intervention_type_image: {
-      xlinkHref: './img/diagnosis.bfe91be3.png',
+      xlinkHref: '',
       refX: 150,
       refY: 68,
       height: 40,
@@ -242,11 +244,19 @@ const markup = {
   }],
 };
 
-export const RecommendationDescriptionConstructor = joint.dia.Element.define(
-  CustomElement.RECOMMENDATION_DESCRIPTION,
-  defaults,
-  markup,
-);
+export const RecommendationDescriptionConstructor = async (recommendation: IFixedMetadata) => {
+  const newDefaults = { ...defaults };
+
+  newDefaults.attrs.intervention_type_image.xlinkHref = await getRecommendationTypeIconBase64(
+    recommendation.intervention_type,
+  );
+
+  return dia.Element.define(
+    CustomElement.RECOMMENDATION_DESCRIPTION,
+    newDefaults,
+    markup,
+  );
+};
 
 const headerDefaults = {
   attrs: {
@@ -276,7 +286,7 @@ const headerMarkup = {
   }],
 };
 
-export const RecommendationDescriptionHeaderConstructor = joint.dia.Element.define(
+export const RecommendationDescriptionHeaderConstructor = dia.Element.define(
   CustomElement.RECOMMENDATION_DESCRIPTION,
   headerDefaults,
   headerMarkup,
