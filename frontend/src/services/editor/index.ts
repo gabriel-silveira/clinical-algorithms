@@ -102,13 +102,32 @@ class Editor {
 
           interactive: () => !this.data.readOnly,
 
-          defaultLink: new joint.dia.Link({
-            attrs: {
-              '.marker-target': {
-                d: 'M 10 0 L 0 5 L 10 10 z',
+          defaultLink: () => {
+            const link = new dia.Link({
+              attrs: {
+                '.marker-target': {
+                  d: 'M 10 0 L 0 5 L 10 10 z',
+                },
+                line: {
+                  stroke: '#333333',
+                  strokeWidth: 2,
+                },
               },
-            },
-          }),
+            });
+
+            link.router('manhattan', {
+              step: 10,
+              padding: 40,
+            });
+
+            link.connector('straight', {
+              cornerType: 'cubic',
+              precision: 0,
+              cornerRadius: 10,
+            });
+
+            return link;
+          },
         };
 
         if (this.data.readOnly) {
@@ -202,6 +221,8 @@ class Editor {
             this.element.updateRecommendationsTotals();
 
             this.element.data.wasMoving = false;
+
+            this.element.redrawAllConnections();
           }
         });
 
