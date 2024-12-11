@@ -1,8 +1,17 @@
 import { dia } from 'jointjs';
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
-import { getRecommendationTypeIconBase64 } from 'src/services/editor/constants/metadata/recommendation_type';
+
 import { toDataUrl } from 'src/services/images';
+import {
+  goodPracticeArrowsImageBase64,
+  recommendationArrowsImageBase64,
+} from "src/services/recommendations";
+
+import {
+  getRecommendationTypeIconBase64,
+  FORMAL_RECOMMENDATION,
+} from 'src/services/editor/constants/metadata/recommendation_type';
 
 const defaults = {
   attrs: {
@@ -20,7 +29,7 @@ const defaults = {
       refY: 20,
     },
     grade_logo: {
-      xlinkHref: './imgs/grade_logo.png',
+      xlinkHref: '',
       refX: 260,
       refY: 17,
       height: 24,
@@ -52,25 +61,25 @@ const defaults = {
       refY: 93,
     },
     certainty_icon_1: {
-      xlinkHref: './imgs/certainty.png',
+      xlinkHref: '',
       refX: 365,
       refY: 90,
       height: 20,
     },
     certainty_icon_2: {
-      xlinkHref: './imgs/certainty.png',
+      xlinkHref: '',
       refX: 365,
       refY: 90,
       height: 20,
     },
     certainty_icon_3: {
-      xlinkHref: './imgs/certainty.png',
+      xlinkHref: '',
       refX: 365,
       refY: 90,
       height: 20,
     },
     certainty_icon_4: {
-      xlinkHref: './imgs/certainty.png',
+      xlinkHref: '',
       refX: 365,
       refY: 90,
       height: 20,
@@ -109,7 +118,7 @@ const defaults = {
       refY: 220,
     },
     recommendation_arrows_image: {
-      xlinkHref: 'imgs/recommendation_arrows/strong_in_favor_intervention.png',
+      xlinkHref: '',
       refX: 300,
       refY: 200,
     },
@@ -260,6 +269,16 @@ export const RecommendationDescriptionConstructor = async (recommendation: IFixe
   newDefaults.attrs.certainty_icon_2.xlinkHref = certaintyIconBase64;
   newDefaults.attrs.certainty_icon_3.xlinkHref = certaintyIconBase64;
   newDefaults.attrs.certainty_icon_4.xlinkHref = certaintyIconBase64;
+
+  if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
+    newDefaults.attrs.recommendation_arrows_image.xlinkHref = await recommendationArrowsImageBase64(
+      recommendation,
+    );
+  } else if (recommendation.direction) {
+    newDefaults.attrs.recommendation_arrows_image.xlinkHref = await goodPracticeArrowsImageBase64(
+      recommendation,
+    );
+  }
 
   return dia.Element.define(
     CustomElement.RECOMMENDATION_DESCRIPTION,

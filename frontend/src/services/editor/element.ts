@@ -1239,11 +1239,10 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 RecommendationElement.attr('comparator_text/text', recommendation.comparator);
                 RecommendationElement.attr('comparator_text', { textWrap: { width: elementWidth * 0.37 } });
                 if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
-                  RecommendationElement.attr('recommendation_arrows_image/xlinkHref', recommendationArrowsImage(recommendation));
+                  RecommendationElement.attr('recommendation_arrows_image/refX', (elementWidth / 2) - 100);
                 } else if (recommendation.direction) {
-                  RecommendationElement.attr('recommendation_arrows_image/xlinkHref', goodPracticeArrowsImage(recommendation));
+                  RecommendationElement.attr('recommendation_arrows_image/refX', (elementWidth / 2) - 55);
                 }
-                RecommendationElement.attr('recommendation_arrows_image/refX', (elementWidth / 2) - 100);
 
                 RecommendationElement.attr('intervention_text/text', recommendation.intervention);
                 RecommendationElement.attr('intervention_text/refX', (elementWidth / 2) + 100);
