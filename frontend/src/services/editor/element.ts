@@ -17,9 +17,8 @@ import { autoResizeTextarea } from 'src/services/editor/textarea';
 import icons from 'src/services/editor/elements/svg_icons';
 
 import {
-  FORMAL_RECOMMENDATION,
-  getRecommendationTypeIconBase64,
   getRecommendationTypeLabel,
+  FORMAL_RECOMMENDATION,
   GOOD_PRACTICES,
   INFORMAL_RECOMMENDATION,
   RECOMMENDATION_TYPES,
@@ -36,31 +35,9 @@ import {
   RecommendationDescriptionHeaderConstructor,
 } from 'src/services/editor/elements/recommendation-element';
 
-import {
-  goodPracticeArrowsImage,
-  orderRecommendations,
-  recommendationArrowsImage,
-} from 'src/services/recommendations';
+import { orderRecommendations } from 'src/services/recommendations';
 import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
-
-// export interface IElementToolsPadding {
-//   left: number | 20,
-//   top: number | 12,
-//   right: number | 10,
-//   bottom: number | 16,
-// }
-
-// export interface IElementToolsSettings {
-//   element: dia.Element,
-//   options?: {
-//     position?: {
-//       x: number,
-//       y: number,
-//     },
-//     padding?: IElementToolsPadding,
-//   }
-// }
 
 class Element {
   editor: Editor;
@@ -86,17 +63,6 @@ class Element {
       recommendationsTogglerRelationsMap: {},
       wasMoving: false,
     });
-
-  public images: {
-      recommendationTypeIcons: {
-        [key: string]: {
-          index: number,
-          src: string,
-        }[],
-      },
-    } = {
-      recommendationTypeIcons: {},
-    };
 
   constructor(editor: Editor) {
     this.editor = editor;
@@ -1044,39 +1010,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
           } = element.position();
 
           void this.create.Recommendation(x + 1, y + 111, element);
-        }
-      }
-    }
-  }
-
-  private setRecommendationTypeImages(allElements: dia.Element[]) {
-    for (const element of allElements) {
-      const elementType = element.prop('type');
-      const recommendationGroupIndex = element.prop('props/elementIndex');
-
-      if (
-        recommendationGroupIndex
-        && [CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType)
-      ) {
-        const metadata = this.editor.metadata.getFromElement(element);
-
-        if (metadata) {
-          const { fixed: recommendations } = metadata;
-
-          if (recommendations.length) {
-            const orderedRecommendations = orderRecommendations(recommendations);
-
-            orderedRecommendations.forEach(async (recommendation, index) => {
-              if (!this.images.recommendationTypeIcons[recommendationGroupIndex]) {
-                this.images.recommendationTypeIcons[recommendationGroupIndex] = [];
-              }
-
-              this.images.recommendationTypeIcons[recommendationGroupIndex].push({
-                index,
-                src: await getRecommendationTypeIconBase64(recommendation.intervention_type),
-              });
-            });
-          }
         }
       }
     }

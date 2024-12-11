@@ -22,7 +22,7 @@ import {
 } from 'src/services/editor/constants/metadata/intervention';
 
 import GradeIcon from 'src/assets/imgs/grade_logo.png';
-import { toDataUrl } from "src/services/images";
+import { toDataUrl } from 'src/services/images';
 
 export const goodPracticeArrowsImage = (data: IFixedMetadata) => {
   if (data.direction === IN_FAVOR_OF_THE_INTERVENTION) {

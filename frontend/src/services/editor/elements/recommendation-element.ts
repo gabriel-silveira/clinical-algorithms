@@ -6,7 +6,7 @@ import { toDataUrl } from 'src/services/images';
 import {
   goodPracticeArrowsImageBase64,
   recommendationArrowsImageBase64,
-} from "src/services/recommendations";
+} from 'src/services/recommendations';
 
 import {
   getRecommendationTypeIconBase64,
