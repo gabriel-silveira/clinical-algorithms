@@ -381,7 +381,7 @@ class Element {
       Recommendation: async (x: number, y: number, originalElement: dia.Element) => {
         const metadata = this.editor.metadata.getFromElement(originalElement);
 
-        if (metadata && metadata.fixed) {
+        if (metadata && metadata.fixed.length) {
           const divId = randomString(32);
 
           const RecommendationElement = customElements.RecommendationElement(metadata.fixed, divId);
