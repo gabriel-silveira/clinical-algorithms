@@ -24,7 +24,6 @@ import {
   RECOMMENDATION_TYPES,
 } from 'src/services/editor/constants/metadata/recommendation_type';
 
-import { COLOR_PRIMARY } from 'src/services/colors';
 import { formatDatetime } from 'src/services/date';
 import { toDataUrl } from 'src/services/images';
 import { getElementBoundingRect, randomString } from 'src/services/general';
@@ -135,7 +134,7 @@ class Element {
         selector: 'button',
         attributes: {
           r: 10,
-          fill: 'white',
+          fill: 'red',
           cursor: 'pointer',
         },
       }, {
@@ -143,8 +142,10 @@ class Element {
         selector: 'icon',
         attributes: {
           d: 'M 6.1 -3.972 L 4.972 -5.1 L 0.5 -0.628 L -3.972 -5.1 L -5.1 -3.972 L -0.628 0.5 L -5.1 4.972 L -3.972 6.1 L 0.5 1.628 L 4.972 6.1 L 6.1 4.972 L 1.628 0.5 L 6.1 -3.972 z',
-          fill: COLOR_PRIMARY,
+          fill: 'white',
           cursor: 'pointer',
+          stroke: 'white',
+          strokeWidth: 5,
         },
       }],
     });
@@ -159,7 +160,7 @@ class Element {
             y: 17,
           },
         });
-      } else {
+      } else if (element.prop('type') !== 'standard.Link') {
         this.createTools(element);
       }
     });
@@ -321,6 +322,8 @@ class Element {
         await this.create.Start();
     }
 
+    this.editor.element.redrawAllConnections();
+
     this.editor.graph.notSaved();
   }
 
@@ -378,6 +381,35 @@ class Element {
 
         this.data.recommendationsTogglerRelationsMap[togglerElement.id] = recommendationElement.id;
       },
+      Evaluation: async () => {
+        const element = new customElements.EvaluationElement({
+          position: {
+            x: this.data.creationPosition.x,
+            y: this.data.creationPosition.y,
+          },
+          ports: Ports.generateToEvaluation(),
+        }).resize(200, 100)
+          .addTo(this.editor.data.graph);
+
+        this.createTools(element);
+
+        this.textarea.createEventHandlers();
+
+        // deselectAllTexts();
+      },
+      End: async () => {
+        const element = new customElements.EndElement({
+          position: {
+            x: this.data.creationPosition.x,
+            y: this.data.creationPosition.y,
+          },
+        }).resize(40, 40)
+          .addTo(this.editor.data.graph);
+
+        this.createTools(element);
+
+        // deselectAllTexts();
+      },
       Recommendation: async (x: number, y: number, originalElement: dia.Element) => {
         const metadata = this.editor.metadata.getFromElement(originalElement);
 
@@ -433,35 +465,6 @@ class Element {
             }
           }
         }
-      },
-      Evaluation: async () => {
-        const element = new customElements.EvaluationElement({
-          position: {
-            x: this.data.creationPosition.x,
-            y: this.data.creationPosition.y,
-          },
-          ports: Ports.generateToEvaluation(),
-        }).resize(200, 100)
-          .addTo(this.editor.data.graph);
-
-        this.createTools(element);
-
-        this.textarea.createEventHandlers();
-
-        // deselectAllTexts();
-      },
-      End: async () => {
-        const element = new customElements.EndElement({
-          position: {
-            x: this.data.creationPosition.x,
-            y: this.data.creationPosition.y,
-          },
-        }).resize(40, 40)
-          .addTo(this.editor.data.graph);
-
-        this.createTools(element);
-
-        // deselectAllTexts();
       },
       Lane: async () => {
         const element = new customElements.LaneElement({
@@ -694,6 +697,32 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
         );
 
         PDFFooter.addTo(this.editor.data.graph);
+      },
+      Link: () => {
+        const link = new dia.Link({
+          attrs: {
+            '.marker-target': {
+              d: 'M 10 0 L 0 5 L 10 10 z',
+            },
+            line: {
+              stroke: '#333333',
+              strokeWidth: 5,
+            },
+          },
+        });
+
+        link.router('manhattan', {
+          step: 10,
+          padding: 40,
+        });
+
+        link.connector('straight', {
+          cornerType: 'cubic',
+          precision: 0,
+          cornerRadius: 10,
+        });
+
+        return link;
       },
     };
   }
@@ -1398,7 +1427,19 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     }
   }
 
-  static removeLinkToolButtons(linkView: dia.LinkView) {
+  static removeLinkTools(linkView: dia.LinkView) {
+    console.log('LINK TOOLS');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    console.log(linkView.$el[0]);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const markerVertices = linkView.$el[0].getElementsByClassName('marker-vertices');
+    if (markerVertices && markerVertices.length) {
+      markerVertices[0].remove();
+    }
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     linkView.$el[0].getElementsByClassName('link-tools')[0]?.remove();
@@ -1406,13 +1447,16 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const markVertexGroups = linkView.$el[0].getElementsByClassName('marker-vertex-group');
-
     if (markVertexGroups && markVertexGroups.length) {
       for (const markVertexGroup of markVertexGroups) {
         markVertexGroup.getElementsByClassName('marker-vertex-remove-area')[0]?.remove();
         markVertexGroup.getElementsByClassName('marker-vertex-remove')[0]?.remove();
       }
     }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    linkView.$el[0].getElementsByClassName('connection-wrap')[0]?.remove();
   }
 
   public createRecommendationsTotals(element?: dia.Element) {
@@ -1490,7 +1534,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     }
   }
 
-  public showAllTools() {
+  /* public showAllTools() {
     const allElements = this.getAll();
 
     if (allElements.length) {
@@ -1507,7 +1551,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
         }
       }
     }
-  }
+  } */
 
   public centerViewOnSelected() {
     const selectedElement = this.getSelected();
