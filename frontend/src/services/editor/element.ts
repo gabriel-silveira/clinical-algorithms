@@ -109,10 +109,11 @@ class Element {
   private removeSelected() {
     this.deleteRecommendationsTotals();
 
-    this.getSelected()
-      ?.remove();
+    this.getSelected()?.remove();
 
     this.deselectAll();
+
+    this.redrawAllConnections();
 
     this.editor.graph.notSaved();
   }
@@ -1428,11 +1429,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   }
 
   static removeLinkTools(linkView: dia.LinkView) {
-    console.log('LINK TOOLS');
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    console.log(linkView.$el[0]);
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const markerVertices = linkView.$el[0].getElementsByClassName('marker-vertices');
@@ -1457,6 +1453,10 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     linkView.$el[0].getElementsByClassName('connection-wrap')[0]?.remove();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    linkView.$el[0].getElementsByClassName('marker-arrowheads')[0]?.remove();
   }
 
   public createRecommendationsTotals(element?: dia.Element) {
