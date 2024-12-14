@@ -4,11 +4,11 @@ export function autoResizeTextarea(textarea: HTMLTextAreaElement) {
     textarea.style.height = `${textarea.scrollHeight}px`;
 
     if (textarea.scrollHeight === 42) {
-      textarea.style.marginTop = '-24px';
+      textarea.style.marginTop = '-22px';
     } else if (textarea.scrollHeight === 63) {
-      textarea.style.marginTop = '-34px';
+      textarea.style.marginTop = '-32px';
     } else {
-      textarea.style.marginTop = '-15px';
+      textarea.style.marginTop = '-13px';
     }
   };
 

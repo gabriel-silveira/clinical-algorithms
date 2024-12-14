@@ -1,3 +1,5 @@
+import { dia } from 'jointjs';
+
 import Editor from 'src/services/editor/index';
 
 import {
@@ -36,8 +38,132 @@ class Ports {
     return Ports.generate(0, 40, ACTION_PORT);
   }
 
+  public static generateActionPorts() {
+    const portBody = {
+      magnet: true,
+      r: 6,
+      fill: 'transparent',
+      stroke: 'transparent',
+    };
+
+    return {
+      groups: {
+        top: {
+          position: {
+            name: 'top',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'left',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+        bottom: {
+          position: {
+            name: 'bottom',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'left',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+        in: {
+          position: {
+            name: 'left',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'left',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+        out: {
+          position: {
+            name: 'right',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'right',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+      },
+    };
+  }
+
   public static generateToEvaluation() {
     return Ports.generate(31, 38, EVALUATION_PORT);
+  }
+
+  public static showPorts(element?: dia.Element) {
+    if (element) {
+      element.prop('ports/groups/top/attrs/portBody/fill', '#0069Cf');
+      element.prop('ports/groups/bottom/attrs/portBody/fill', '#0069Cf');
+      element.prop('ports/groups/in/attrs/portBody/fill', '#0069Cf');
+      element.prop('ports/groups/out/attrs/portBody/fill', '#0069Cf');
+    }
+  }
+
+  public static hidePorts(element?: dia.Element) {
+    if (element) {
+      element.prop('ports/groups/top/attrs/portBody/fill', 'transparent');
+      element.prop('ports/groups/bottom/attrs/portBody/fill', 'transparent');
+      element.prop('ports/groups/in/attrs/portBody/fill', 'transparent');
+      element.prop('ports/groups/out/attrs/portBody/fill', 'transparent');
+    }
   }
 }
 

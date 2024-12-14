@@ -350,13 +350,30 @@ class Element {
             x: this.data.creationPosition.x,
             y: this.data.creationPosition.y,
           },
-          ports: Ports.generateToAction(),
-        }).resize(200, 100)
-          .addTo(this.editor.data.graph);
+          ports: Ports.generateActionPorts(),
+        });
+
+        element.resize(200, 100);
+
+        element.addPorts([
+          // { group: 'in', attrs: { label: { text: 'in1' } } },
+          { group: 'in' },
+          { group: 'out' },
+          { group: 'top' },
+          { group: 'top' },
+          { group: 'top' },
+          { group: 'bottom' },
+          { group: 'bottom' },
+          { group: 'bottom' },
+        ]);
+
+        element.addTo(this.editor.data.graph);
 
         this.createTools(element);
 
         this.textarea.createEventHandlers();
+
+        console.log({ ...element });
 
         // deselectAllTexts();
       },
