@@ -94,17 +94,24 @@ class Element {
   }
 
   public setCreationPosition(x: number, y: number) {
-    const stringX = String(x);
-    const stringY = String(y);
+    const stageWrapper = document.getElementById('editor-stage-wrapper');
 
-    // ...respecting 10px paper grid
-    const fixedX = x - Number(stringX[stringX.length - 1]);
-    const fixedY = y - Number(stringY[stringY.length - 1]);
+    if (stageWrapper) {
+      const xWithScroll = x + stageWrapper.scrollLeft;
+      const yWithScroll = y + stageWrapper.scrollTop;
 
-    this.data.creationPosition = {
-      x: fixedX,
-      y: fixedY,
-    };
+      const stringX = String(xWithScroll);
+      const stringY = String(yWithScroll);
+
+      // ...respecting 10px paper grid
+      const fixedX = xWithScroll - Number(stringX[stringX.length - 1]);
+      const fixedY = yWithScroll - Number(stringY[stringY.length - 1]);
+
+      this.data.creationPosition = {
+        x: fixedX,
+        y: fixedY,
+      };
+    }
   }
 
   private removeSelected() {

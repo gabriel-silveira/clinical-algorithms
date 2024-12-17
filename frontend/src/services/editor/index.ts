@@ -93,9 +93,7 @@ class Editor {
           gridSize: 0,
           drawGrid: false,
 
-          background: {
-            color: '#EAEAEA',
-          },
+          background: { color: '#EAEAEA' },
 
           linkPinning: false,
           snapLinks: { radius: 5 },
