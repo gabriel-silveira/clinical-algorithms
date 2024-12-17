@@ -17,8 +17,8 @@ import { autoResizeTextarea } from 'src/services/editor/textarea';
 import icons from 'src/services/editor/elements/svg_icons';
 
 import {
-  FORMAL_RECOMMENDATION,
   getRecommendationTypeLabel,
+  FORMAL_RECOMMENDATION,
   GOOD_PRACTICES,
   INFORMAL_RECOMMENDATION,
   RECOMMENDATION_TYPES,
@@ -37,6 +37,7 @@ import {
 import { orderRecommendations } from 'src/services/recommendations';
 import { CERTAINTY } from 'src/services/editor/constants/metadata/certainty';
 import { IFixedMetadata } from 'src/services/editor/constants/metadata';
+import { COLOR_ACCENT } from 'src/services/colors';
 
 class Element {
   editor: Editor;
@@ -373,7 +374,48 @@ class Element {
 
         this.textarea.createEventHandlers();
 
-        console.log({ ...element });
+        // deselectAllTexts();
+      },
+      Evaluation: async () => {
+        const element = new customElements.EvaluationElement({
+          position: {
+            x: this.data.creationPosition.x,
+            y: this.data.creationPosition.y,
+          },
+          ports: Ports.generateActionPorts(),
+        });
+
+        element.resize(200, 100);
+
+        element.addPorts([
+          { group: 'in' },
+          { group: 'out' },
+          { group: 'top' },
+          { group: 'top' },
+          { group: 'top' },
+          { group: 'bottom' },
+          { group: 'bottom' },
+          { group: 'bottom' },
+        ]);
+
+        element.addTo(this.editor.data.graph);
+
+        this.createTools(element);
+
+        this.textarea.createEventHandlers();
+
+        // deselectAllTexts();
+      },
+      End: async () => {
+        const element = new customElements.EndElement({
+          position: {
+            x: this.data.creationPosition.x,
+            y: this.data.creationPosition.y,
+          },
+        }).resize(40, 40)
+          .addTo(this.editor.data.graph);
+
+        this.createTools(element);
 
         // deselectAllTexts();
       },
@@ -398,35 +440,6 @@ class Element {
         }).addTo(this.editor.data.graph);
 
         this.data.recommendationsTogglerRelationsMap[togglerElement.id] = recommendationElement.id;
-      },
-      Evaluation: async () => {
-        const element = new customElements.EvaluationElement({
-          position: {
-            x: this.data.creationPosition.x,
-            y: this.data.creationPosition.y,
-          },
-          ports: Ports.generateToEvaluation(),
-        }).resize(200, 100)
-          .addTo(this.editor.data.graph);
-
-        this.createTools(element);
-
-        this.textarea.createEventHandlers();
-
-        // deselectAllTexts();
-      },
-      End: async () => {
-        const element = new customElements.EndElement({
-          position: {
-            x: this.data.creationPosition.x,
-            y: this.data.creationPosition.y,
-          },
-        }).resize(40, 40)
-          .addTo(this.editor.data.graph);
-
-        this.createTools(element);
-
-        // deselectAllTexts();
       },
       Recommendation: async (x: number, y: number, originalElement: dia.Element) => {
         const metadata = this.editor.metadata.getFromElement(originalElement);
@@ -1664,6 +1677,38 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
           linkView.requestConnectionUpdate();
         }
       }
+    });
+  }
+
+  public showPorts(elementId: dia.Cell.ID) {
+    const element = this.getById(elementId);
+
+    if (element) {
+      const color = element.prop('type') === CustomElement.ACTION ? '#0069Cf' : COLOR_ACCENT;
+
+      element.prop('ports/groups/top/attrs/portBody/fill', color);
+      element.prop('ports/groups/bottom/attrs/portBody/fill', color);
+      element.prop('ports/groups/in/attrs/portBody/fill', color);
+      element.prop('ports/groups/out/attrs/portBody/fill', color);
+    }
+  }
+
+  public hidePorts(elementId: dia.Cell.ID) {
+    const element = this.getById(elementId);
+
+    if (element) {
+      element.prop('ports/groups/top/attrs/portBody/fill', 'transparent');
+      element.prop('ports/groups/bottom/attrs/portBody/fill', 'transparent');
+      element.prop('ports/groups/in/attrs/portBody/fill', 'transparent');
+      element.prop('ports/groups/out/attrs/portBody/fill', 'transparent');
+    }
+  }
+
+  public hideAllPorts() {
+    const allElements = this.getAll();
+
+    allElements.forEach((element) => {
+      console.log(element);
     });
   }
 }

@@ -164,16 +164,15 @@ class Editor {
         });
 
         this.data.paper.on('element:mouseover', (elementView) => {
-          const element = this.element.getById(elementView.options.model.id);
-
-          Ports.showPorts(element);
-          console.log('Overing');
+          this.element.showPorts(elementView.options.model.id);
         });
 
         this.data.paper.on('element:mouseout', (elementView) => {
-          const element = this.element.getById(elementView.options.model.id);
+          this.element.hidePorts(elementView.options.model.id);
+        });
 
-          Ports.hidePorts(element);
+        this.data.paper.on('element:mouseleave', (elementView) => {
+          this.element.hidePorts(elementView.options.model.id);
         });
 
         this.data.paper.on('element:pointerdown', (/* elementView: dia.ElementView */) => {
@@ -214,9 +213,7 @@ class Editor {
         this.data.paper.on('link:connect', (linkView) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          const element = this.element.getById(linkView.model.attributes.source.id);
-
-          Ports.hidePorts(element);
+          this.element.hidePorts(linkView.model.attributes.source.id);
 
           this.element.deselectAll();
 

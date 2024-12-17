@@ -1,5 +1,3 @@
-import { dia } from 'jointjs';
-
 import Editor from 'src/services/editor/index';
 
 import {
@@ -146,24 +144,6 @@ class Ports {
 
   public static generateToEvaluation() {
     return Ports.generate(31, 38, EVALUATION_PORT);
-  }
-
-  public static showPorts(element?: dia.Element) {
-    if (element) {
-      element.prop('ports/groups/top/attrs/portBody/fill', '#0069Cf');
-      element.prop('ports/groups/bottom/attrs/portBody/fill', '#0069Cf');
-      element.prop('ports/groups/in/attrs/portBody/fill', '#0069Cf');
-      element.prop('ports/groups/out/attrs/portBody/fill', '#0069Cf');
-    }
-  }
-
-  public static hidePorts(element?: dia.Element) {
-    if (element) {
-      element.prop('ports/groups/top/attrs/portBody/fill', 'transparent');
-      element.prop('ports/groups/bottom/attrs/portBody/fill', 'transparent');
-      element.prop('ports/groups/in/attrs/portBody/fill', 'transparent');
-      element.prop('ports/groups/out/attrs/portBody/fill', 'transparent');
-    }
   }
 }
 
