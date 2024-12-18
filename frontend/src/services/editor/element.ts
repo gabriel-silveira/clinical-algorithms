@@ -1082,6 +1082,45 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     }
   }
 
+  static createRecommendationLinks(
+    RecommendationElement: dia.Element,
+    shift: { label: number, links: number },
+    recommendation: IFixedMetadata,
+    linkLinksClass: string,
+    elementWidth: number,
+  ) {
+    const llRefY = RecommendationElement.attr('links_label/refY');
+    // RecommendationElement.attr('links_label/refY', llRefY + lastElementBeforeLinks.height + 370);
+    // RecommendationElement.attr('links_links/refY', llRefY + lastElementBeforeLinks.height + 400);
+    RecommendationElement.attr('links_label/refY', llRefY + shift.label);
+    RecommendationElement.attr('links_links/refY', llRefY + shift.links);
+
+    let linksContent = '';
+    let linkIndex = 0;
+
+    for (const link of recommendation.links) {
+      if (linkIndex > 0) linksContent += '\n\n';
+      linksContent += `${link.type}: ${link.url}`;
+      linkIndex += 1;
+    }
+
+    RecommendationElement.attr('links_links/text', linksContent);
+
+    const linksLinksRect = getElementBoundingRect(linkLinksClass);
+
+    if (linksLinksRect) {
+      const newElementHeight = Number((
+        linksLinksRect.top - RecommendationElement.position().y
+      ).toFixed(0)) + (linksLinksRect.height + 18);
+
+      RecommendationElement.size(elementWidth, newElementHeight);
+
+      return newElementHeight;
+    }
+
+    return 0;
+  }
+
   public async createRecommendationsForPDF() {
     const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 130;
     let elementHeight = 1000;
@@ -1137,14 +1176,14 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                     RecommendationElement.attr(
                       'recommendation_source_label/refY',
                       rslRefY + (ITBoundingRect?.height || 0)
-                      + ACBoundingRect.height + (ITBoundingRect ? 60 : 20),
+                      + ACBoundingRect.height + (ITBoundingRect ? 90 : 50),
                     );
 
                     RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
                     RecommendationElement.attr(
                       'recommendation_source_text/refY',
                       rslRefY + (ITBoundingRect?.height || 0)
-                      + ACBoundingRect.height + (ITBoundingRect ? 80 : 40),
+                      + ACBoundingRect.height + (ITBoundingRect ? 110 : 70),
                     );
                   }
                 } else {
@@ -1155,6 +1194,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
               let recommendationIndex = 1;
 
               for await (const recommendation of orderedRecommendations) {
+                console.log(recommendationGroupIndex, recommendationIndex);
+
                 let implementationTextClass = '';
                 let additionalCommentsTextClass = '';
                 let recommendationSourceTextClass = '';
@@ -1339,12 +1380,12 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationElement.attr('additional_comments_label/style', 'display: none');
 
                   const rslRefY = RecommendationElement.attr('recommendation_source_label/refY');
-                  RecommendationElement.attr('recommendation_source_label/refY', rslRefY + ITBoundingRect.height + 20);
+                  RecommendationElement.attr('recommendation_source_label/refY', rslRefY + ITBoundingRect.height + 50);
 
                   RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
                   RecommendationElement.attr(
                     'recommendation_source_text/refY',
-                    rslRefY + ITBoundingRect.height + 42,
+                    rslRefY + ITBoundingRect.height + 72,
                   );
 
                   lastElementBeforeLinks = getElementBoundingRect(recommendationSourceTextClass);
@@ -1354,10 +1395,10 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   && recommendation.additional_comments
                 ) {
                   const aclRefY = RecommendationElement.attr('additional_comments_label/refY');
-                  RecommendationElement.attr('additional_comments_label/refY', aclRefY + ITBoundingRect.height + 20);
+                  RecommendationElement.attr('additional_comments_label/refY', aclRefY + ITBoundingRect.height + 50);
 
                   RecommendationElement.attr('additional_comments_text/text', recommendation.additional_comments);
-                  RecommendationElement.attr('additional_comments_text/refY', aclRefY + ITBoundingRect.height + 40);
+                  RecommendationElement.attr('additional_comments_text/refY', aclRefY + ITBoundingRect.height + 70);
 
                   createRecommendationSourceAfterAdditionalComments(
                     recommendation,
@@ -1379,32 +1420,16 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
                 // LINKS
                 if (lastElementBeforeLinks && recommendation.links.length) {
-                  const llRefY = RecommendationElement.attr('links_label/refY');
-                  RecommendationElement.attr('links_label/refY', llRefY + lastElementBeforeLinks.height + 370);
-                  RecommendationElement.attr('links_links/refY', llRefY + lastElementBeforeLinks.height + 400);
-
-                  let linksContent = '';
-                  let linkIndex = 0;
-
-                  for (const link of recommendation.links) {
-                    if (linkIndex > 0) linksContent += '\n\n';
-                    linksContent += `${link.type}: ${link.url}`;
-                    linkIndex += 1;
-                  }
-
-                  RecommendationElement.attr('links_links/text', linksContent);
-
-                  const linksLinksRect = getElementBoundingRect(linkLinksClass);
-
-                  if (linksLinksRect) {
-                    const newElementHeight = Number((
-                      linksLinksRect.top - RecommendationElement.position().y
-                    ).toFixed(0)) + (linksLinksRect.height + 18);
-
-                    RecommendationElement.size(elementWidth, newElementHeight);
-
-                    elementHeight = newElementHeight;
-                  }
+                  elementHeight = Element.createRecommendationLinks(
+                    RecommendationElement,
+                    {
+                      label: lastElementBeforeLinks.height + 370,
+                      links: lastElementBeforeLinks.height + 400,
+                    },
+                    recommendation,
+                    linkLinksClass,
+                    elementWidth,
+                  );
                 } else {
                   RecommendationElement.attr('links_label/style', 'display: none');
 

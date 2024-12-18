@@ -135,32 +135,32 @@ const defaults = {
     additional_comments_label: {
       style: 'font-weight: bold',
       refX: 15,
-      refY: 285,
+      refY: 260,
       text: 'Additional comments',
     },
     additional_comments_text: {
       refX: 15,
-      refY: 285,
+      refY: 260,
     },
     recommendation_source_label: {
       style: 'font-weight: bold',
       refX: 15,
-      refY: 285,
+      refY: 260,
       text: 'Recommendation source',
     },
     recommendation_source_text: {
       refX: 15,
-      refY: 285,
+      refY: 260,
     },
     links_label: {
       style: 'font-weight: bold',
       refX: 15,
-      refY: 285,
+      refY: 260,
       text: 'Links',
     },
     links_links: {
       refX: 15,
-      refY: 285,
+      refY: 260,
     },
   },
 };

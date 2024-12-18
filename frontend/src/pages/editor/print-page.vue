@@ -64,7 +64,7 @@ onMounted(async () => {
     setTimeout(async () => {
       loading.value = false;
 
-      editor.graph.exportPDF();
+      // editor.graph.exportPDF();
     }, 2000);
   }
 });
