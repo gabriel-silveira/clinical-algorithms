@@ -278,6 +278,7 @@ class Algorithms {
     this.data.searchResults = null;
     this.data.totalSearchResult = null;
     this.data.searchKeyword = '';
+    this.data.searchUser = null;
   }
 
   public async toggleEditDialog() {
