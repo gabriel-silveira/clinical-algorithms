@@ -1127,9 +1127,31 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     return [CustomElement.ACTION, CustomElement.EVALUATION].includes(elementType);
   }
 
+  static readjustRecommendationElementHeight(
+    RecommendationElement: dia.Element,
+    elementTextClass: string,
+    elementWidth: number,
+  ) {
+    let elementHeight = 0;
+
+    const TextBoundingRect = getElementBoundingRect(elementTextClass);
+
+    if (TextBoundingRect) {
+      elementHeight = Number((
+        TextBoundingRect.top - RecommendationElement.position().y
+      ).toFixed(0)) + (TextBoundingRect.height + 20);
+
+      RecommendationElement.size(elementWidth, elementHeight);
+
+      return elementHeight;
+    }
+
+    return 0;
+  }
+
   public async createRecommendationsForPDF() {
     const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 130;
-    const elementHeight = 1000;
+    let elementHeight = 1000;
     let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;
 
     const allElements = this.getAll();
@@ -1296,8 +1318,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
                       RecommendationElement.attr('additional_comments_text/refY', ITY + ICTextBoundingRect.height + 45);
                     }
-                  } else {
-                    //
                   }
                 } else {
                   RecommendationElement.attr('additional_comments_label/style', 'display: none');
@@ -1328,6 +1348,12 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                       RecommendationElement.attr('recommendation_source_text/refY', ITY + ICTextBoundingRect.height + 42);
                     }
                   }
+
+                  elementHeight = Element.readjustRecommendationElementHeight(
+                    RecommendationElement,
+                    recommendationSourceTextClass,
+                    elementWidth,
+                  ) || elementHeight;
                 } else {
                   RecommendationElement.attr('recommendation_source_label/style', 'display: none');
                 }
@@ -1377,6 +1403,8 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 } else {
                   RecommendationElement.attr('links_label/style', 'display: none');
                 }
+
+                // adjust element height based on elements...
 
                 // end...
                 recommendationHeaderElement.size(elementWidth, 40);
