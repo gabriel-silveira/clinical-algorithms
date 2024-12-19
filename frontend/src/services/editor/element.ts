@@ -1166,15 +1166,27 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
               let recommendationIndex = 1;
 
               for await (const recommendation of orderedRecommendations) {
-                let implementationTextClass = '';
+                if (recommendationGroupIndex === 5 && recommendationIndex === 4) {
+                  console.log(recommendationGroupIndex, recommendationIndex);
+                  console.log(recommendation);
+                }
+
+                let implementationConsiderationsTextClass = '';
+                let additionalCommentsTextClass = '';
 
                 const REConstructor = await RecommendationDescriptionConstructor(recommendation);
 
                 const RecommendationElement = new REConstructor();
 
                 // creates the accessory classes
-                implementationTextClass = `class-${randomString(16)}`;
-                RecommendationElement.attr('implementation_text/class', implementationTextClass);
+
+                // IMPLEMENTATION CONSIDERATIONS text
+                implementationConsiderationsTextClass = `class-${randomString(16)}`;
+                RecommendationElement.attr('implementation_text/class', implementationConsiderationsTextClass);
+
+                // ADDITIONAL COMMENTS text
+                additionalCommentsTextClass = `class-${randomString(16)}`;
+                RecommendationElement.attr('additional_comments_text/class', additionalCommentsTextClass);
 
                 // set the reference to the recommendation element on metadata
                 recommendation.recommendationElementId = RecommendationElement.id;
@@ -1268,22 +1280,58 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                   RecommendationElement.attr('additional_comments_text/text', recommendation.additional_comments);
 
                   if (recommendation.implementation_considerations) {
-                    const ICTextBoundingRect = getElementBoundingRect(implementationTextClass);
+                    const ICTextBoundingRect = getElementBoundingRect(
+                      implementationConsiderationsTextClass,
+                    );
 
                     if (ICTextBoundingRect) {
                       const ITY = RecommendationElement.attr('implementation_text/refY');
+
                       RecommendationElement.attr('additional_comments_label/refY', ITY + ICTextBoundingRect.height + 20);
 
                       RecommendationElement.attr('additional_comments_text/refY', ITY + ICTextBoundingRect.height + 45);
                     }
                   }
+                } else {
+                  RecommendationElement.attr('additional_comments_label/style', 'display: none');
                 }
 
+                // RECOMMENDATION SOURCE
+                if (recommendation.recommendation_source) {
+                  RecommendationElement.attr('recommendation_source_text/text', recommendation.recommendation_source);
+
+                  if (recommendation.additional_comments) {
+                    const ACTextBoundingRect = getElementBoundingRect(additionalCommentsTextClass);
+
+                    if (ACTextBoundingRect) {
+                      const ACY = RecommendationElement.attr('additional_comments_text/refY');
+
+                      RecommendationElement.attr('recommendation_source_label/refY', ACY + ACTextBoundingRect.height + 20);
+                      RecommendationElement.attr('recommendation_source_text/refY', ACY + ACTextBoundingRect.height + 42);
+                    }
+                  } else if (recommendation.implementation_considerations) {
+                    const ICTextBoundingRect = getElementBoundingRect(
+                      implementationConsiderationsTextClass,
+                    );
+
+                    if (ICTextBoundingRect) {
+                      const ITY = RecommendationElement.attr('implementation_text/refY');
+
+                      RecommendationElement.attr('recommendation_source_label/refY', ITY + ICTextBoundingRect.height + 20);
+                      RecommendationElement.attr('recommendation_source_text/refY', ITY + ICTextBoundingRect.height + 42);
+                    }
+                  }
+                } else {
+                  RecommendationElement.attr('recommendation_source_label/style', 'display: none');
+                }
+
+                RecommendationElement.attr('links_label/style', 'display: none');
+
                 // end...
-                console.log(recommendationIndex, recommendation);
                 recommendationHeaderElement.size(elementWidth, 40);
 
                 recommendationIndex += 1;
+                outermostY += (elementHeight + 10);
               }
             }
           }
