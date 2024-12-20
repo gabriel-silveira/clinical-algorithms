@@ -64,7 +64,9 @@ onMounted(async () => {
     setTimeout(async () => {
       loading.value = false;
 
-      // editor.graph.exportPDF();
+      editor.element.redrawAllConnections();
+
+      editor.graph.exportPDF();
     }, 2000);
   }
 });

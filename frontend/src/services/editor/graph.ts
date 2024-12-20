@@ -6,7 +6,7 @@ import html2pdf from 'html2pdf.js';
 import Editor from 'src/services/editor/index';
 
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
-import { GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
+import { GRAPH_MODE_PRINT, GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
 
 const RESOURCE_ALGORITHM = 'algorithms';
 const RESOURCE = 'algorithms/graph';
@@ -134,14 +134,15 @@ class Graph {
           await this.editor.element.createAllRecommendationsTotals();
 
           // READ ONLY MODE
-          if (this.editor.data.readOnly) {
+          if (
+            this.editor.data.readOnly
+            && this.data.mode !== GRAPH_MODE_PRINT
+          ) {
             setTimeout(() => {
               this.editor.element.textarea.disableAll();
             }, 600);
 
             this.editor.element.createRecommendations();
-
-            // this.editor.element.showAllTools();
 
             if (this.editor.route.query.node) {
               setTimeout(() => {
@@ -341,13 +342,11 @@ class Graph {
    * Get outermost element coordinate in the graph
    * @private
    */
-  public getOutermostCoordinate(coordinate: 'x' | 'y', printConsole = false) {
+  public getOutermostCoordinate(coordinate: 'x' | 'y') {
     let outerX = 0;
     let lowerY = 0;
 
     const allCells = this.editor.data.graph.getCells();
-
-    if (printConsole) console.log('Getting Outermost Coordinate...');
 
     for (const cell of allCells) {
       const {
@@ -373,7 +372,6 @@ class Graph {
           && coordinate === 'x'
         )
       ) {
-        if (printConsole) console.log(elementType);
         // lanes are not considered to calculate width
         if (elementType !== CustomElement.LANE) {
           const refX = x + width;
@@ -385,13 +383,12 @@ class Graph {
       }
     }
 
-    if (printConsole) console.log(coordinate === 'x' ? outerX : lowerY);
     return coordinate === 'x' ? outerX : lowerY;
   }
 
   private setContentSize() {
-    this.data.printSize.width = this.getOutermostCoordinate('x', true) + 200;
-    this.data.printSize.height = this.getOutermostCoordinate('y', true) + 200;
+    this.data.printSize.width = this.getOutermostCoordinate('x') + 200;
+    this.data.printSize.height = this.getOutermostCoordinate('y') + 200;
   }
 
   public exportPDF() {
