@@ -153,35 +153,6 @@ export const RecommendationTotalConstructor = (hasPendency: boolean) => {
 };
 
 const customElements = {
-  [CustomElement.LINK]: joint.dia.Link.define(CustomElement.LINK, {
-    connector: { name: 'rounded' },
-    router: { name: 'manhattan' },
-    attrs: {
-      line: {
-        connection: true,
-        stroke: 'grey',
-        strokeWidth: 2,
-        targetAnchor: {},
-        targetMarker: {
-          stroke: 'none',
-          strokeWidth: 0,
-          type: 'path',
-          fill: 'grey',
-          d: 'M 10 -10 -2 0 10 10 Z',
-        },
-      },
-    },
-  }, {
-    markup: [{
-      tagName: 'path',
-      selector: 'line',
-      attributes: {
-        fill: 'none',
-        pointerEvents: 'none',
-      },
-    }],
-  }),
-
   [CustomElement.RECOMMENDATION_TOGGLER]: joint.dia.Element.define(
     CustomElement.RECOMMENDATION_TOGGLER,
     {
@@ -332,7 +303,7 @@ const customElements = {
         x="8"
         y="8"
         width="184"
-        height="76"
+        height="84"
         fill="#DAE7EF"
         rx="2"
         ry="2"

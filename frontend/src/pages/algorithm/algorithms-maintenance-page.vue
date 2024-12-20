@@ -12,7 +12,8 @@
 
         <div
           v-if="algorithmsCategories.data.categories.length"
-          class="float-left q-mr-lg" style="width:auto;min-width:150px"
+          class="float-left q-mr-lg"
+          style="width:auto;min-width:150px"
         >
           <q-select
             v-model="algorithms.data.searchCategory"
@@ -21,6 +22,7 @@
             label="Categoría"
             clearable
             @update:model-value="updateSearch"
+            @clear="tryClearingSearch"
           />
         </div>
 
@@ -140,6 +142,10 @@ const tryClearingSearch = () => {
     || algorithms.data.searchUser
   ) {
     algorithms.search();
+  } else if (isMaster.value) {
+    algorithms.getAll(true);
+  } else if (isMaintainer.value) {
+    algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
   } else {
     algorithms.getAll();
   }

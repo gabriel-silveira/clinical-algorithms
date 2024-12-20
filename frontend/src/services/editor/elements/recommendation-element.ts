@@ -46,7 +46,7 @@ const defaults = {
     },
     intervention_type_image: {
       xlinkHref: '',
-      refX: 150,
+      refX: 170,
       refY: 68,
       height: 40,
     },
@@ -135,7 +135,7 @@ const defaults = {
     additional_comments_label: {
       style: 'font-weight: bold',
       refX: 15,
-      refY: 285,
+      refY: 260,
       text: 'Additional comments',
     },
     additional_comments_text: {
@@ -145,7 +145,7 @@ const defaults = {
     recommendation_source_label: {
       style: 'font-weight: bold',
       refX: 15,
-      refY: 285,
+      refY: 260,
       text: 'Recommendation source',
     },
     recommendation_source_text: {
@@ -155,10 +155,10 @@ const defaults = {
     links_label: {
       style: 'font-weight: bold',
       refX: 15,
-      refY: 285,
+      refY: 260,
       text: 'Links',
     },
-    links_links: {
+    links_text: {
       refX: 15,
       refY: 285,
     },
@@ -250,7 +250,7 @@ const markup = {
     selector: 'links_label',
   }, {
     tagName: 'text',
-    selector: 'links_links',
+    selector: 'links_text',
   }],
 };
 
