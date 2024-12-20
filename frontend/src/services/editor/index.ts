@@ -93,22 +93,14 @@ class Editor {
           gridSize: 0,
           drawGrid: false,
 
-          background: {
-            color: '#EAEAEA',
-          },
+          background: { color: '#EAEAEA' },
 
           linkPinning: false,
-          snapLinks: { radius: 10 },
+          snapLinks: { radius: 5 },
 
           interactive: () => !this.data.readOnly,
 
-          defaultLink: new joint.dia.Link({
-            attrs: {
-              '.marker-target': {
-                d: 'M 10 0 L 0 5 L 10 10 z',
-              },
-            },
-          }),
+          defaultLink: this.element.create.Link,
         };
 
         if (this.data.readOnly) {
@@ -136,11 +128,6 @@ class Editor {
         this.data.paper = new joint.dia.Paper(options);
 
         this.data.paper.on('blank:pointerup', (/* elementView */) => {
-          // if (this.metadata.pendency.has()) {
-          //   this.metadata.alertPendency();
-          // } else {
-          //   this.element.deselectAll();
-          // }
           this.element.deselectAll();
         });
 
@@ -151,10 +138,6 @@ class Editor {
             deselectAllTexts();
           }
         });
-
-        // this.data.paper.on('cell:pointerdown', (cellView, evt) => {
-        //   cellView.preventDefaultInteraction(evt);
-        // });
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -176,6 +159,18 @@ class Editor {
         // @ts-ignore
         this.data.graph.on('change:vertices', (/* cell: dia.Cell */) => {
           this.graph.notSaved();
+        });
+
+        this.data.paper.on('element:mouseover', (elementView) => {
+          this.element.showPorts(elementView.options.model.id);
+        });
+
+        this.data.paper.on('element:mouseout', (elementView) => {
+          this.element.hidePorts(elementView.options.model.id);
+        });
+
+        this.data.paper.on('element:mouseleave', (elementView) => {
+          this.element.hidePorts(elementView.options.model.id);
         });
 
         this.data.paper.on('element:pointerdown', (/* elementView: dia.ElementView */) => {
@@ -202,6 +197,8 @@ class Editor {
             this.element.updateRecommendationsTotals();
 
             this.element.data.wasMoving = false;
+
+            this.element.redrawAllConnections();
           }
         });
 
@@ -211,7 +208,11 @@ class Editor {
           deselectAllTexts();
         });
 
-        this.data.paper.on('link:connect', () => {
+        this.data.paper.on('link:connect', (linkView) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          this.element.hidePorts(linkView.model.attributes.source.id);
+
           this.element.deselectAll();
 
           this.graph.notSaved();
@@ -225,7 +226,7 @@ class Editor {
 
         this.data.paper.on('link:mouseover', (linkView) => {
           if (this.data.readOnly) {
-            Element.removeLinkToolButtons(linkView);
+            Element.removeLinkTools(linkView);
           }
         });
 

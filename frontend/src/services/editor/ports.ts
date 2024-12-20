@@ -36,6 +36,112 @@ class Ports {
     return Ports.generate(0, 40, ACTION_PORT);
   }
 
+  public static generateActionPorts() {
+    const portBody = {
+      magnet: true,
+      r: 6,
+      fill: 'transparent',
+      stroke: 'transparent',
+    };
+
+    return {
+      groups: {
+        top: {
+          position: {
+            name: 'top',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'left',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+        bottom: {
+          position: {
+            name: 'bottom',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'left',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+        in: {
+          position: {
+            name: 'left',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'left',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+        out: {
+          position: {
+            name: 'right',
+          },
+          attrs: {
+            portBody,
+          },
+          label: {
+            position: {
+              name: 'right',
+              args: { y: 6 },
+            },
+            markup: [{
+              tagName: 'text',
+              selector: 'label',
+              className: 'label-text',
+            }],
+          },
+          markup: [{
+            tagName: 'circle',
+            selector: 'portBody',
+          }],
+        },
+      },
+    };
+  }
+
   public static generateToEvaluation() {
     return Ports.generate(31, 38, EVALUATION_PORT);
   }

@@ -110,8 +110,6 @@ class Graph {
         if (graphJson) {
           this.editor.data.graph.fromJSON(graphJson);
 
-          const allElements = this.editor.data.graph.getElements();
-
           setTimeout(() => {
             const allElementsAgain = this.editor.data.graph.getElements();
 
@@ -121,6 +119,8 @@ class Graph {
 
           if (!this.editor.data.readOnly) {
             setTimeout(() => {
+              const allElements = this.editor.data.graph.getElements();
+
               this.editor.element.createElementsTools(allElements);
               this.editor.element.textarea.createEventHandlers();
             }, 200);
