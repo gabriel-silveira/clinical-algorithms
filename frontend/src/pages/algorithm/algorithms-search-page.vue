@@ -1,54 +1,64 @@
 <template>
   <q-page class="full-width bg-grey-1">
-    <div class="row q-mx-md q-py-sm">
-      <div class="col-3">
-        <search-input
-          v-if="data.mountSearchInput"
-          :value="data.initialKeyword"
-          label="Palabra clave para la búsqueda de algoritmos"
-          @clear="clearSearch"
-          @search="searchFlowchart"
-        />
+    <div style="padding-top:20px;width:80%;margin-left:10%">
+      <div>
+        <div class="q-mb-sm"><b style="font-size: 18px">¿Qué son los algoritmos clínicos?</b></div>
+
+        <div>
+          Los algoritmos clínicos son secuencias de pasos o reglas definidas que los profesionales
+          de la salud siguen para diagnosticar, tratar o gestionar una condición médica específica.
+        </div>
       </div>
-    </div>
 
-    <loading-spinner
-      v-if="data.searching"
-    />
-
-    <div
-      v-else-if="hasResults"
-      class="row q-mx-md"
-    >
-      <div class="col-12">
-        <div class="text-body1 text-grey-7 q-mb-md">Resultados de la búsqueda:</div>
-
-        <!-- RESULTS CARDS -->
-        <div
-          v-for="key of Object.keys(data.results)"
-          :key="`result-${key}`"
-        >
-          <algorithms-search-result
-            v-if="data.results"
-            :keyword="data.keyword"
-            :result="data.results[key]"
+      <div class="row q-py-sm">
+        <div class="col-3">
+          <search-input
+            v-if="data.mountSearchInput"
+            :value="data.initialKeyword"
+            label="Palabra clave para la búsqueda de algoritmos"
+            @clear="clearSearch"
+            @search="searchFlowchart"
           />
         </div>
       </div>
-    </div>
 
-    <div
-      v-else-if="data.results !== null"
-      class="q-px-md text-grey-7"
-    >
-      No se encontraron resultados en la búsqueda.
-    </div>
+      <loading-spinner
+        v-if="data.searching"
+      />
 
-    <div
-      v-if="!data.keyword && showTable"
-      class="q-px-md"
-    >
-      <algorithms-table />
+      <div
+        v-else-if="hasResults"
+        class="row"
+      >
+        <div class="col-12">
+          <div class="text-body1 text-grey-7 q-mb-md">Resultados de la búsqueda:</div>
+
+          <!-- RESULTS CARDS -->
+          <div
+            v-for="key of Object.keys(data.results)"
+            :key="`result-${key}`"
+          >
+            <algorithms-search-result
+              v-if="data.results"
+              :keyword="data.keyword"
+              :result="data.results[key]"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-else-if="data.results !== null"
+        class="text-grey-7"
+      >
+        No se encontraron resultados en la búsqueda.
+      </div>
+
+      <div
+        v-if="!data.keyword && showTable"
+      >
+        <algorithms-table />
+      </div>
     </div>
   </q-page>
 </template>
