@@ -27,6 +27,7 @@
       <loading-spinner
         v-if="data.searching"
         color="white"
+        class="q-mt-xl"
       />
 
       <div
