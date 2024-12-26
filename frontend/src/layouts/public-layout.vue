@@ -1,34 +1,24 @@
 <template>
   <q-layout view="hHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
-        <div class="row full-width">
-          <div class="col-7">
-            <div class="header-text">
-              Algoritmos Clínicos
-            </div>
-          </div>
-          <div class="col-5">
-            <q-img
-              :src="LogoHeader"
-              class="float-right"
-              fit="contain"
-              style="height:74px;width:400px"
-            />
-          </div>
+      <div class="row full-width">
+        <div class="col-7 flex items-center">
+          <q-img
+            :src="SitemapIcon"
+            fit="contain"
+            style="margin:10px;height:52px;width:52px"
+          /> <div class="header-text">Algoritmos Clínicos - Búsqueda de algoritmos</div>
         </div>
-      </q-toolbar>
+        <div class="col-5">
+          <q-img
+            :src="LogoHeader"
+            class="float-right"
+            fit="contain"
+            style="height:74px;width:400px"
+          />
+        </div>
+      </div>
     </q-header>
-
-    <q-drawer
-      v-if="showMenuButton"
-      v-model="settings.page.mainMenu"
-      show-if-above
-      bordered
-      class="bg-info"
-    >
-      <main-menu />
-    </q-drawer>
 
     <q-page-container>
       <router-view />
@@ -80,6 +70,7 @@ import {
 
 import { ACCOUNT_LOGIN } from 'src/router/routes/account';
 
+import SitemapIcon from 'src/assets/imgs/icons/sitemap.png';
 import LogoHeader from 'src/assets/imgs/logo_paho_header.png';
 
 const route = useRoute();
@@ -147,14 +138,8 @@ onMounted(async () => {
   border-bottom-right-radius: 8px
 
 .header-text
-  margin-left: 15px
-  margin-top: 33px
-  padding: 3px
-  width: 250px
-  background-color: white
-  border-radius: 10px
-  color: var(--q-primary)
-  font-size: 24px
-  font-weight: bold
+  display: inline-block
+  font-size: 22px
+  font-weight: 500
   text-align: center
 </style>
