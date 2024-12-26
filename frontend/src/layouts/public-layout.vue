@@ -21,7 +21,9 @@
     </q-header>
 
     <q-page-container>
-      <router-view />
+      <div class="page-container-background">
+        <router-view />
+      </div>
     </q-page-container>
 
     <q-footer>
@@ -134,6 +136,12 @@ onMounted(async () => {
 </script>
 
 <style lang="sass">
+.page-container-background
+  background-color: #1ABC9C !important
+  background-image: url('/imgs/backgrounds/page-background.jpg') !important
+  background-size: 100%
+  background-position: center bottom
+
 .app-version
   z-index: 1000
   bottom: 16px

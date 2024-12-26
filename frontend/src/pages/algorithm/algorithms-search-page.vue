@@ -1,8 +1,10 @@
 <template>
-  <q-page class="full-width bg-grey-1">
+  <q-page class="full-width text-white">
     <div style="padding-top:20px;width:80%;margin-left:10%">
       <div>
-        <div class="q-mb-sm"><b style="font-size: 18px">¿Qué son los algoritmos clínicos?</b></div>
+        <div style="margin-bottom:3px">
+          <b style="font-size: 21px">¿Qué son los algoritmos clínicos?</b>
+        </div>
 
         <div>
           Los algoritmos clínicos son secuencias de pasos o reglas definidas que los profesionales
@@ -10,8 +12,8 @@
         </div>
       </div>
 
-      <div class="row q-py-sm">
-        <div class="col-3">
+      <div class="row">
+        <div class="col-12 q-pt-md">
           <search-input
             v-if="data.mountSearchInput"
             :value="data.initialKeyword"
