@@ -10,9 +10,8 @@
     :hide-bottom="!(algorithms.flowchartsList && !algorithms.flowchartsList.length)"
   >
     <template v-slot:loading>
-      <q-inner-loading
-        color="primary"
-        showing
+      <loading-spinner
+        color="white"
       />
     </template>
 
@@ -22,6 +21,7 @@
 
     <template v-slot:body="rows">
       <q-tr
+        v-if="!algorithms.data.loading"
         :props="rows"
         class="cursor-pointer"
         @click="editAlgorithm(rows.row, publicView ? 'public' : 'edit', publicViewInAdmin)"
@@ -89,6 +89,7 @@ import Users from 'src/services/users';
 import { ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR, ALGORITHMS_SEARCH } from 'src/router/routes/algorithms';
 import { formatDatetime } from 'src/services/date';
 import Editor from 'src/services/editor';
+import LoadingSpinner from "components/spinners/loading-spinner.vue";
 
 const props = defineProps({
   isMaintainer: {
