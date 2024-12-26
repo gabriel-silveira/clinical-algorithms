@@ -225,6 +225,9 @@ onBeforeMount(() => {
 .custom-table .q-tr
   background-color: white
 
+.custom-table .q-tr .q-td
+  border: none
+
 .custom-table .q-tr .q-td:first-of-type
   -webkit-border-top-left-radius: 10px
   -webkit-border-bottom-left-radius: 10px
