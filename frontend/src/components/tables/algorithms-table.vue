@@ -219,6 +219,8 @@ onBeforeMount(() => {
 
 .custom-table thead tr th
   font-size: 13px !important
+  border: none
+  padding-bottom: 0
 
 .custom-table .q-tr
   background-color: white
