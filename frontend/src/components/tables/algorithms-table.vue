@@ -3,9 +3,9 @@
     :rows="algorithms.flowchartsList"
     :columns="columns"
     :loading="algorithms.data.loading"
-    title="Algoritmos"
     :rows-per-page-options="[0]"
     row-key="name"
+    class="custom-table"
     flat
     :hide-bottom="!(algorithms.flowchartsList && !algorithms.flowchartsList.length)"
   >
@@ -122,18 +122,18 @@ const columns = [
     align: 'left',
     label: 'Título',
     field: 'title',
-    style: 'width:40%',
+    // style: 'width:40%',
   },
   {
     name: 'user_id',
     align: 'left',
     label: 'Autor',
     field: 'user_id',
-    style: 'width:10%',
+    // style: 'width:10%',
   },
   {
     name: 'updated_at',
-    align: 'center',
+    align: 'right',
     label: 'Última actualización.',
     field: 'updated_at',
     style: 'width:10%',
@@ -146,7 +146,9 @@ const columns = [
   },
 ];
 
-if (props.isMaster || props.isMaintainer) {
+if (publicView.value) {
+  columns.splice(3, 1);
+} else if (props.isMaster || props.isMaintainer) {
   columns.splice(1, 0, {
     name: 'status',
     align: 'left',
@@ -207,3 +209,37 @@ onBeforeMount(() => {
   }
 });
 </script>
+
+<style lang="sass">
+.custom-table
+  background-color: transparent
+
+.custom-table thead
+  color: white
+
+.custom-table thead tr th
+  font-size: 13px !important
+
+.custom-table .q-tr
+  background-color: white
+
+.custom-table .q-tr .q-td:first-of-type
+  -webkit-border-top-left-radius: 10px
+  -webkit-border-bottom-left-radius: 10px
+  -moz-border-radius-topleft: 10px
+  -moz-border-radius-bottomleft: 10px
+  border-top-left-radius: 10px
+  border-bottom-left-radius: 10px
+
+.custom-table .q-tr .q-td:last-of-type
+  -webkit-border-top-right-radius: 10px
+  -webkit-border-bottom-right-radius: 10px
+  -moz-border-radius-topright: 10px
+  -moz-border-radius-bottomright: 10px
+  border-top-right-radius: 10px
+  border-bottom-right-radius: 10px
+
+.custom-table table
+  border-collapse: separate !important
+  border-spacing: 0 10px !important
+</style>

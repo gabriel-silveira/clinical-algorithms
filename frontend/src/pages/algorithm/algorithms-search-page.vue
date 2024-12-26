@@ -26,6 +26,7 @@
 
       <loading-spinner
         v-if="data.searching"
+        color="white"
       />
 
       <div
