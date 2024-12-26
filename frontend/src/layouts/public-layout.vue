@@ -9,7 +9,12 @@
             </div>
           </div>
           <div class="col-5">
-            <q-img :src="LogoHeader" />
+            <q-img
+              :src="LogoHeader"
+              class="float-right"
+              fit="contain"
+              style="height:74px;width:400px"
+            />
           </div>
         </div>
       </q-toolbar>
@@ -143,8 +148,8 @@ onMounted(async () => {
 
 .header-text
   margin-left: 15px
-  margin-top: 26px
-  padding: 10px
+  margin-top: 33px
+  padding: 3px
   width: 250px
   background-color: white
   border-radius: 10px
