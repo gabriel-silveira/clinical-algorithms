@@ -21,25 +21,6 @@
         </div>
       </div>
     </div>
-
-    <div
-      class="absolute-bottom-left bg-primary full-width"
-      style="height:54px"
-    >
-      <div
-        class="absolute-top-right text-white text-bold text-right q-pr-md"
-        style="font-size:14px;line-height:110%;right:310px;top:10px;border-right:2px solid white"
-      >
-        <div class="float-left">Powered<br/>by</div>
-      </div>
-
-      <q-img
-        :src="LogoBiremeWhite"
-        class="absolute-top-right auto"
-        style="top:11px;right:177px"
-        width="117px"
-      />
-    </div>
   </q-page>
 </template>
 
@@ -47,7 +28,6 @@
 import { inject, onBeforeMount } from 'vue';
 import Settings from 'src/services/settings';
 import Logo from 'assets/imgs/logo_large.png';
-import LogoBiremeWhite from 'assets/imgs/logo-bireme-white.png';
 
 const settings = inject('settings') as Settings;
 
