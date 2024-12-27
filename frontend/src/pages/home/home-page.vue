@@ -51,11 +51,3 @@ onBeforeMount(() => {
   settings.page.setTitle('Inicio');
 });
 </script>
-
-<style lang="sass">
-.admin-page-content-background
-  background-color: #1ABC9C !important
-  background-image: url('/imgs/backgrounds/page-background.jpg') !important
-  background-size: 100%
-  background-position: center bottom
-</style>
