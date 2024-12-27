@@ -42,8 +42,7 @@
 <script setup lang="ts">
 import { inject, onBeforeMount } from 'vue';
 import Settings from 'src/services/settings';
-import Logo from 'assets/imgs/logo_large.png';
-import LogoHeader from "assets/imgs/logo_paho_header.png";
+import LogoHeader from 'assets/imgs/logo_paho_header.png';
 
 const settings = inject('settings') as Settings;
 
