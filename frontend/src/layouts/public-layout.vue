@@ -98,12 +98,6 @@ onMounted(async () => {
 </script>
 
 <style lang="sass">
-.page-container-background
-  background-color: #1ABC9C !important
-  background-image: url('/imgs/backgrounds/page-background.jpg') !important
-  background-size: 100%
-  background-position: center bottom
-
 .header-text
   display: inline-block
   font-size: 22px
