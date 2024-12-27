@@ -24,7 +24,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '',
-    component: () => import('layouts/main-layout.vue'),
+    component: () => import('layouts/admin-layout.vue'),
     children: [
       ...Home,
       ...Users,
