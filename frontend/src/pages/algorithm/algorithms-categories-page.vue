@@ -1,10 +1,10 @@
 <template>
-  <q-page class="bg-grey-1" padding>
+  <q-page class="page-container-background" padding>
     <div class="row q-mb-md">
       <div class="col-12 text-right">
         <q-btn
           label="Registrar categoría"
-          color="primary"
+          color="secondary"
           push
           @click="startCreatingCategory"
         />

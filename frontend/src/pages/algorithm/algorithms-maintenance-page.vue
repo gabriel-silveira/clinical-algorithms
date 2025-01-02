@@ -1,7 +1,7 @@
 <template>
-  <q-page class="bg-grey-1">
+  <q-page class="page-container-background">
     <div class="row q-mx-md q-py-sm">
-      <div class="col-9">
+      <div class="col-9 q-pa-md">
         <div class="float-left q-mr-lg" style="width:370px">
           <search-input
             label="Palabra clave para la búsqueda de algoritmos"
@@ -12,7 +12,7 @@
 
         <div
           v-if="algorithmsCategories.data.categories.length"
-          class="float-left q-mr-lg"
+          class="float-left q-mr-lg bg-white q-pl-sm"
           style="width:auto;min-width:150px"
         >
           <q-select
@@ -20,7 +20,9 @@
             :options="algorithmsCategories.data.categories"
             :option-label="opt => Object(opt) === opt && 'name' in opt ? opt.name : '- Null -'"
             label="Categoría"
+            color="white"
             clearable
+            dense
             @update:model-value="updateSearch"
             @clear="tryClearingSearch"
           />
@@ -28,14 +30,16 @@
 
         <div
           v-if="isMaster && users.data.users.length"
-          class="float-left q-mr-lg" style="width:auto;min-width:150px"
+          class="float-left bg-white q-pl-sm q-mr-lg" style="width:auto;min-width:150px"
         >
           <q-select
             v-model="algorithms.data.searchUser"
             :options="users.data.users"
             :option-label="opt => Object(opt) === opt && 'name' in opt ? opt.name : '- Null -'"
             label="Autor"
+            color="white"
             clearable
+            dense
             @update:model-value="updateSearch"
           />
         </div>
@@ -45,7 +49,7 @@
         <q-btn
           v-if="isMaintainer"
           label="Registrar algoritmo"
-          color="primary"
+          color="secondary"
           push
           @click="createAlgorithm"
         />
@@ -56,14 +60,10 @@
       v-if="showTable"
       class="q-px-md"
     >
-      <q-card class="shadow-light">
-        <q-card-section>
-          <algorithms-table
-            :is-maintainer="isMaintainer"
-            :is-master="isMaster"
-          />
-        </q-card-section>
-      </q-card>
+      <algorithms-table
+        :is-maintainer="isMaintainer"
+        :is-master="isMaster"
+      />
     </div>
 
     <edit-algorithm-modal
@@ -172,3 +172,8 @@ onBeforeRouteLeave((leaveGuard) => {
   }
 });
 </script>
+
+<style lang="sass">
+.q-field__label
+  color: black
+</style>

@@ -55,7 +55,9 @@
       <router-view />
     </q-page-container>
 
-    <layout-footer />
+    <layout-footer
+      v-if="!onEditor"
+    />
 
     <simple-modal
       :show="showLogoutDialog"
@@ -110,6 +112,8 @@ const isMaster = ref(false);
 const showLogoutDialog = ref(false);
 
 const userName = computed(() => LocalStorage.getItem('user_name'));
+
+const onEditor = computed(() => [ALGORITHMS_EDITOR].includes(route.name));
 
 const toggleLeftDrawer = () => {
   settings.page.mainMenu = !settings.page.mainMenu;
