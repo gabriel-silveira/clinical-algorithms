@@ -1699,15 +1699,17 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   }
 
   public showPorts(elementId: dia.Cell.ID) {
-    const element = this.getById(elementId);
+    if (!this.editor.data.readOnly) {
+      const element = this.getById(elementId);
 
-    if (element) {
-      const color = element.prop('type') === CustomElement.ACTION ? '#0069Cf' : COLOR_ACCENT;
+      if (element) {
+        const color = element.prop('type') === CustomElement.ACTION ? '#0069Cf' : COLOR_ACCENT;
 
-      element.prop('ports/groups/top/attrs/portBody/fill', color);
-      element.prop('ports/groups/bottom/attrs/portBody/fill', color);
-      element.prop('ports/groups/in/attrs/portBody/fill', color);
-      element.prop('ports/groups/out/attrs/portBody/fill', color);
+        element.prop('ports/groups/top/attrs/portBody/fill', color);
+        element.prop('ports/groups/bottom/attrs/portBody/fill', color);
+        element.prop('ports/groups/in/attrs/portBody/fill', color);
+        element.prop('ports/groups/out/attrs/portBody/fill', color);
+      }
     }
   }
 
