@@ -2,6 +2,9 @@ import { dia } from 'jointjs';
 import { reactive } from 'vue';
 
 import Editor from 'src/services/editor/index';
+
+import { orderRecommendations } from 'src/services/recommendations';
+
 import { IFixedMetadata, IFixedMetadataLink } from 'src/services/editor/constants/metadata';
 
 import { CustomElement } from 'src/services/editor/elements/custom-elements';
@@ -398,15 +401,17 @@ class Metadata {
     if (element) {
       const metadata = this.getFromElement(element);
 
-      if (
-        metadata
-        && metadata.fixed
-        && metadata.fixed[recommendationIndex - 1]
-      ) {
-        this.data.recommendationToShow = {
-          data: { ...metadata.fixed[recommendationIndex - 1] },
-          originalElementId: elementId,
-        };
+      if (metadata && metadata.fixed) {
+        const { fixed: recommendations } = metadata;
+
+        const orderedRecommendations = orderRecommendations(recommendations);
+
+        if (recommendationIndex !== 0) {
+          this.data.recommendationToShow = {
+            data: { ...orderedRecommendations[recommendationIndex - 1] },
+            originalElementId: elementId,
+          };
+        }
       }
     }
   }
