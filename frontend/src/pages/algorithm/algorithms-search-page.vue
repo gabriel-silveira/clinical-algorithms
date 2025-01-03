@@ -1,7 +1,16 @@
 <template>
-  <q-page class="full-width text-white">
-    <div style="padding-top:20px;width:80%;margin-left:10%">
-      <div>
+  <q-page class="page-container-background full-width text-white">
+    <div
+      style="margin-left:10%"
+      :style="{
+        width: Settings.isPublicView(route.name) ? '80%' : '100%',
+        marginLeft: Settings.isPublicView(route.name) ? '10%' : '0',
+        padding: Settings.isPublicView(route.name) ? '20px 0 0 0' : '10px 20px',
+      }"
+    >
+      <div
+        v-if="Settings.isPublicView(route.name)"
+      >
         <div style="margin-bottom:3px">
           <b style="font-size: 21px">¿Qué son los algoritmos clínicos?</b>
         </div>
@@ -160,7 +169,7 @@ onBeforeMount(async () => {
   if (Settings.isPublicView(route.name)) {
     settings.page.setTitle('Búsqueda de algoritmos');
   } else {
-    settings.page.setTitle('Publicación de algoritmos (visualización para usuarios finales)');
+    settings.page.setTitle('Búsqueda (visualización para usuarios finales)');
   }
 
   data.mountSearchInput = true;
