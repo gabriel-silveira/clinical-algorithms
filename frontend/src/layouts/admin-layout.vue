@@ -55,8 +55,11 @@
       <router-view />
     </q-page-container>
 
+    <editor-layout-footer
+      v-if="onEditor"
+    />
     <layout-footer
-      v-if="!onEditor"
+      v-else-if="!onEditor"
     />
 
     <simple-modal
@@ -91,6 +94,7 @@ import Settings from 'src/services/settings';
 import MainMenu from 'components/menus/main-menu.vue';
 import SimpleModal from 'components/modals/simple-modal.vue';
 import LayoutFooter from 'components/footers/layout-footer.vue';
+import EditorLayoutFooter from 'components/footers/editor-layout-footer.vue';
 
 import {
   ALGORITHMS_EDITOR,
@@ -113,7 +117,7 @@ const showLogoutDialog = ref(false);
 
 const userName = computed(() => LocalStorage.getItem('user_name'));
 
-const onEditor = computed(() => [ALGORITHMS_EDITOR].includes(route.name));
+const onEditor = computed(() => [ALGORITHMS_EDITOR, ALGORITHMS_PUBLIC_EDITOR].includes(route.name));
 
 const toggleLeftDrawer = () => {
   settings.page.mainMenu = !settings.page.mainMenu;

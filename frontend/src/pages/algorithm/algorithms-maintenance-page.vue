@@ -1,5 +1,5 @@
 <template>
-  <q-page class="page-container-background">
+  <q-page class="page-container-background q-pb-xl">
     <div class="row q-mx-md q-py-sm">
       <div class="col-9 q-pa-md">
         <div class="float-left q-mr-lg" style="width:370px">

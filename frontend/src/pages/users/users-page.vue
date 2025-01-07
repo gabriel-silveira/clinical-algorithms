@@ -1,5 +1,5 @@
 <template>
-  <q-page class="page-container-background">
+  <q-page class="page-container-background q-pb-xl">
     <div class="row q-mx-md q-py-sm">
       <div class="col-4 q-py-md">
         <search-input

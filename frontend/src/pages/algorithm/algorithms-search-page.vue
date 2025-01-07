@@ -1,5 +1,5 @@
 <template>
-  <q-page class="page-container-background full-width text-white">
+  <q-page class="page-container-background q-pb-xl">
     <div
       style="margin-left:10%"
       :style="{
