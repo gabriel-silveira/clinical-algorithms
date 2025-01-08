@@ -13,7 +13,7 @@
           />
         </div>
 
-        <div class="float-left q-mr-lg">
+        <div class="float-left q-mr-lg" style="width:250px">
           <categories-select
             custom-select-id="categories-select"
             custom-select-label="Categoría"

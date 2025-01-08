@@ -41,35 +41,59 @@ onMounted(() => {
   display: none /*hide original SELECT element: */
 
 .select-selected
-  background-color: DodgerBlue
+  background-color: white
+  border-radius: 4px
+
+.select-selected.select-arrow-active
+  -webkit-border-radius: 4px
+  -webkit-border-bottom-right-radius: 0
+  -webkit-border-bottom-left-radius: 0
+  -moz-border-radius: 4px
+  -moz-border-radius-bottomright: 0
+  -moz-border-radius-bottomleft: 0
+  border-radius: 4px
+  border-bottom-right-radius: 0
+  border-bottom-left-radius: 0
 
 /* Style the arrow inside the select element: */
 .select-selected:after
   position: absolute
   content: ""
-  top: 14px
-  right: 10px
+  top: 17px
+  right: 14px
   width: 0
   height: 0
+  border: 6px solid transparent
+  border-color: black transparent transparent transparent
 
 /* Point the arrow upwards when the select box is open (active): */
 .select-selected.select-arrow-active:after
-  border-color: transparent transparent #fff transparent
-  top: 7px
+  border-color: transparent transparent black transparent
+  top: 11px
 
 /* style the items (options), including the selected item: */
 .select-items div,.select-selected
-  color: #ffffff
-  padding: 8px 16px
+  color: black
+  padding: 10px 16px
   cursor: pointer
 
 /* Style items (options): */
 .select-items
   position: absolute
-  background-color: DodgerBlue
+  background-color: white
   left: 0
   right: 0
   z-index: 99
+  -webkit-border-radius: 0
+  -webkit-border-bottom-right-radius: 4px
+  -webkit-border-bottom-left-radius: 4px
+  -moz-border-radius: 0
+  -moz-border-radius-bottomright: 4px
+  -moz-border-radius-bottomleft: 4px
+  border-radius: 0
+  border-bottom-right-radius: 4px
+  border-bottom-left-radius: 4px
+  transition: all 1s ease-in-out
 
 /* Hide the items when the select box is closed: */
 .select-hide
