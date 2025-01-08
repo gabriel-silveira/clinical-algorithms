@@ -1,111 +1,63 @@
-function updateSelectBoxAndSelectedItem(element: Element) {
-  /* When an item is clicked, update the original select box, and the selected item: */
-  let y;
-  let index;
-  let k;
-  let yl;
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const s = element.parentNode.parentNode.getElementsByTagName('select')[0];
-  const sl = s.length;
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const h = element.parentNode.previousSibling;
-
-  if (h) {
-    for (index = 0; index < sl; index += 1) {
-      if (s.options[index].innerHTML === element.innerHTML) {
-        s.selectedIndex = index;
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        h.innerHTML = element.innerHTML;
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        y = element.parentNode.getElementsByClassName('same-as-selected');
-        yl = y.length;
-
-        for (k = 0; k < yl; k += 1) {
-          y[k].removeAttribute('class');
-        }
-
-        element.setAttribute('class', 'same-as-selected');
-        break;
-      }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    h.click();
-  }
+interface ISelectedValue {
+  id: number,
+  value: string,
 }
 
-/*
-function closeAllSelect(element: Element) {
-  // A function that will close all select boxes in the document,
-  // except the current select box:
-  let i;
-  const arrNo = [];
+export class CustomSelect {
+  private readonly customSelectId: string;
 
-  const selectItems = document.getElementsByClassName('select-items');
-  const xl = selectItems.length;
+  private readonly clearButtonClassName: string;
 
-  const selectSelected = document.getElementsByClassName('select-selected');
-  const yl = selectSelected.length;
+  private readonly label: string;
 
-  for (i = 0; i < yl; i += 1) {
-    if (element === selectSelected[i]) {
-      arrNo.push(i);
-    } else {
-      selectSelected[i].classList.remove('select-arrow-active');
-    }
+  private readonly customSelectWrapper: HTMLElement | null;
+
+  public selectedItem: ISelectedValue | null = null;
+
+  constructor(customSelectId: string, label: string) {
+    this.customSelectId = customSelectId;
+    this.label = label;
+    this.clearButtonClassName = `${this.customSelectId}-clear`;
+
+    this.customSelectWrapper = document.getElementById(this.customSelectId);
   }
 
-  for (i = 0; i < xl; i += 1) {
-    if (arrNo.indexOf(i)) {
-      selectItems[i].classList.add('select-hide');
-    }
+  private reset() {
+    this.selectedItem = null;
   }
-}
 
-function closeOtherSelects(e: PointerEvent) {
-  // When the select box is clicked, close any other select boxes,
-  // and open/close the current select box:
-  e.stopPropagation();
+  static createClearButton(clearButtonClassName: string) {
+    const clearButton = document.createElement('i');
+    clearButton.setAttribute('class', 'q-icon notranslate material-icons q-field__focusable-action');
+    clearButton.setAttribute('style', 'font-size:24px;color:grey');
+    clearButton.innerHTML = 'cancel';
 
-  // closeAllSelect(this);
+    const clearButtonWrapper = document.createElement('div');
+    clearButtonWrapper.classList.add(clearButtonClassName);
+    clearButtonWrapper.setAttribute(
+      'style',
+      'z-index:99999;position:absolute;top:0;right:8px;font-size:24px;background-color:white',
+    );
 
-  this.nextSibling.classList.toggle('select-hide');
-  this.classList.toggle('select-arrow-active');
-}
-*/
+    clearButtonWrapper.appendChild(clearButton);
 
-/* If the user clicks anywhere outside the select box, then close all select boxes: */
-// document.addEventListener('click', closeAllSelect);
+    return clearButtonWrapper;
+  }
 
-let selectedItem: object | null = null;
-
-export const CustomSelect = {
-  get selectedItem() {
-    return selectedItem;
-  },
-  init(customSelectId: string, label: string) {
-    const customSelect = document.getElementById(customSelectId);
-
-    if (customSelect) {
-      const selectElement = customSelect.getElementsByTagName('select')[0];
+  public init() {
+    if (this.customSelectWrapper) {
+      const selectElement = this.customSelectWrapper.getElementsByTagName('select')[0];
 
       const totalOptions = selectElement.length;
 
-      /* For each element, create a new DIV that will act as the selected item: */
-      const a = document.createElement('div');
-      a.setAttribute('class', 'select-selected');
-      a.innerHTML = selectElement.options[selectElement.selectedIndex]?.innerHTML || label;
+      const selectedItemElement = document.createElement('div');
 
-      customSelect.appendChild(a);
+      /* For each element, create a new DIV that will act as the selected item: */
+      selectedItemElement.setAttribute('class', 'select-selected');
+      // eslint-disable-next-line max-len
+      selectedItemElement.innerHTML = selectElement.options[selectElement.selectedIndex]?.innerHTML || this.label;
+
+      this.customSelectWrapper.appendChild(selectedItemElement);
 
       /* For each element, create a new DIV that will contain the option list: */
       const b = document.createElement('div');
@@ -121,12 +73,20 @@ export const CustomSelect = {
         // eslint-disable-next-line no-loop-func
         c.addEventListener('click', () => {
           // selected item on a private variable
-          selectedItem = {
-            id: c.getAttribute('data-value'),
+          this.selectedItem = {
+            id: Number(c.getAttribute('data-value')),
             value: c.innerHTML,
           };
 
-          a.innerHTML = c.innerHTML;
+          selectedItemElement.innerHTML = c.innerHTML;
+
+          const clearButtonWrapper = CustomSelect.createClearButton(this.clearButtonClassName);
+          selectedItemElement.appendChild(clearButtonWrapper);
+          clearButtonWrapper.addEventListener('click', (e: MouseEvent) => {
+            e.stopPropagation();
+
+            this.reset();
+          });
 
           this.onSelectCallback();
         });
@@ -134,27 +94,29 @@ export const CustomSelect = {
         b.appendChild(c);
       }
 
-      customSelect.appendChild(b);
+      this.customSelectWrapper.appendChild(b);
 
-      a.addEventListener('click', (e: MouseEvent) => {
+      selectedItemElement.addEventListener('click', (e: MouseEvent) => {
         // When the select box is clicked, close any other select boxes,
         // and open/close the current select box:
         e.stopPropagation();
 
         b.classList.toggle('select-hide');
 
-        a.classList.toggle('select-arrow-active');
+        selectedItemElement.classList.toggle('select-arrow-active');
       });
 
       document.addEventListener('click', () => {
         b.classList.add('select-hide');
 
-        a.classList.remove('select-arrow-active');
+        selectedItemElement.classList.remove('select-arrow-active');
       });
     }
-  },
-  onSelectCallback: () => ({}),
-  onSelect(callback: () => object) {
+  }
+
+  onSelectCallback: () => void = () => this;
+
+  onSelect(callback: () => void) {
     this.onSelectCallback = callback;
-  },
-};
+  }
+}

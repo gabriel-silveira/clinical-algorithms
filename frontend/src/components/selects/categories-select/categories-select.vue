@@ -40,14 +40,12 @@ const selectedItem = ref(null);
 
 const emit = defineEmits(['selected-item']);
 
-const emitSelectedItem = () => {
-  console.log('selected-item', CustomSelect.selectedItem);
-  emit('selected-item', CustomSelect.selectedItem);
-};
-
 onMounted(() => {
-  CustomSelect.init(props.customSelectId, props.customSelectLabel);
-  CustomSelect.onSelect(emitSelectedItem);
+  const customSelect = new CustomSelect(props.customSelectId, props.customSelectLabel);
+
+  customSelect.init();
+
+  customSelect.onSelect(() => emit('selected-item', customSelect.selectedItem));
 });
 </script>
 
@@ -55,6 +53,20 @@ onMounted(() => {
 /* The container must be positioned relative: */
 .custom-select
   position: relative
+
+  .clear-button
+    position: absolute
+    top: 9px
+    right: 10px
+    width: 22px
+    height: 22px
+    border-radius: 20px
+    border: 1px solid #000
+    background-color: white
+    z-index: 10
+    display: flex
+    justify-content: center
+    align-items: center
 
 .custom-select select
   display: none /*hide original SELECT element: */
