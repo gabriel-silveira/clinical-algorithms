@@ -10,6 +10,7 @@
     >
       <div
         v-if="Settings.isPublicView(route.name)"
+        class="text-white"
       >
         <div style="margin-bottom:3px">
           <b style="font-size: 21px">¿Qué son los algoritmos clínicos?</b>
