@@ -1,6 +1,6 @@
 <template>
   <q-table
-    :rows="algorithms.flowchartsList"
+    :rows="algorithms.data.searchResults"
     :columns="columns"
     :loading="algorithms.data.loading"
     :rows-per-page-options="[0]"
@@ -16,7 +16,7 @@
     </template>
 
     <template v-slot:no-data>
-      <b>No se encontraron algoritmos.</b>
+      <b class="text-white text-body2">No se encontraron algoritmos.</b>
     </template>
 
     <template v-slot:body="rows">

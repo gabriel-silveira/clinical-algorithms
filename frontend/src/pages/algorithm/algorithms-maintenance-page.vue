@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-container-background q-pb-xl">
     <div class="row q-mx-md q-py-sm">
-      <div class="col-9 q-pa-md">
+      <div class="col-9 q-py-md">
         <div
           class="float-left q-mr-lg"
           style="width:370px"
@@ -9,7 +9,7 @@
           <search-input
             label="Palabra clave para la búsqueda de algoritmos"
             @search="searchAlgorithm"
-            @clear="tryClearingSearch"
+            @clear="clearKeyword"
           />
         </div>
 
@@ -36,42 +36,6 @@
             @update="setUser"
           />
         </div>
-
-        <!--<div
-          v-if="algorithmsCategories.data.categories.length"
-          class="float-left q-mr-lg bg-white q-pl-sm"
-          style="width:auto;min-width:150px"
-        >
-          <categories-select />
-
-          <q-select
-            v-model="algorithms.data.searchCategory"
-            :options="algorithmsCategories.data.categories"
-            :option-label="opt => Object(opt) === opt && 'name' in opt ? opt.name : '- Null -'"
-            label="Categoría"
-            color="white"
-            clearable
-            dense
-            @update:model-value="updateSearch"
-            @clear="tryClearingSearch"
-          />
-        </div>
-
-        <div
-          v-if="isMaster && users.data.users.length"
-          class="float-left bg-white q-pl-sm q-mr-lg" style="width:auto;min-width:150px"
-        >
-          <q-select
-            v-model="algorithms.data.searchUser"
-            :options="users.data.users"
-            :option-label="opt => Object(opt) === opt && 'name' in opt ? opt.name : '- Null -'"
-            label="Autor"
-            color="white"
-            clearable
-            dense
-            @update:model-value="updateSearch"
-          />
-        </div>-->
       </div>
 
       <div class="col-3 q-pt-lg q-pr-md text-right">
@@ -111,17 +75,19 @@ import {
 
 import { onBeforeRouteLeave } from 'vue-router';
 
+import { LocalStorage } from 'quasar';
+
 import { ALGORITHMS_EDITOR } from 'src/router/routes/algorithms';
 
-import Settings from 'src/services/settings';
 import SearchInput from 'components/inputs/search-input.vue';
 import AlgorithmsTable from 'components/tables/algorithms-table.vue';
-import Algorithms from 'src/services/algorithms';
 import EditAlgorithmModal from 'components/modals/algorithms/edit-algorithm-modal.vue';
+import CategoriesSelect from 'components/selects/categories-select/categories-select.vue';
+
+import Settings from 'src/services/settings';
+import Algorithms from 'src/services/algorithms';
 import AlgorithmsCategories from 'src/services/algorithms-categories';
 import Users from 'src/services/users';
-import { LocalStorage } from 'quasar';
-import CategoriesSelect from 'components/selects/categories-select/categories-select.vue';
 
 const users = new Users();
 provide('users', users);
@@ -164,21 +130,30 @@ const updateSearch = () => {
 
 const createAlgorithm = () => algorithms.startCreating();
 
-const tryClearingSearch = () => {
-  algorithms.clearSearch();
+const tryClearingSearch = async () => {
+  // algorithms.clearSearch();
+  algorithms.data.algorithms = [];
+  algorithms.data.searchResults = [];
 
   if (
     algorithms.data.searchCategory
     || algorithms.data.searchUser
+    || algorithms.data.searchKeyword
   ) {
-    algorithms.search();
+    await algorithms.search();
   } else if (isMaster.value) {
-    algorithms.getAll(true);
+    await algorithms.getAll(true);
   } else if (isMaintainer.value) {
-    algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
+    await algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
   } else {
-    algorithms.getAll();
+    await algorithms.getAll();
   }
+};
+
+const clearKeyword = () => {
+  algorithms.data.searchKeyword = '';
+
+  tryClearingSearch();
 };
 
 const setCategory = (selectedCategory: { id: number, name: string }) => {
