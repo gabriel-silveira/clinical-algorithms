@@ -14,7 +14,7 @@
           />
 
           <div
-            class="text-body1 text-bold"
+            class="text-body1 text-bold text-primary"
             style="text-transform: uppercase"
           >
             {{ props.hideIndex ? '' : `${fixedMetadata.index}. ` }}{{
@@ -84,7 +84,7 @@
           v-if="fixedMetadata.description"
           class="q-pt-md"
         >
-          <div><b>Original transcription</b></div>
+          <div class="text-primary"><b>Original transcription</b></div>
 
           <div>{{ fixedMetadata.description }}</div>
         </div>
@@ -119,7 +119,7 @@
             v-if="fixedMetadata.implementation_considerations"
             class="q-pb-lg"
           >
-            <div class="q-pb-sm"><b>Implementation considerations</b></div>
+            <div class="q-pb-sm text-primary"><b>Implementation considerations</b></div>
 
             <div>{{ fixedMetadata.implementation_considerations }}</div>
           </div>
@@ -128,7 +128,7 @@
             v-if="fixedMetadata.additional_comments"
             class="q-pb-lg"
           >
-            <div class="q-pb-sm"><b>Additional comments</b></div>
+            <div class="q-pb-sm text-primary"><b>Additional comments</b></div>
 
             <div>{{ fixedMetadata.additional_comments }}</div>
           </div>
@@ -137,7 +137,7 @@
             v-if="fixedMetadata.recommendation_source"
             class="q-pb-lg"
           >
-            <div class="q-pb-sm"><b>Recommendation source</b></div>
+            <div class="q-pb-sm text-primary"><b>Recommendation source</b></div>
 
             <div>{{ fixedMetadata.recommendation_source }}</div>
           </div>
@@ -152,7 +152,7 @@
         v-if="fixedMetadata.links.length"
         class="q-pa-lg"
       >
-        <div class="q-pb-sm"><b>Links</b></div>
+        <div class="q-pb-sm text-primary"><b>Links</b></div>
 
         <q-card
           v-for="link of fixedMetadata.links"
