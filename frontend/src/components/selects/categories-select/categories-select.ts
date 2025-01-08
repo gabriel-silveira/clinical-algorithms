@@ -86,7 +86,12 @@ function closeOtherSelects(e: PointerEvent) {
 /* If the user clicks anywhere outside the select box, then close all select boxes: */
 // document.addEventListener('click', closeAllSelect);
 
+let selectedItem: object | null = null;
+
 export const CustomSelect = {
+  get selectedItem() {
+    return selectedItem;
+  },
   init(customSelectId: string, label: string) {
     const customSelect = document.getElementById(customSelectId);
 
@@ -106,12 +111,25 @@ export const CustomSelect = {
       const b = document.createElement('div');
       b.setAttribute('class', 'select-items select-hide');
 
-      for (let j = 1; j < totalOptions; j += 1) {
+      for (let j = 0; j < totalOptions; j += 1) {
         // For each option in the original select element,
         // create a new DIV that will act as an option item:
         const c = document.createElement('DIV');
         c.innerHTML = selectElement.options[j].innerHTML;
-        c.addEventListener('click', () => updateSelectBoxAndSelectedItem(customSelect));
+        c.setAttribute('data-value', selectElement.options[j].value);
+
+        // eslint-disable-next-line no-loop-func
+        c.addEventListener('click', () => {
+          // selected item on a private variable
+          selectedItem = {
+            id: c.getAttribute('data-value'),
+            value: c.innerHTML,
+          };
+
+          a.innerHTML = c.innerHTML;
+
+          this.onSelectCallback();
+        });
 
         b.appendChild(c);
       }
@@ -134,5 +152,9 @@ export const CustomSelect = {
         a.classList.remove('select-arrow-active');
       });
     }
+  },
+  onSelectCallback: () => ({}),
+  onSelect(callback: () => object) {
+    this.onSelectCallback = callback;
   },
 };

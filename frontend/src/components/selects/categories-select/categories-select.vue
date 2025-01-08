@@ -3,15 +3,19 @@
     <select
       v-model="selectedItem"
     >
-      <option disabled selected>Categoría</option>
-      <option value="1">Doenças metabólicas</option>
-      <option value="1">Doenças autoimunes</option>
+      <option
+        v-for="option of props.customSelectOptions"
+        :key="`${props.customSelectId}-${option.id}`"
+        :value="option.id"
+      >
+        {{ option.name }}
+      </option>
     </select>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, PropType, ref } from 'vue';
 import { CustomSelect } from 'components/selects/categories-select/categories-select';
 
 const props = defineProps({
@@ -23,12 +27,27 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  customSelectOptions: {
+    type: Array as PropType<[{
+      id: string,
+      name: string,
+    }]>,
+    required: true,
+  },
 });
 
 const selectedItem = ref(null);
 
+const emit = defineEmits(['selected-item']);
+
+const emitSelectedItem = () => {
+  console.log('selected-item', CustomSelect.selectedItem);
+  emit('selected-item', CustomSelect.selectedItem);
+};
+
 onMounted(() => {
   CustomSelect.init(props.customSelectId, props.customSelectLabel);
+  CustomSelect.onSelect(emitSelectedItem);
 });
 </script>
 
@@ -83,6 +102,7 @@ onMounted(() => {
   background-color: white
   left: 0
   right: 0
+  top: 41px
   z-index: 99
   -webkit-border-radius: 0
   -webkit-border-bottom-right-radius: 4px

@@ -13,10 +13,15 @@
           />
         </div>
 
-        <div class="float-left q-mr-lg" style="width:250px">
+        <div
+          v-if="algorithmsCategories.data.categories.length"
+          class="float-left q-mr-lg" style="width:200px"
+        >
           <categories-select
             custom-select-id="categories-select"
             custom-select-label="Categoría"
+            :custom-select-options="algorithmsCategories.data.categories"
+            @selected-item="setCategory"
           />
         </div>
 
@@ -143,6 +148,12 @@ const updateSearch = () => {
   } else {
     algorithms.search();
   }
+};
+
+const setCategory = (selectedCategory: { id: number, name: string }) => {
+  algorithms.data.searchCategory = { ...selectedCategory };
+
+  updateSearch();
 };
 
 const createAlgorithm = () => algorithms.startCreating();
