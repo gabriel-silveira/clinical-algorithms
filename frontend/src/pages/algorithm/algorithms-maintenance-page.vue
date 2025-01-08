@@ -21,7 +21,7 @@
             custom-select-id="categories-select"
             custom-select-label="Categoría"
             :custom-select-options="algorithmsCategories.data.categories"
-            @selected-item="setCategory"
+            @update="setCategory"
           />
         </div>
 
@@ -150,12 +150,6 @@ const updateSearch = () => {
   }
 };
 
-const setCategory = (selectedCategory: { id: number, name: string }) => {
-  algorithms.data.searchCategory = { ...selectedCategory };
-
-  updateSearch();
-};
-
 const createAlgorithm = () => algorithms.startCreating();
 
 const tryClearingSearch = () => {
@@ -172,6 +166,18 @@ const tryClearingSearch = () => {
     algorithms.getUserAlgorithms(LocalStorage.getItem('user'));
   } else {
     algorithms.getAll();
+  }
+};
+
+const setCategory = (selectedCategory: { id: number, name: string }) => {
+  if (!selectedCategory) {
+    algorithms.data.searchCategory = null;
+
+    tryClearingSearch();
+  } else {
+    algorithms.data.searchCategory = { ...selectedCategory };
+
+    updateSearch();
   }
 };
 

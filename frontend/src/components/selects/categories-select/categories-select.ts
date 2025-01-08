@@ -85,7 +85,13 @@ export class CustomSelect {
           clearButtonWrapper.addEventListener('click', (e: MouseEvent) => {
             e.stopPropagation();
 
-            this.reset();
+            selectedItemElement.innerHTML = this.label;
+
+            this.selectedItem = null;
+
+            clearButtonWrapper.remove();
+
+            this.onSelectCallback();
           });
 
           this.onSelectCallback();

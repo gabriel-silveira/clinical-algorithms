@@ -38,14 +38,14 @@ const props = defineProps({
 
 const selectedItem = ref(null);
 
-const emit = defineEmits(['selected-item']);
+const emit = defineEmits(['update']);
 
 onMounted(() => {
   const customSelect = new CustomSelect(props.customSelectId, props.customSelectLabel);
 
   customSelect.init();
 
-  customSelect.onSelect(() => emit('selected-item', customSelect.selectedItem));
+  customSelect.onSelect(() => emit('update', customSelect.selectedItem));
 });
 </script>
 
