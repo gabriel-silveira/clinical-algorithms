@@ -2,7 +2,10 @@
   <q-page class="page-container-background q-pb-xl">
     <div class="row q-mx-md q-py-sm">
       <div class="col-9 q-pa-md">
-        <div class="float-left q-mr-lg" style="width:370px">
+        <div
+          class="float-left q-mr-lg"
+          style="width:370px"
+        >
           <search-input
             label="Palabra clave para la búsqueda de algoritmos"
             @search="searchAlgorithm"
@@ -10,11 +13,20 @@
           />
         </div>
 
-        <div
+        <div class="float-left q-mr-lg">
+          <categories-select
+            custom-select-id="categories-select"
+            custom-select-label="Categoría"
+          />
+        </div>
+
+        <!--<div
           v-if="algorithmsCategories.data.categories.length"
           class="float-left q-mr-lg bg-white q-pl-sm"
           style="width:auto;min-width:150px"
         >
+          <categories-select />
+
           <q-select
             v-model="algorithms.data.searchCategory"
             :options="algorithmsCategories.data.categories"
@@ -26,7 +38,7 @@
             @update:model-value="updateSearch"
             @clear="tryClearingSearch"
           />
-        </div>
+        </div>-->
 
         <div
           v-if="isMaster && users.data.users.length"
@@ -92,6 +104,7 @@ import EditAlgorithmModal from 'components/modals/algorithms/edit-algorithm-moda
 import AlgorithmsCategories from 'src/services/algorithms-categories';
 import Users from 'src/services/users';
 import { LocalStorage } from 'quasar';
+import CategoriesSelect from 'components/selects/categories-select/categories-select.vue';
 
 const users = new Users();
 provide('users', users);
