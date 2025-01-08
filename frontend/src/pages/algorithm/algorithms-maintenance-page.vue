@@ -25,6 +25,18 @@
           />
         </div>
 
+        <div
+          v-if="isMaster && users.data.users.length"
+          class="float-left q-mr-lg" style="width:200px"
+        >
+          <categories-select
+            custom-select-id="author-select"
+            custom-select-label="Autor"
+            :custom-select-options="users.data.users"
+            @update="setUser"
+          />
+        </div>
+
         <!--<div
           v-if="algorithmsCategories.data.categories.length"
           class="float-left q-mr-lg bg-white q-pl-sm"
@@ -43,7 +55,7 @@
             @update:model-value="updateSearch"
             @clear="tryClearingSearch"
           />
-        </div>-->
+        </div>
 
         <div
           v-if="isMaster && users.data.users.length"
@@ -59,7 +71,7 @@
             dense
             @update:model-value="updateSearch"
           />
-        </div>
+        </div>-->
       </div>
 
       <div class="col-3 q-pt-lg q-pr-md text-right">
@@ -176,6 +188,18 @@ const setCategory = (selectedCategory: { id: number, name: string }) => {
     tryClearingSearch();
   } else {
     algorithms.data.searchCategory = { ...selectedCategory };
+
+    updateSearch();
+  }
+};
+
+const setUser = (selectedUser: { id: number, name: string }) => {
+  if (!selectedUser) {
+    algorithms.data.searchUser = null;
+
+    tryClearingSearch();
+  } else {
+    algorithms.data.searchUser = { ...selectedUser };
 
     updateSearch();
   }
