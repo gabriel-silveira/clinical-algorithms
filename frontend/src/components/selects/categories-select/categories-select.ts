@@ -123,14 +123,16 @@ export const CustomSelect = {
         // and open/close the current select box:
         e.stopPropagation();
 
-        console.log(a);
-
         b.classList.toggle('select-hide');
 
         a.classList.toggle('select-arrow-active');
       });
 
-      // a.addEventListener('click', closeOtherSelects);
+      document.addEventListener('click', () => {
+        b.classList.add('select-hide');
+
+        a.classList.remove('select-arrow-active');
+      });
     }
   },
 };
