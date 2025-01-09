@@ -866,9 +866,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
         this.data.selectedId = elementId;
 
-        console.log('Selected element props:');
-        console.log({ ...element });
-
         if (element) {
           const elementType = element.prop('type');
 
@@ -986,9 +983,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
               textarea.value = element.prop('props/label') || '';
 
               // force resizing textarea...
-              if (this.editor.data.readOnly) {
-                autoResizeTextarea(textarea);
-              }
+              autoResizeTextarea(textarea);
             }
 
             setTimeout(() => {
@@ -1651,7 +1646,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
         clonedElement.toFront();
 
         this.select(clonedElement.id);
-      }, 100);
+      }, 1000);
     }
   }
 
