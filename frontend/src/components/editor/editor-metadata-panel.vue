@@ -7,7 +7,7 @@
     <div
       v-if="showMetadataPanel"
       id="editor-metadata-panel"
-      class="shadow-light-up"
+      class="shadow-7"
       :class="{ 'editor-read-only': !editable }"
     >
       <div
