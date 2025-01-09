@@ -790,8 +790,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
     elements.forEach((element) => {
       // hide element tools
       if (this.editor.data.paper && !this.editor.data.readOnly) {
-        element.findView(this.editor.data.paper)
-          .hideTools();
+        element.findView(this.editor.data.paper).hideTools();
       } else if (this.editor.data.readOnly) {
         this.createReadonlyTools(element, false);
       }
@@ -872,8 +871,6 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
           if (elementType === CustomElement.LANE) {
             const { y } = element.position();
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             element.position(0, y);
 
             if (document.activeElement?.tagName !== 'INPUT') {
@@ -1556,14 +1553,16 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   }
 
   public updateRecommendationsTotals(element?: dia.Element) {
-    this.deleteRecommendationsTotals();
+    if (!this.editor.data.readOnly) {
+      this.deleteRecommendationsTotals();
 
-    const parentElement = element || this.getSelected();
+      const parentElement = element || this.getSelected();
 
-    if (parentElement) {
-      this.editor.metadata.clearPendency();
+      if (parentElement) {
+        this.editor.metadata.clearPendency();
 
-      this.createRecommendationsTotals(parentElement);
+        this.createRecommendationsTotals(parentElement);
+      }
     }
   }
 
@@ -1646,7 +1645,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
         clonedElement.toFront();
 
         this.select(clonedElement.id);
-      }, 1000);
+      }, 100);
     }
   }
 
