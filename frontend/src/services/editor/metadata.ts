@@ -2,6 +2,9 @@ import { dia } from 'jointjs';
 import { reactive } from 'vue';
 
 import Editor from 'src/services/editor/index';
+
+import { orderRecommendations } from 'src/services/recommendations';
+
 import { IFixedMetadata, IFixedMetadataLink } from 'src/services/editor/constants/metadata';
 
 import { orderRecommendations } from 'src/services/recommendations';
