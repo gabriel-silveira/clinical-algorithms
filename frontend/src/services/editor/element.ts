@@ -1631,7 +1631,9 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
 
       const clonedElement = selectedElement.clone();
 
-      clonedElement.prop('props/label', `${labelPrefix} - ${selectedElement.prop('props/label') || ''}`);
+      const newText = `${labelPrefix} - ${selectedElement.prop('props/label') || ''}`;
+
+      clonedElement.prop('props/label', newText.slice(0, 60));
 
       clonedElement.translate(40, 40);
 
