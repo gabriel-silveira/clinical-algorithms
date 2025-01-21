@@ -1640,7 +1640,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
       this.createTools(clonedElement);
 
       setTimeout(() => {
-        this.editor.element.textarea.setValues([clonedElement]);
+        this.textarea.setValues([clonedElement]);
 
         clonedElement.toFront();
 

@@ -129,7 +129,12 @@ class Graph {
           // reset scroll because of createEventHandlers method
           // that focus on input fields
           // which changes the scroll
-          Editor.setScroll({ x: 0, y: 0 });
+          setTimeout(() => {
+            Editor.setScroll({ x: 0, y: 0 });
+
+            // this.editor.paperDiv?.classList.remove('hidden');
+            document.getElementById('stage-loading-spinner-cover')?.classList.add('hidden');
+          }, 1000);
 
           await this.editor.element.createAllRecommendationsTotals();
 
