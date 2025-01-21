@@ -95,7 +95,6 @@ import {
 import { GRAPH_MODE_EDIT, GRAPH_MODE_PUBLIC } from 'src/services/editor/types';
 
 import ZoomingBar from 'components/bar/zooming-bar.vue';
-import LoadingSpinner from "components/spinners/loading-spinner.vue";
 
 const route = useRoute();
 const router = useRouter();
