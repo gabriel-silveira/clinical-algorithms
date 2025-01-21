@@ -792,7 +792,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
       if (this.editor.data.paper && !this.editor.data.readOnly) {
         element.findView(this.editor.data.paper).hideTools();
       } else if (this.editor.data.readOnly) {
-        this.createReadonlyTools(element, false);
+        // this.createReadonlyTools(element, false);
       }
     });
 
@@ -887,7 +887,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
               CustomElement.END,
             ].includes(elementType)
           ) {
-            this.createReadonlyTools(element, true);
+            // this.createReadonlyTools(element, true);
           }
         }
       }
