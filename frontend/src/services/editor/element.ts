@@ -1273,17 +1273,19 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
                 }
 
                 RecommendationElement.attr('comparator_text/text', recommendation.comparator);
-                RecommendationElement.attr('comparator_text', { textWrap: { width: elementWidth * 0.35 } });
+
+                RecommendationElement.attr('comparator_text', { textWrap: { width: 200 } });
+
                 if (recommendation.recommendation_type === FORMAL_RECOMMENDATION) {
-                  RecommendationElement.attr('recommendation_arrows_image/refX', (elementWidth / 2) - 100);
+                  RecommendationElement.attr('recommendation_arrows_image/refX', 230);
                 } else if (recommendation.direction) {
-                  RecommendationElement.attr('recommendation_arrows_image/refX', (elementWidth / 2) - 55);
+                  RecommendationElement.attr('recommendation_arrows_image/refX', 250);
                 }
 
                 RecommendationElement.attr('intervention_text/text', recommendation.intervention);
-                RecommendationElement.attr('intervention_text/refX', (elementWidth / 2) + 100);
+                RecommendationElement.attr('intervention_text/refX', 400);
                 RecommendationElement.attr('intervention_text', { textWrap: { width: elementWidth * 0.35 } });
-                RecommendationElement.attr('intervention_label/refX', (elementWidth / 2) + 100);
+                RecommendationElement.attr('intervention_label/refX', 400);
 
                 if (recommendation.implementation_considerations) {
                   RecommendationElement.attr('implementation_text/text', recommendation.implementation_considerations);
