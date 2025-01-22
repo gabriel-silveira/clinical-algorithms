@@ -402,12 +402,16 @@ class Graph {
 
       if (stageStage) {
         const options = {
+          margin: 0,
           filename: `${this.editor.graph.data.algorithm.title}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           jsPDF: {
             orientation: this.data.printSize.width > this.data.printSize.height ? 'landscape' : 'portrait',
             unit: 'px',
-            format: [this.data.printSize.width, this.data.printSize.height],
+            format: [
+              Number(this.data.printSize.width.toFixed(0)),
+              Number(this.data.printSize.height.toFixed(0)),
+            ],
           },
         };
 
