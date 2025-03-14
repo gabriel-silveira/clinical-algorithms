@@ -197,7 +197,11 @@ onBeforeMount(async () => {
 
       await editor.init('editor-stage');
 
-      if (editor.data.readOnly) editor.graph.cropToContent(500, 600);
+      if (editor.data.readOnly) {
+        editor.graph.cropToContent(500, 600);
+
+        editor.element.hideAllPorts();
+      }
 
       settings.page.setTitle(editor.data.readOnly ? 'Publicación de algoritmo' : 'Editar algoritmo');
     } else {

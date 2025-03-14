@@ -64,9 +64,13 @@ onMounted(async () => {
     setTimeout(async () => {
       loading.value = false;
 
+      editor.element.hideAllPorts();
+
       editor.element.redrawAllConnections();
 
-      editor.graph.exportPDF();
+      editor.element.createElementsIndexes();
+
+      // editor.graph.exportPDF();
     }, 2000);
   }
 });
