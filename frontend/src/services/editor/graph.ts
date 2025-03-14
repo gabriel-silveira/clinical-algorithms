@@ -134,7 +134,7 @@ class Graph {
 
             // this.editor.paperDiv?.classList.remove('hidden');
             document.getElementById('stage-loading-spinner-cover')?.classList.add('hidden');
-          }, 1000);
+          }, 1500);
 
           await this.editor.element.createAllRecommendationsTotals();
 
@@ -337,8 +337,8 @@ class Graph {
     }
   }
 
-  private cropToContent() {
-    this.setContentSize();
+  public cropToContent(shiftX = 200, shiftY = 200) {
+    this.setContentSize(shiftX, shiftY);
 
     this.editor.data.paper?.setDimensions(this.data.printSize.width, this.data.printSize.height);
   }
@@ -391,9 +391,9 @@ class Graph {
     return coordinate === 'x' ? outerX : lowerY;
   }
 
-  private setContentSize() {
-    this.data.printSize.width = this.getOutermostCoordinate('x') + 200;
-    this.data.printSize.height = this.getOutermostCoordinate('y') + 200;
+  private setContentSize(shiftX: number, shiftY: number) {
+    this.data.printSize.width = this.getOutermostCoordinate('x') + shiftX;
+    this.data.printSize.height = this.getOutermostCoordinate('y') + shiftY;
   }
 
   public exportPDF() {
