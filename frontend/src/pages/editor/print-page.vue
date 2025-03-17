@@ -70,7 +70,7 @@ onMounted(async () => {
 
       editor.element.createElementsIndexes();
 
-      // editor.graph.exportPDF();
+      editor.graph.exportPDF();
     }, 2000);
   }
 });
