@@ -1147,7 +1147,7 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
   }
 
   public async createRecommendationsForPDF() {
-    const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 130;
+    const elementWidth = this.editor.graph.getOutermostCoordinate('x') + 330;
     let elementHeight = 1000;
     let outermostY = this.editor.graph.getOutermostCoordinate('y') + 50;
 

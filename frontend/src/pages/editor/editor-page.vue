@@ -160,7 +160,7 @@ onBeforeMount(async () => {
 
     const loggedUserId = LocalStorage.getItem('user');
 
-    const algorithm = await new Algorithms().getAlgorithm(id);
+    const algorithm = await new Algorithms().getAlgorithm(Number(id));
 
     if (
       algorithm.public
@@ -198,7 +198,7 @@ onBeforeMount(async () => {
       await editor.init('editor-stage');
 
       if (editor.data.readOnly) {
-        editor.graph.cropToContent(500, 600);
+        editor.graph.cropToContent(800, 600);
 
         editor.element.hideAllPorts();
       }
