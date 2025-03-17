@@ -303,7 +303,7 @@ class Graph {
 
       this.editor.element.moveAllElementsDown(250);
 
-      this.cropToContent();
+      this.cropToContent(400, 200);
 
       await this.editor.element.create.PDFHeader();
 
