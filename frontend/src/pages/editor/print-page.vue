@@ -57,7 +57,7 @@ onMounted(async () => {
 
     await editor.init('editor-stage');
 
-    await editor.graph.putLogoOnPdfHeader(putLogoOnHeader);
+    void editor.graph.putLogoOnPdfHeader(putLogoOnHeader);
 
     await editor.graph.setToPrint();
 
@@ -70,7 +70,7 @@ onMounted(async () => {
 
       editor.element.createElementsIndexes();
 
-      editor.graph.exportPDF();
+      // editor.graph.exportPDF();
     }, 2000);
   }
 });

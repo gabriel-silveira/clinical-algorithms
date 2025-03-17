@@ -125,16 +125,6 @@ class Graph {
             }, 200);
           }
 
-          // reset scroll because of createEventHandlers method
-          // that focus on input fields
-          // which changes the scroll
-          setTimeout(() => {
-            Editor.setScroll({ x: 0, y: 0 });
-
-            // this.editor.paperDiv?.classList.remove('hidden');
-            document.getElementById('stage-loading-spinner-cover')?.classList.add('hidden');
-          }, 1500);
-
           await this.editor.element.createAllRecommendationsTotals();
 
           // READ ONLY MODE
@@ -158,6 +148,19 @@ class Graph {
           }
         }
       }
+
+      // reset scroll because of createEventHandlers method
+      // that focus on input fields
+      // which changes the scroll
+      setTimeout(() => {
+        Editor.setScroll({ x: 0, y: 0 });
+
+        if (document.activeElement && document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+
+        document.getElementById('stage-loading-spinner-cover')?.classList.add('hidden');
+      }, 1500);
 
       return Promise.resolve(true);
     } catch (error) {
