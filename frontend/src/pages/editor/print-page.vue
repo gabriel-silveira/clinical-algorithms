@@ -57,7 +57,7 @@ onMounted(async () => {
 
     await editor.init('editor-stage');
 
-    await editor.graph.putLogoOnPdfHeader(putLogoOnHeader);
+    void editor.graph.putLogoOnPdfHeader(putLogoOnHeader);
 
     await editor.graph.setToPrint();
 
