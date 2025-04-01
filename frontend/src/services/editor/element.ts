@@ -463,7 +463,9 @@ class Element {
             },
           }).resize(600, 500 * metadata.fixed.length);
 
-          this.create.RecommendationTogglerButton(originalElement, recommendationElement);
+          if (metadata.fixed.length) {
+            this.create.RecommendationTogglerButton(originalElement, recommendationElement);
+          }
 
           recommendationElement.attr('./display', 'none');
 

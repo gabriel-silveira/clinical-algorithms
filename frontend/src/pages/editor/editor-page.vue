@@ -198,10 +198,11 @@ onBeforeMount(async () => {
       await editor.init('editor-stage');
 
       if (editor.data.readOnly) {
-        editor.graph.cropToContent(800, 600);
-
-        editor.element.hideAllPorts();
+        editor.graph.cropToContent(1000, 600);
       }
+
+      // avoid ports to start visible...
+      editor.element.hideAllPorts();
 
       settings.page.setTitle(editor.data.readOnly ? 'Publicación de algoritmo' : 'Editar algoritmo');
     } else {
