@@ -32,7 +32,11 @@
 
               <q-select
                 v-model="data.intervention_type"
-                :options="['Tratamiento', 'Diagnóstico', 'Clasificación de la población']"
+                :options="[
+                  INTERVENTION_TYPES_SPANISH[TREATMENT],
+                  INTERVENTION_TYPES_SPANISH[DIAGNOSIS],
+                  INTERVENTION_TYPES_SPANISH[POPULATION_CLASSIFICATION],
+                ]"
                 class="q-my-lg"
                 label="Tipo de intervención"
                 dense
@@ -91,16 +95,21 @@
               <q-select
                 v-if="isFormal"
                 v-model="data.certainty_of_the_evidence"
-                :options="['High', 'Moderate', 'Low', 'Very Low']"
+                :options="[
+                  CERTAINTY_SPANISH[HIGH],
+                  CERTAINTY_SPANISH[MODERATE],
+                  CERTAINTY_SPANISH[LOW],
+                  CERTAINTY_SPANISH[VERY_LOW],
+                ]"
                 class="q-my-lg"
-                label="Certainty of evidence"
+                label="Certeza de la evidencia"
                 dense
                 @update:model-value="setProp('certainty_of_the_evidence')"
               />
 
               <q-input
                 v-model="data.implementation_considerations"
-                label="Implementation considerations"
+                label="Consideraciones de implementación"
                 class="q-my-lg"
                 type="textarea"
                 spellcheck="false"
@@ -110,7 +119,7 @@
 
               <q-input
                 v-model="data.additional_comments"
-                label="Additional comments"
+                label="Comentarios adicionales"
                 class="q-my-lg"
                 type="textarea"
                 spellcheck="false"
@@ -120,7 +129,7 @@
 
               <q-input
                 v-model="data.recommendation_source"
-                label="Recommendation source"
+                label="Fuente de recomendación"
                 class="q-my-lg"
                 type="textarea"
                 spellcheck="false"
@@ -190,7 +199,22 @@ import {
 } from 'src/services/editor/constants/metadata/recommendation_strength';
 
 import { QInput, QSelect } from 'quasar';
-import { getInterventionTypeKey, translateInterventionType } from 'src/services/editor/constants/metadata/intervention';
+import {
+  DIAGNOSIS,
+  INTERVENTION_TYPES_SPANISH,
+  POPULATION_CLASSIFICATION,
+  TREATMENT,
+  getInterventionTypeKey,
+  translateInterventionType,
+} from 'src/services/editor/constants/metadata/intervention';
+
+import {
+  CERTAINTY_SPANISH, getCertaintyKey,
+  HIGH,
+  LOW,
+  MODERATE, translateCertainty,
+  VERY_LOW,
+} from 'src/services/editor/constants/metadata/certainty';
 
 const editor = inject('editor') as Editor;
 
@@ -319,6 +343,7 @@ const setProp = (propName: string) => {
   editor.metadata.setMetadata(props.index, propName, {
     ...data,
     intervention_type: getInterventionTypeKey(data.intervention_type),
+    certainty_of_the_evidence: getCertaintyKey(data.certainty_of_the_evidence),
   });
 };
 
@@ -346,12 +371,14 @@ const setInitialValues = () => {
       data.implementation_considerations = fixed[currentIndex].implementation_considerations;
       data.additional_comments = fixed[currentIndex].additional_comments;
       data.recommendation_source = fixed[currentIndex].recommendation_source;
+      data.strength = fixed[currentIndex].strength;
+      data.direction = fixed[currentIndex].direction;
 
       // from english to spanish
       data.intervention_type = translateInterventionType(fixed[currentIndex].intervention_type);
-      data.direction = fixed[currentIndex].direction;
-      data.strength = fixed[currentIndex].strength;
-      data.certainty_of_the_evidence = fixed[currentIndex].certainty_of_the_evidence;
+      data.certainty_of_the_evidence = translateCertainty(
+        fixed[currentIndex].certainty_of_the_evidence,
+      );
     }
   }
 

@@ -10,7 +10,7 @@ export const CERTAINTY = {
   VERY_LOW,
 };
 
-const CERTAINTY_SPANISH: { [key: string]: string } = {
+export const CERTAINTY_SPANISH: { [key: string]: string } = {
   [HIGH]: 'Alta',
   [MODERATE]: 'Moderada',
   [LOW]: 'Baja',
@@ -19,4 +19,15 @@ const CERTAINTY_SPANISH: { [key: string]: string } = {
 
 export function translateCertainty(value: string) {
   return CERTAINTY_SPANISH[value];
+}
+
+export function getCertaintyKey(value: string) {
+  return [
+    HIGH,
+    MODERATE,
+    LOW,
+    VERY_LOW,
+  ].find(
+    (key) => CERTAINTY_SPANISH[key] === value,
+  ) as string;
 }
