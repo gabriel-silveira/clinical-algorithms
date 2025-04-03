@@ -4,7 +4,7 @@
       <q-expansion-item
         :label="blockName"
         default-opened
-        header-class="bg-grey-2 text-primary text-body1"
+        header-class="bg-grey-2 text-primary text-body2"
         expand-icon-class="text-primary"
       >
         <q-card>
@@ -14,7 +14,7 @@
                 v-model="data.recommendation_type"
                 :options="RECOMMENDATION_TYPES"
                 class="q-mb-lg"
-                label="Recommendation type"
+                label="Tipo de recomendación"
                 map-options
                 emit-value
                 dense
@@ -23,7 +23,7 @@
 
               <q-input
                 v-model="data.description"
-                label="Original transcription"
+                label="Transcripción original"
                 type="textarea"
                 spellcheck="false"
                 dense
@@ -32,9 +32,9 @@
 
               <q-select
                 v-model="data.intervention_type"
-                :options="['Treatment', 'Diagnosis', 'Population classification']"
+                :options="['Tratamiento', 'Diagnóstico', 'Clasificación de la población']"
                 class="q-my-lg"
-                label="Intervention type"
+                label="Tipo de intervención"
                 dense
                 @update:model-value="setProp('intervention_type')"
               />
@@ -44,7 +44,7 @@
                 :rules="[val => !!val || 'Informe la intervención.']"
                 ref="refIntervention"
                 class="q-mt-md"
-                label="Intervention"
+                label="Intervención"
                 spellcheck="false"
                 dense
                 @update:model-value="setProp('intervention')"
@@ -55,7 +55,7 @@
                 :rules="[val => !!val || 'Informe el comparador.']"
                 ref="redComparator"
                 class="q-mt-md"
-                label="Comparator"
+                label="Comparador"
                 spellcheck="false"
                 dense
                 @update:model-value="setProp('comparator')"
@@ -68,7 +68,7 @@
                 :rules="[val => !!val || 'Informe la fuerza del recomendación.']"
                 ref="refStrength"
                 class="q-my-lg"
-                label="Recommendation strength"
+                label="Fuerza de la recomendación"
                 map-options
                 emit-value
                 dense
@@ -81,7 +81,7 @@
                 :rules="[val => !!val || 'Informe la dirección.']"
                 ref="refDirection"
                 class="q-my-lg"
-                label="Direction"
+                label="Dirección"
                 map-options
                 emit-value
                 dense
@@ -190,6 +190,7 @@ import {
 } from 'src/services/editor/constants/metadata/recommendation_strength';
 
 import { QInput, QSelect } from 'quasar';
+import { getInterventionTypeKey, translateInterventionType } from 'src/services/editor/constants/metadata/intervention';
 
 const editor = inject('editor') as Editor;
 
@@ -229,7 +230,7 @@ const data = reactive({
 const blockName = computed(() => `${props.index}. ${
   data.recommendation_type ? RECOMMENDATION_TYPES.find(
     (type) => type.value === data.recommendation_type,
-  )?.label : 'Select recommendation type'
+  )?.label : 'Seleccione el tipo de recomendación'
 }`);
 
 const isFormal = computed(() => data.recommendation_type === RECOMMENDATION_TYPES[0].value);
@@ -315,7 +316,10 @@ const setProp = (propName: string) => {
     }
   }
 
-  editor.metadata.setMetadata(props.index, propName, data);
+  editor.metadata.setMetadata(props.index, propName, {
+    ...data,
+    intervention_type: getInterventionTypeKey(data.intervention_type),
+  });
 };
 
 const deleteBlock = () => {
@@ -337,15 +341,17 @@ const setInitialValues = () => {
     if (fixed[currentIndex]) {
       data.description = fixed[currentIndex].description;
       data.recommendation_type = fixed[currentIndex].recommendation_type;
-      data.intervention_type = fixed[currentIndex].intervention_type;
       data.intervention = fixed[currentIndex].intervention;
       data.comparator = fixed[currentIndex].comparator;
-      data.direction = fixed[currentIndex].direction;
-      data.strength = fixed[currentIndex].strength;
-      data.certainty_of_the_evidence = fixed[currentIndex].certainty_of_the_evidence;
       data.implementation_considerations = fixed[currentIndex].implementation_considerations;
       data.additional_comments = fixed[currentIndex].additional_comments;
       data.recommendation_source = fixed[currentIndex].recommendation_source;
+
+      // from english to spanish
+      data.intervention_type = translateInterventionType(fixed[currentIndex].intervention_type);
+      data.direction = fixed[currentIndex].direction;
+      data.strength = fixed[currentIndex].strength;
+      data.certainty_of_the_evidence = fixed[currentIndex].certainty_of_the_evidence;
     }
   }
 
