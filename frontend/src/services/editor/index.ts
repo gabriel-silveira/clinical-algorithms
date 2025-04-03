@@ -192,10 +192,9 @@ class Editor {
         });
 
         this.data.paper.on('element:pointerup', (elementView: dia.ElementView) => {
-          const element = this.element.getById(elementView.options.model.id);
-
-          console.log('Selected element');
-          console.log(element);
+          // const element = this.element.getById(elementView.options.model.id);
+          // console.log('Selected element');
+          // console.log(element);
 
           // not in print mode (PDF export)
           if (this.graph.data.mode !== GRAPH_MODE_PRINT) {

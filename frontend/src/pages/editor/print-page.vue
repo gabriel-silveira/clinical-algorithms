@@ -61,7 +61,7 @@ onMounted(async () => {
 
       editor.element.hideAllPorts();
 
-      // editor.graph.exportPDF();
+      editor.graph.exportPDF();
     }, 2000);
   }
 });
