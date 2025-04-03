@@ -5,9 +5,6 @@
     class="bg-grey-4 overflow-hidden"
   >
     <div id="editor-header">
-      <!--<div style="position:absolute">
-        mode: {{ editor.graph.data.mode }} - read only: {{ editor.data.readOnly }}
-      </div>-->
       <editor-stage-header/>
 
       <zooming-bar
