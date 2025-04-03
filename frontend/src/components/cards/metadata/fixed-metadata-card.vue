@@ -166,11 +166,11 @@
       </div>
 
       <q-separator
-        v-if="fixedMetadata.links.length"
+        v-if="fixedMetadata.links && fixedMetadata.links.length"
       />
 
       <div
-        v-if="fixedMetadata.links.length"
+        v-if="fixedMetadata.links && fixedMetadata.links.length"
         class="q-pa-lg"
       >
         <div class="q-pb-sm text-primary"><b>Enlaces</b></div>

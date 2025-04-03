@@ -754,7 +754,12 @@ autores individuales, y la producción de algoritmos con esta herramienta no imp
         link.router('manhattan', {
           step: 10,
           padding: 40,
-          excludeTypes: ['standard.Rectangle'],
+          excludeTypes: [
+            'standard.Rectangle',
+            'RecommendationElement',
+            'RecommendationTotalElement',
+            'RecommendationTogglerElement',
+          ],
           excludeEnds: ['source'],
         });
 
