@@ -60,6 +60,8 @@ onMounted(async () => {
 
     await editor.graph.setToPrint(putLogoOnHeader);
 
+    editor.data.paper?.scale(0.8);
+
     setTimeout(async () => {
       loading.value = false;
 
