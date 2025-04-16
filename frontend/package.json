@@ -20,7 +20,6 @@
     "core-js": "^3.6.5",
     "dotenv": "^16.3.1",
     "html2canvas": "^1.4.1",
-    "html3pdf": "^0.12.2",
     "jointjs": "^3.7.7",
     "jspdf": "^3.0.1",
     "quasar": "^2.6.0",
