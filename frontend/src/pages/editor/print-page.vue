@@ -7,7 +7,8 @@
     >
       <loading-spinner
         v-if="loading"
-        label="Generando archivo PDF... por favor espere."
+        :label="loadingLabel"
+        :loaded="loaded"
       />
     </div>
 
@@ -41,6 +42,8 @@ const route = useRoute();
 const editor = inject('editor') as Editor;
 
 const loading = ref(true);
+const loaded = ref(false);
+const loadingLabel = ref('Estamos abriendo su algoritmo...');
 
 onMounted(async () => {
   const {
@@ -64,6 +67,8 @@ onMounted(async () => {
     setTimeout(async () => {
       editor.element.hideAllPorts();
 
+      loadingLabel.value = 'Generando archivo PDF... por favor espere.';
+
       await html2pdf({
         elementId: 'editor-stage',
         title: editor.graph.data.algorithm.title,
@@ -71,7 +76,18 @@ onMounted(async () => {
         height: Number((editor.graph.data.printSize.height * editor.graph.data.scale).toFixed(0)),
       });
 
-      loading.value = false;
+      if (editor.quasar.platform.is.mobile) {
+        loadingLabel.value = 'El PDF está disponible para descargar.';
+
+        loaded.value = true;
+      } else {
+        loading.value = false;
+
+        editor.quasar.notify({
+          type: 'positive',
+          message: 'El PDF está disponible para descargar.',
+        });
+      }
     }, 2000);
   }
 });
