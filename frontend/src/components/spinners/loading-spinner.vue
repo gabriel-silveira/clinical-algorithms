@@ -1,15 +1,16 @@
 <template>
   <div
-    class="text-caption text-center text-info"
+    class="text-caption text-center"
   >
     <q-spinner
       :color="props.color"
       :size="props.size"
     />
+
     <div
       v-if="props.label"
-      :style="{ color: `var(--q-color-${props.color})` }"
       class="q-mt-md"
+      :class="props.color ? `text-${props.color}` : ''"
     >
       {{ props.label }}
     </div>
