@@ -7,7 +7,7 @@
     >
       <loading-spinner
         v-if="loading"
-        color="primary"
+        label="Generando archivo PDF... por favor espere."
       />
     </div>
 
@@ -59,22 +59,19 @@ onMounted(async () => {
 
     await editor.graph.open(id);
 
-    await editor.graph.setToPrint(putLogoOnHeader);
-
-    editor.data.paper?.scale(0.8);
+    await editor.graph.setToPrint(putLogoOnHeader, 0.7);
 
     setTimeout(async () => {
-      loading.value = false;
-
       editor.element.hideAllPorts();
 
       await html2pdf({
         elementId: 'editor-stage',
         title: editor.graph.data.algorithm.title,
-        width: editor.graph.data.printSize.width,
-        height: editor.graph.data.printSize.height,
-        proportion: 0.8,
+        width: Number((editor.graph.data.printSize.width * editor.graph.data.scale).toFixed(0)),
+        height: Number((editor.graph.data.printSize.height * editor.graph.data.scale).toFixed(0)),
       });
+
+      loading.value = false;
     }, 2000);
   }
 });
