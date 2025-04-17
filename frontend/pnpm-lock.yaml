@@ -20,12 +20,15 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.4.7
-      html3pdf:
-        specifier: ^0.12.2
-        version: 0.12.2
+      html2canvas:
+        specifier: ^1.4.1
+        version: 1.4.1
       jointjs:
         specifier: ^3.7.7
         version: 3.7.7
+      jspdf:
+        specifier: ^3.0.1
+        version: 3.0.1
       quasar:
         specifier: ^2.6.0
         version: 2.18.1
@@ -847,6 +850,9 @@ packages:
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
 
+  '@types/trusted-types@2.0.7':
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+
   '@types/vue-tel-input@2.1.7':
     resolution: {integrity: sha512-s7bj9VBEQwfSaHDfWJ1KnQ+bgx0N+GT+y3pcsvoEqOZv4zJn/DX3CxNWnyBOQx8hwt3fGWp/aTm/X+fbq91Uiw==}
 
@@ -1649,8 +1655,8 @@ packages:
     resolution: {integrity: sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ==}
     engines: {node: '>= 4'}
 
-  dompurify@2.5.8:
-    resolution: {integrity: sha512-o1vSNgrmYMQObbSSvF/1brBYEQPHhV1+gsmrusO7/GXtp1T9rCS8cXFqVxK/9crT1jA6Ccv+5MTSjBNqr7Sovw==}
+  dompurify@3.2.5:
+    resolution: {integrity: sha512-mLPd29uoRe9HpvwP2TxClGQBzGXeEC/we/q+bFlmPPmj2p2Ugl3r6ATu/UU1v77DXNcehiBg9zsr1dREyA/dJQ==}
 
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
@@ -2186,9 +2192,6 @@ packages:
     resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==}
     engines: {node: '>=8.0.0'}
 
-  html3pdf@0.12.2:
-    resolution: {integrity: sha512-jxcwxJfXgUILOBJG3dwi+6snqNNN5t8CaJbeqkGK4tPqe/btB48y8RqDt9cXQjApDxNAFthj+XJSHQK9G/pMrA==}
-
   htmlparser2@6.1.0:
     resolution: {integrity: sha512-gyyPk6rgonLFEDGoeRgQNaEUvdJ4ktTmmUh/h2t7s+M8oPpIPxgNACWa+6ESR57kXstwqPiCut0V8NRpcwgU7A==}
 
@@ -2509,8 +2512,8 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  jspdf@2.5.2:
-    resolution: {integrity: sha512-myeX9c+p7znDWPk0eTrujCzNjT+CXdXyk7YmJq5nD5V7uLLKmSXnlQ/Jn/kuo3X09Op70Apm0rQSnFWyGK8uEQ==}
+  jspdf@3.0.1:
+    resolution: {integrity: sha512-qaGIxqxetdoNnFQQXxTKUD9/Z7AloLaw94fFsOiJMxbfYdBbrBuhWmbzI8TVjrw7s3jBY1PFHofBKMV/wZPapg==}
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -5192,6 +5195,9 @@ snapshots:
     dependencies:
       '@types/node': 12.20.55
 
+  '@types/trusted-types@2.0.7':
+    optional: true
+
   '@types/vue-tel-input@2.1.7':
     dependencies:
       vue: 2.7.16
@@ -6166,7 +6172,9 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@2.5.8:
+  dompurify@3.2.5:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
     optional: true
 
   domutils@2.8.0:
@@ -6870,11 +6878,6 @@ snapshots:
       css-line-break: 2.1.0
       text-segmentation: 1.0.3
 
-  html3pdf@0.12.2:
-    dependencies:
-      html2canvas: 1.4.1
-      jspdf: 2.5.2
-
   htmlparser2@6.1.0:
     dependencies:
       domelementtype: 2.3.0
@@ -7191,7 +7194,7 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jspdf@2.5.2:
+  jspdf@3.0.1:
     dependencies:
       '@babel/runtime': 7.26.10
       atob: 2.1.2
@@ -7200,7 +7203,7 @@ snapshots:
     optionalDependencies:
       canvg: 3.0.11
       core-js: 3.41.0
-      dompurify: 2.5.8
+      dompurify: 3.2.5
       html2canvas: 1.4.1
 
   keyv@4.5.4:

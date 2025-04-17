@@ -34,7 +34,7 @@ import { GRAPH_MODE_PRINT } from 'src/services/editor/types';
 import Editor from 'src/services/editor';
 import LoadingSpinner from 'components/spinners/loading-spinner.vue';
 import EditorStage from 'components/editor/editor-stage.vue';
-import { html2pdf } from 'src/services/pdf';
+import { svg2png } from 'src/services/pdf';
 
 const route = useRoute();
 
@@ -61,20 +61,22 @@ onMounted(async () => {
 
     await editor.graph.setToPrint(putLogoOnHeader);
 
-    editor.data.paper?.scale(0.8);
+    // editor.data.paper?.scale(0.8);
 
     setTimeout(async () => {
       loading.value = false;
 
       editor.element.hideAllPorts();
 
-      await html2pdf({
+      svg2png();
+
+      /* await html2pdf({
         elementId: 'editor-stage',
         title: editor.graph.data.algorithm.title,
         width: editor.graph.data.printSize.width,
         height: editor.graph.data.printSize.height,
         proportion: 0.8,
-      });
+      }); */
     }, 2000);
   }
 });
