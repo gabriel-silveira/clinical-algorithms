@@ -47,3 +47,5 @@ backend/.vscode
 backend/.idea
 
 docs/*
+
+frontend/coverage
