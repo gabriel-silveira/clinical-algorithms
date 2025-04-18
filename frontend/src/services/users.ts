@@ -83,7 +83,7 @@ class Users {
   public editUser(user: IUser) {
     this.data.user = { ...user };
 
-    // hide original password hash
+    // hide the original password hash
     this.data.user.password = '';
 
     // convert 0 / 1 to false / true
@@ -121,8 +121,7 @@ class Users {
     } catch (error) {
       return Promise.reject(error);
     } finally {
-      this.toggleEditDialog();
-
+      this.data.showEditDialog = false;
       this.data.loading = false;
     }
   }
@@ -140,8 +139,7 @@ class Users {
     } catch (error) {
       return Promise.reject(error);
     } finally {
-      this.toggleEditDialog();
-
+      this.data.showEditDialog = false;
       this.data.loading = false;
     }
   }
@@ -156,8 +154,7 @@ class Users {
     } catch (error) {
       return Promise.reject(error);
     } finally {
-      this.toggleEditDialog();
-
+      this.data.showEditDialog = false;
       this.data.loading = false;
     }
   }

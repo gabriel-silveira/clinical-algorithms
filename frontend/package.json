@@ -12,7 +12,8 @@
     "docker:build": "docker compose -f docker-compose.yml -f docker-compose.build.yml build",
     "docker:exec": "systemctl start docker && docker compose -f docker-compose.yml -f docker-compose.dev.yml up",
     "lint": "eslint --ext .js,.ts,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
@@ -29,14 +30,20 @@
   },
   "devDependencies": {
     "@quasar/app-webpack": "^3.0.0",
+    "@testing-library/vue": "^8.1.0",
     "@types/node": "^12.20.21",
     "@types/vue-tel-input": "^2.1.6",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitest/coverage-v8": "^3.1.1",
+    "@vue/test-utils": "^2.4.6",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-vue": "^9.0.0"
+    "eslint-plugin-vue": "^9.0.0",
+    "jsdom": "^26.1.0",
+    "vitest": "^3.1.1"
   },
   "browserslist": [
     "last 10 Chrome versions",
